@@ -368,18 +368,18 @@ class Dungeon:
 
         # Loop through the shuffled directions
         for direction in directions:
-            neighbor_row, neighbor_col = self._get_neighbor_coords(current_row, current_col, direction)
+            neighbor_row, neighbor_col = self._get_neighbor_coordinates(current_row, current_col, direction)
             if self.is_valid_room(neighbor_row, neighbor_col):
                 neighbor_room = self.__maze[neighbor_row][neighbor_col]
                 if not neighbor_room.get_visited():  # If the neighboring room hasn't been visited...
-                    # Knock down the doors between them
-                    self._knock_down_door(room, direction)
-                    self._knock_down_door(neighbor_room, self._opposite_direction(direction))
+                    # Create doors between them
+                    self._create_doors(room, direction)
+                    self._create_doors(neighbor_room, self._opposite_direction(direction))
 
                     # Recursively explore the neighbor Room
                     self._create_maze(neighbor_room, neighbor_row, neighbor_col)
 
-    def _get_neighbor_coords(self, row, col, direction):
+    def _get_neighbor_coordinates(self, row, col, direction):
         """
         Internal method that returns the coordinates of the neighboring room in order to generate the maze.
         :param row: row coordinate, intended to be the current row
@@ -405,9 +405,9 @@ class Dungeon:
             raise ValueError("INVALID DIRECTION PROVIDED")
         return {"N": "S", "S": "N", "E": "W", "W": "E"}[direction]
 
-    def _knock_down_door(self, room, direction):
+    def _create_doors(self, room, direction):
         """
-        Internal method that "knocks down" a door in a particular direction ("N," "S," "E," "W") in relation
+        Internal method that creates a door in a particular direction ("N," "S," "E," "W") in relation
         to the provided Room.
         :param room: Room object whose doors need to be knocked down in _create_maze()
         :param direction: the direction of the door that will be knocked down ("N," "S," "E," "W")
