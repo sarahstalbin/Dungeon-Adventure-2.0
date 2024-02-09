@@ -75,7 +75,7 @@ class Dungeon:
         """
         return self.__items
 
-    def print_room_str(self, key):
+    def show_room_str(self, key):
         """
         Gets the entrance Room coordinates of the Dungeon's maze based on the provided key.
         :return: Room
@@ -114,7 +114,8 @@ class Dungeon:
             boo_results = attributes_current.get_west_door() and attributes_new.get_east_door()
             return boo_results
 
-    def set_current_room(self, room):
+    @current_room.setter
+    def current_room(self, room):
         """
         Sets player's current coordinates as current room. Used in vision potion
         """
@@ -130,7 +131,8 @@ class Dungeon:
         room.set_encapsulation_pillar(False)
         room.set_current_room(True)
 
-    def set_room_empty(self, key=(0, 0), pit=False):
+    @empty_room.setter
+    def empty_room(self, key=(0, 0), pit=False):
         """
         If room traveled, removes items but leaves pit
         """
@@ -160,7 +162,7 @@ class Dungeon:
             item.set_encapsulation_pillar(False)
             item.set_empty_room(True)
 
-    def get_room_contents(self, key):
+    def show_room_contents(self, key):
         """
        Gets the contents of a Room in the dungeon.
        :param key: a tuple representation of the row, column Room coordinates (0, 0)
@@ -301,10 +303,10 @@ class Dungeon:
                 print(bottom[room], end="")
             print("\n")
 
-    def set_player_traveled(self, key):
+    @player_traveled.setter
+    def player_traveled(self, key):
         room = self.__items.get(key)
         room.set_player_traveled()
-
 
     def print_dungeon(self, current_row=-1, current_col=-1):
         """
@@ -373,7 +375,7 @@ class Dungeon:
 
         # Loop through the shuffled directions
         for direction in directions:
-            neighbor_row, neighbor_col = self._get_neighbor_coordinates(current_row, current_col, direction)
+            neighbor_row, neighbor_col = self._return_neighbor_coordinates(current_row, current_col, direction)
             if self.is_valid_room(neighbor_row, neighbor_col):
                 neighbor_room = self.__maze[neighbor_row][neighbor_col]
                 if not neighbor_room.get_visited():  # If the neighboring room hasn't been visited...
@@ -384,7 +386,7 @@ class Dungeon:
                     # Recursively explore the neighbor Room
                     self._create_maze(neighbor_room, neighbor_row, neighbor_col)
 
-    def _get_neighbor_coordinates(self, row, col, direction):
+    def _return_neighbor_coordinates(self, row, col, direction):
         """
         Internal method that returns the coordinates of the neighboring room in order to generate the maze.
         :param row: row coordinate, intended to be the current row
