@@ -182,27 +182,27 @@ class Dungeon:
 
         item = self.__items.get(key)
         symbols = ""
-        if item.get_healing_potion():
+        if item.healing_potion():
             symbols += "H"
-        elif item.get_vision_potion():
+        elif item.vision_potion():
             symbols += "V"
-        elif item.get_pit():
+        elif item.pit():
             symbols += "X"
-        elif item.get_entrance():
+        elif item.entrance():
             symbols += "i"
-        elif item.get_exit():
+        elif item.exit():
             symbols += "O"
-        elif item.get_multiple_items():
+        elif item.multiple_items():
             symbols += "M"
-        elif item.get_empty_room():
+        elif item.empty_room():
             symbols += " "
-        elif item.get_abstraction_pillar():
+        elif item.abstraction_pillar():
             symbols += "A"
-        elif item.get_polymorphism_pillar():
+        elif item.polymorphism_pillar():
             symbols += "P"
-        elif item.get_inheritance_pillar():
+        elif item.inheritance_pillar():
             symbols += "I"
-        elif item.get_encapsulation_pillar():
+        elif item.encapsulation_pillar():
             symbols += "E"
         return symbols
 
@@ -266,7 +266,7 @@ class Dungeon:
                 if row == current_row and col == current_col:
                     top.append(str(self.__maze[row][col])[0:3] + "  ")
                 else:
-                    if self.__items.get((row, col)).get_player_traveled():
+                    if self.__items.get((row, col)).player_traveled():
                         top.append("---  ")
                     else:
                         top.append("^^^  ")
@@ -281,7 +281,7 @@ class Dungeon:
                     else:
                         mid.append(str(self.__maze[row][col])[4:7] + "  ")
                 else:
-                    if self.__items.get((row, col)).get_player_traveled():
+                    if self.__items.get((row, col)).player_traveled():
                         mid.append("---  ")
                     else:
                         mid.append("^^^  ")
@@ -296,7 +296,7 @@ class Dungeon:
                     else:
                         bottom.append(str(self.__maze[row][col])[8:11] + "  ")
                 else:
-                    if self.__items.get((row, col)).get_player_traveled():
+                    if self.__items.get((row, col)).player_traveled():
                         bottom.append("---  ")
                     else:
                         bottom.append("^^^  ")
@@ -358,7 +358,7 @@ class Dungeon:
                 else:
                     bottom.append(str(self.__maze[row][col])[8:11] + "     ")
 
-        # prints dungeon according to the dimensons
+        # prints dungeon according to the dimensions
         for i in range(0, self.__rows):
             print(end="\n")
             for room in range(i * self.__cols, (i + 1) * self.__cols):
