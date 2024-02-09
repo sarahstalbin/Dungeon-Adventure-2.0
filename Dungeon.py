@@ -55,37 +55,42 @@ class Dungeon:
         else:
             self._create_maze(start_room, start_row, start_col)  # Otherwise generate a new maze if not passable
 
-    def get_entrance(self):
+    @property
+    def entrance(self):
         """
         Gets the entrance Room coordinates of the Dungeon's maze.
         :return: Room
         """
         return self.__maze[0][0]
 
-    def get_maze_array(self):
+    @property
+    def maze_array(self):
         return self.__maze
 
-    def get_maze_dictionary(self):
+    @property
+    def maze_dictionary(self):
         """
         Internal getter method that returns the dictionary.
         :return: the dictionary instantiated in the class constructor.
         """
         return self.__items
 
-    def get_room_str(self, key):
+    def print_room_str(self, key):
         """
-        Gets the entrance Room coordinates of the Dungeon's maze.
+        Gets the entrance Room coordinates of the Dungeon's maze based on the provided key.
         :return: Room
         """
         return self.__items.get(key)
 
-    def get_col_length(self):
+    @property
+    def col_length(self):
         return self.__cols
 
-    def get_row_length(self):
+    @property
+    def row_length(self):
         return self.__rows
 
-    def get_doors(self, current_key, new_key, direction="N"):
+    def show_doors(self, current_key, new_key, direction="N"):
         """
         Get attributes of room
         :return: Boolean
