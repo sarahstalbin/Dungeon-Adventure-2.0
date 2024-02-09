@@ -148,30 +148,30 @@ class Dungeon:
         If room traveled, removes items but leaves pit
         """
         item = self.__items.get(key)
-        if item.get_healing_potion():
-            item.set_healing_potion(False)
-            item.set_empty_room(True)
-        elif item.get_vision_potion():
-            item.set_vision_potion(False)
-            item.set_empty_room(True)
-        elif item.get_multiple_items():
-            item.set_multiple_items(False)
+        if item.healing_potion():
+            item.healing_potion(False)
+            item.empty_room(True)
+        elif item.vision_potion():
+            item.vision_potion(False)
+            item.empty_room(True)
+        elif item.multiple_items():
+            item.multiple_items(False)
             if pit:
-                item.set_pit(True)
+                item.spit(True)
             else:
-                item.set_empty_room(True)
-        elif item.get_abstraction_pillar():
-            item.set_abstraction_pillar(False)
-            item.set_empty_room(True)
-        elif item.get_polymorphism_pillar():
-            item.set_polymorphism_pillar(False)
-            item.set_empty_room(True)
-        elif item.get_inheritance_pillar():
-            item.set_inheritance_pillar(False)
-            item.set_empty_room(True)
-        elif item.get_encapsulation_pillar():
-            item.set_encapsulation_pillar(False)
-            item.set_empty_room(True)
+                item.empty_room(True)
+        elif item.abstraction_pillar():
+            item.abstraction_pillar(False)
+            item.empty_room(True)
+        elif item.polymorphism_pillar():
+            item.polymorphism_pillar(False)
+            item.empty_room(True)
+        elif item.inheritance_pillar():
+            item.inheritance_pillar(False)
+            item.empty_room(True)
+        elif item.encapsulation_pillar():
+            item.encapsulation_pillar(False)
+            item.empty_room(True)
 
     def show_room_contents(self, key):
         """
