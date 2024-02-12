@@ -1,4 +1,4 @@
-from DungeonCharacter import DungeonCharacter
+from DungeonCharacter_m import DungeonCharacter
 from abc import ABC, abstractmethod
 import random
 
@@ -7,27 +7,27 @@ class Hero(DungeonCharacter, ABC):
     """ Hero class inherits from DungeonCharacter parent class, and it is an abstract base class"""
 
     def __init__(self, name, hit_points, attack_speed, chance_to_hit, min_damage,
-                 max_damage, chance_to_block):
+                 max_damage, chance_to_block, h_potion_ct, v_potion_ct, pillar_ct):
         super().__init__(name, hit_points, attack_speed, chance_to_hit, min_damage,
-                         max_damage)
+                         max_damage, h_potion_ct, v_potion_ct, pillar_ct)
         self._chance_to_block = chance_to_block
 
     @abstractmethod
-    def get_name(self, name):
+    def current_name(self, name): 
         """
-        abstract method for get_name method used in child classes
+        abstract method for current_name method used in child classes
         """
         pass
 
     @abstractmethod
-    def get_hit_points(self, hit_points):
-        """
+    def hit_points(self, hit_points):
+        """ 
         abstract method for get_hit-points method used in child classes
         """
         pass
 
     @abstractmethod
-    def get_healing_potion_count(self, h_potion):
+    def healing_potion_count(self, h_potion):
         """
         abstract method for get_hit-points method used in child classes
         """
@@ -78,9 +78,10 @@ class Warrior(Hero):
     """ Warrior class is the child class of Hero """
 
     def __init__(self):
-        super().__init__("Warrior", 125, 4, 0.8, 35, 60, 0.2)
+        super().__init__("Warrior", 125, 4, 0.8, 35, 60,
+                         0.2, 0, 0, 0)
 
-    def get_name(self, name):
+    def current_name(self, name):
         """
         Sets and get name
         return: string name
@@ -88,7 +89,7 @@ class Warrior(Hero):
         self._name = name
         return self._name
 
-    def get_hit_points(self, hit_points):
+    def hit_points(self, hit_points):
         """
         Sets and gets hit-points
         return: int hit-points
@@ -96,7 +97,7 @@ class Warrior(Hero):
         self._hit_points = hit_points
         return self._hit_points
 
-    def get_healing_potion_count(self, h_potion):
+    def healing_potion_count(self, h_potion):
         """
         Sets and gets healing potion count
         return: int healing potion count
@@ -160,9 +161,10 @@ class Priestess(Hero):
     """ Priestess class is the child class of Hero """
 
     def __init__(self):
-        super().__init__("Priestess", 75, 5, 0.7, 25, 45, 0.3)
+        super().__init__("Priestess", 75, 5, 0.7, 25, 45,
+                         0.3, 0, 0, 0)
 
-    def get_name(self, name):
+    def current_name(self, name):
         """
         Sets and get name
         return: string name
@@ -170,7 +172,7 @@ class Priestess(Hero):
         self._name = name
         return self._name
 
-    def get_hit_points(self, hit_points):
+    def hit_points(self, hit_points):
         """
         Sets and gets hit-points
         return: int hit-points
@@ -178,7 +180,7 @@ class Priestess(Hero):
         self._hit_points = hit_points
         return self._hit_points
 
-    def get_healing_potion_count(self, h_potion):
+    def healing_potion_count(self, h_potion):
         """
         Sets and gets healing potion count
         return: int healing potion count
@@ -238,9 +240,10 @@ class Thief(Hero):
     """ Thief class is the child class of Hero """
 
     def __init__(self):
-        super().__init__("Thief", 75, 6, 0.8, 20, 40, 0.4)
+        super().__init__("Thief", 75, 6, 0.8, 20, 40,
+                         0.4, 0, 0, 0)
 
-    def get_name(self, name):
+    def current_name(self, name):
         """
         Sets and get name
         return: string name
@@ -248,7 +251,7 @@ class Thief(Hero):
         self._name = name
         return self._name
 
-    def get_hit_points(self, hit_points):
+    def hit_points(self, hit_points):
         """
         Sets and gets hit-points
         return: int hit-points
@@ -256,7 +259,7 @@ class Thief(Hero):
         self._hit_points = hit_points
         return self._hit_points
 
-    def get_healing_potion_count(self, h_potion):
+    def healing_potion_count(self, h_potion):
         """
         Sets and gets healing potion count
         return: int healing potion count
