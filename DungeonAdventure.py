@@ -5,7 +5,7 @@ Dungeon Adventure
 """
 
 
-from Adventurer import Adventurer
+from Hero import Warrior, Priestess, Thief
 from Dungeon import Dungeon
 from DungeonItemsFactory import DungeonItemsFactory
 import random
@@ -49,7 +49,7 @@ class DungeonAdventure:
                      "Use Health Potion": "h", "Use Vision": "v", "View current status": "stats", "Quit Game": "q"}
         self.hidden_menu_option = "map" #prints dungeon
         self.dungeon = Dungeon(5, 5)
-        self.adventurer = Adventurer()
+        self.hero = Warrior()
         self.player_loc_col = 0
         self.player_loc_row = 0
         self.original_dungeon = copy.deepcopy(self.dungeon)
@@ -95,16 +95,23 @@ class DungeonAdventure:
         vision potion count, dungeon dimension are set up in this module
         :return: None
         """
+        input_player = input(f"Please choose a Hero. Type \"Warrior\" or w, \"Priestess\" or p, and \"Thief\" or t ")
+        if input_player.lower()== "Warrior" or input_player.lower() == "w":
+            self.hero = Warrior()
+        if input_player.lower()== "Priestess" or input_player.lower() == "p":
+            self.hero = Priestess()
+        if input_player.lower()== "Thief" or input_player.lower() == "t":
+            self.hero = Thief()
+
+
         input_play_mode = input(f"Choose: Easy/e, Medium/m, Hard/h, or players choice (c/choice)? Default will be Easy. ")
         if input_play_mode.lower() == "medium" or input_play_mode.lower() == "m":
-            HP = random.randint(75, 100)
             healing_potion_count = random.randint(0, 2)
             vision_potion_count = random.randint(0, 1)
             self.dungeon = Dungeon(10, 10)
             self.original_dungeon = copy.deepcopy(self.dungeon)
             print(f"Play mode is Medium with dungeon dimension of 10x10")
         elif input_play_mode.lower() == "hard" or input_play_mode.lower() == "h":
-            HP = random.randint(75, 90)
             healing_potion_count = 0
             vision_potion_count = 0
             self.dungeon = Dungeon(15, 15)
@@ -115,6 +122,7 @@ class DungeonAdventure:
                 choice = input("Desired health points? ")
                 try:
                     HP = int(choice)
+                    self.hero.hit_points = HP
                     break
                 except ValueError:
                     print("\nMust be a number")
@@ -159,7 +167,6 @@ class DungeonAdventure:
             print(f"Play mode is Player's Choice with dungeon dimension of {row}x{col}")
 
         else:
-            HP = 100
             healing_potion_count = 3
             vision_potion_count = random.randint(1, 3)
             self.dungeon = Dungeon(5, 5)
@@ -167,9 +174,10 @@ class DungeonAdventure:
             print(f"Play mode is Easy with dungeon dimension of 5x5")
 
         name = input("What is your name? ")
-
-        self.adventurer.__init__(name, HP, healing_potion_count, vision_potion_count)
-        print(f"Your stats: {self.adventurer}")
+        self.hero.hero_name = name
+        self.hero.healing_potion_count = healing_potion_count
+        self.hero.vision_potion_count = vision_potion_count
+        print(f"Your stats: {self.hero}")
 
 
     def menu_str(self):
@@ -197,10 +205,10 @@ class DungeonAdventure:
         :return: None
         """
         response = ""
-        if self.adventurer.get_HP() > 0:
+        if self.hero.hit_points > 0:
             self.dungeon.print_play_dungeon(self.player_loc_row, self.player_loc_col)
 
-        while self.adventurer.get_HP() > 0:
+        while self.hero.hit_points > 0:
             menu_command = input("What is your next move? Enter \"m\" for menu: ")
             # while still in maze and not quit
             # quits game
@@ -211,33 +219,34 @@ class DungeonAdventure:
                 print(self.menu_str())
             # use health potion
             elif str(menu_command).lower() == "h":
-                if self.adventurer.get_health_potion_count__() > 0:
+                if self.hero.healing_potion_count > 0:
                     health_points = self.item.create_item("H", 1, 10).use_item()
-                    self.adventurer.set_HP(health_points)
+                    self.hero.hit_points += health_points
+                    self.hero.healing_potion_count -= 1
                     print(f"You gained {health_points} health points! Your health is now "
-                          f"{self.adventurer.get_HP()} and you have "
-                          f"{self.adventurer.get_health_potion_count__()} left.")
+                          f"{self.hero.hit_points} and you have "
+                          f"{self.hero.healing_potion_count} left.")
                 else:
                     print("You don't have any health potions left")
             # use vision potion
             elif str(menu_command).lower() == "v":
-                if self.adventurer.get_vision_potion_count__() > 0:
-                    self.adventurer.dec_vision_potion()
+                if self.hero.vision_potion_count > 0:
+                    self.hero.vision_potion_count -= 1
                     self.item.create_item("V").use_vision(self.player_loc_row, self.player_loc_col, self.dungeon.get_col_length(),
                                            self.dungeon.get_row_length(), self.dungeon)
                 else:
                     print("You don't have any vision potions left")
-            # print adventurer statistics
+            # print hero statistics
             elif str(menu_command).lower() == "stats":
-                print(self.adventurer)
-            # move adventurer in dungeon
+                print(self.hero)
+            # move hero in dungeon
             elif (menu_command.lower() == "w" or menu_command.lower() == "a" or menu_command.lower() == "s" or
                   menu_command.lower() == "d"):
                 #moving character
-                item = self.move_adventurer(menu_command)
+                item = self.move_hero(menu_command)
 
-                #if the player dies end  game
-                if self.adventurer.get_HP() <= 0:
+                #if the player dies the game end
+                if self.hero.hit_points <= 0:
                     break
                 #reached exit, ask to leave game
                 elif item == "O":
@@ -247,10 +256,10 @@ class DungeonAdventure:
                         if response.lower() == "y" or response.lower() == "yes":
                             break
                         elif response.lower() == "pillar":
-                            if self.adventurer.get_pillar() == 1:
-                                print(f"You have found {self.adventurer.get_pillar()} pillar so far.")
+                            if self.hero.pillar_count == 1:
+                                print(f"You have found {self.hero.pillar_count} pillar so far.")
                             else:
-                                print(f"You have found {self.adventurer.get_pillar()} pillars so far.")
+                                print(f"You have found {self.hero.pillar_count} pillars so far.")
                         elif response.lower() == "n" or response.lower() == "no":
                             break
                 if response.lower() == "y" or response.lower() == "yes":
@@ -261,7 +270,7 @@ class DungeonAdventure:
             else:
                 print("Not a valid command")
 
-    def move_adventurer(self, menu_command="g"):
+    def move_hero(self, menu_command="g"):
         """
         Player's input is a direction, check to see if that direction is possible and move that direction.
         If moving to next room is possible, collect items and make traveled rooms empty unless pit
@@ -297,7 +306,7 @@ class DungeonAdventure:
                 if item == "O":
                     print("You found the exit to the dungeon")
                     return item
-                if self.adventurer.get_HP() <= 0:
+                if self.hero.hit_points <= 0:
                     print("You have died and lost the game!")
                     return item
             else:
@@ -314,19 +323,19 @@ class DungeonAdventure:
         """
         # Collect Health potion
         if item == "H":
-            self.adventurer.inc_healing_potion_count()
-            print(f"Picked up Healing Potion. Total Healing Potions: {self.adventurer.get_health_potion_count__()}")
+            self.hero.healing_potion_count += 1
+            print(f"Picked up Healing Potion. Total Healing Potions: {self.hero.healing_potion_count}")
             self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col), False) #removing item from dungeon
         # Collect Vision potion
         elif item == "V":
-            self.adventurer.inc_vision_potion_count()
-            print(f"Picked up Vision Potion. Total Vision Potions: {self.adventurer.get_vision_potion_count__()}")
+            self.hero.vision_potion_count += 1
+            print(f"Picked up Vision Potion. Total Vision Potions: {self.hero.vision_potion_count}")
             self.dungeon.set_room_empty((self.player_loc_row,self.player_loc_col),False)
         # Encounter Pit
         elif item == "X":
             pit_points = self.item.create_item("X", 1, 15)
-            self.adventurer.set_HP(pit_points.use_item())
-            print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.adventurer.get_HP()}.")
+            self.hero.healing_potion_count -= pit_points.use_item() #check if it returns negative
+            print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.healing_potion_count}.")
         # find exit
         elif item == "O":
             return item
@@ -335,24 +344,28 @@ class DungeonAdventure:
             self.multi_items()
         # collect Abstraction pillar
         elif item == "A":  # abstraction
-            self.adventurer.inc_pillar()
+            print(self.hero.pillar_count)
+            self.hero.pillar_count +=1
             self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
-            print(f"You found the Abstraction pillar! Total Pillars: {self.adventurer.get_pillar()}")
+            print(f"You found the Abstraction pillar! Total Pillars: {self.hero.pillar_count}")
         # collect polymorphism pillar
         elif item == "P":
-            self.adventurer.inc_pillar()
+            print(self.hero.pillar_count)
+            self.hero.pillar_count +=1
             self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
-            print(f"You found the Polymorphism pillar! Total Pillars: {self.adventurer.get_pillar()}")
+            print(f"You found the Polymorphism pillar! Total Pillars: {self.hero.pillar_count}")
         # collect inheritance pillar
         elif item == "I":  # inheritance
-            self.adventurer.inc_pillar()
+            print(self.hero.pillar_count)
+            self.hero.pillar_count +=1
             self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
-            print(f"You found the Inheritance pillar! Total Pillars: {self.adventurer.get_pillar()}")
+            print(f"You found the Inheritance pillar! Total Pillars: {self.hero.pillar_count}")
         # collect encapsulation pillar
         elif item == "E":  # encapsulation
-            self.adventurer.inc_pillar()
+            print(self.hero.pillar_count)
+            self.hero.pillar_count +=1
             self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
-            print(f"You found the Encapsulation pillar! Total Pillars: {self.adventurer.get_pillar()}")
+            print(f"You found the Encapsulation pillar! Total Pillars: {self.hero.pillar_count}")
         else:
             return item
 
@@ -366,33 +379,33 @@ class DungeonAdventure:
         pit = False
         for value in results:
             if value == "V":
-                self.adventurer.inc_vision_potion_count()
-                print(f"Gained 1 Vision Potion. Total Vision Potion count: {self.adventurer.get_vision_potion_count__()}")
+                self.hero.vision_potion_count += 1
+                print(f"Gained 1 Vision Potion. Total Vision Potion count: {self.hero.vision_potion_count}")
             if value == "H":
-                self.adventurer.inc_healing_potion_count()
-                print(f"Gained 1 Healing Potion. Total Healing Potion count: {self.adventurer.get_health_potion_count__()}")
+                self.hero.healing_potion_count += 1
+                print(f"Gained 1 Healing Potion. Total Healing Potion count: {self.hero.healing_potion_count}")
             if value == "X":
                 pit_points = self.item.create_item("X", 1, 15)
-                self.adventurer.set_HP(pit_points.use_item())
+                self.hero.hit_points -= -pit_points.use_item()
                 print(
-                    f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.adventurer.get_HP()}.")
+                    f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
         self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col), pit)
 
     def player_results(self):
         """
-        Game has ended and prints Adventurer results
+        Game has ended and prints hero results
         :return: None
         """
-        if self.adventurer.get_pillar() == 4:
-            print(f"You won the game and found all {self.adventurer.get_pillar()} pillars!")
+        if self.hero.pillar_count == 4:
+            print(f"You won the game and found all {self.hero.pillar_count} pillars!")
 
-        elif self.adventurer.get_pillar() == 1:
-            print(f"Sorry, you only found {self.adventurer.get_pillar()} pillar. You have lost the game")
+        elif self.hero.pillar_count == 1:
+            print(f"Sorry, you only found {self.hero.pillar_count} pillar. You have lost the game")
         else:
-            print(f"Sorry, you only found {self.adventurer.get_pillar()} pillars. You have lost the game")
+            print(f"Sorry, you only found {self.hero.pillar_count} pillars. You have lost the game")
         see_stats = input("\nDo you want to see your stats? y/n ")
         if see_stats.lower() == "y" or see_stats.lower() == "yes":
-            print(self.adventurer)
+            print(self.hero)
         else:
             print("I guess you'll never know")
 
@@ -418,4 +431,5 @@ class DungeonAdventure:
 
 
 game_play = DungeonAdventure()
+# game_play.set_play_mode()
 
