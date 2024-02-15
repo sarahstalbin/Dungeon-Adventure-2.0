@@ -347,3 +347,12 @@ class Room:
         else:
             layout += "***"
         return layout
+
+    def display_room_view(self):
+        return str(self)
+
+
+r = Room()
+r.exit = True
+c = r.display_room_view()
+print(c)
