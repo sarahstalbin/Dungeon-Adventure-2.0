@@ -91,15 +91,13 @@ class Ogre(Monster):
 
     def heal(self):
         """ based on chance to heal and then range of heal points for the monster """
-        # Check whether Ogre has fainted
         if not super().has_fainted:
-            # Check the chance to heal
-            # Check the minimum and maximum range of heal points for Ogre in database
-            # Heal (or don't, it's based on chance)
+            # Check the chance to heal --> database
+            # Check the minimum and maximum range of heal points for Ogre --> database
+            # Restore hit points to maximum --> database
             pass
         else:
-            print("The Monster has fainted and cannot heal itself.")
-            pass
+            print("The Ogre has fainted and can't heal itself!")
 
     def get_damage(self):
         """ abstract method for get_damage method used in subclasses """
