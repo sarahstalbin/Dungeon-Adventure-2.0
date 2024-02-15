@@ -1,4 +1,4 @@
-from DungeonCharacter_m import DungeonCharacter
+from DungeonCharacter import DungeonCharacter
 from abc import ABC, abstractmethod
 import random
 
@@ -14,37 +14,37 @@ class Hero(DungeonCharacter, ABC):
         self.stats["chance_to_block"] = chance_to_block
 
     @abstractmethod
-    def current_name(self, name):
+    def hero_name(self):
         """
-        abstract method for current_name method used in child classes
+        abstract method for hero_name method used in child classes
         """
         pass
 
     @abstractmethod
-    def hit_points(self, hit_points):
+    def hit_points(self):
         """ 
         abstract method for get_hit-points method used in child classes
         """
         pass
 
     @abstractmethod
-    def healing_potion_count(self, h_potion):
+    def healing_potion_count(self):
         """
-        abstract method for get_hit-points method used in child classes
-        """
-        pass
-
-    @abstractmethod
-    def vision_potion_count(self, v_potion):
-        """
-        abstract method for get_hit-points method used in child classes
+        abstract method for healing potion count method used in child classes
         """
         pass
 
     @abstractmethod
-    def pillar_count(self, pillar):
+    def vision_potion_count(self):
         """
-        abstract method for get_hit-points method used in child classes
+        abstract method for vision potion count method used in child classes
+        """
+        pass
+
+    @abstractmethod
+    def pillar_count(self):
+        """
+        abstract method for pillar count method used in child classes
         """
         pass
 
@@ -57,11 +57,6 @@ class Hero(DungeonCharacter, ABC):
     @abstractmethod
     def attack(self, opponent):
         """ abstract method for attack method used in child classes """
-        pass
-
-    @abstractmethod
-    def calculate_damage(self, damage):
-        """ abstract method for calculate_damage method used in child classes """
         pass
 
     @abstractmethod
@@ -86,42 +81,87 @@ class Warrior(Hero):
         formatted_list = ["   " +str(item) + " : " + str(values) for item, values in self.stats.items()]
         return "\n" + "\n".join(formatted_list) + "\n"
 
-    def current_name(self, name):
+    @property
+    def hero_name(self):
+        """
+        returns player name
+        """
+        return self.stats["name"]
+
+    @hero_name.setter
+    def hero_name(self, name):
         """
         Sets character name
         """
         self.stats["name"] = name
 
+    @property
+    def hit_points(self):
+        """
+        returns character hit-points
+        """
+        return self.stats["hit_points"]
 
+    @hit_points.setter
     def hit_points(self, hit_points):
         """
-        Sets character hitpoints
+        Sets character hit-points
         """
-        self.stats["hit_points"] += hit_points
+        try:
+            self.stats["hit_points"] = hit_points
+        except ValueError:
+            print("\nMust be an int.")
 
+    @property
+    def healing_potion_count(self):
+        """
+        returns healing potion count
+        """
+        return self.stats["h_potion_ct"]
+
+    @healing_potion_count.setter
     def healing_potion_count(self, h_potion):
         """
-        Sets healing potion count
+        Sets vision potion count
         """
-        self.stats["h_potion_ct"] += h_potion
+        try:
+            self.stats["h_potion_ct"] = h_potion
+        except ValueError:
+            print("\nMust be an int.")
 
-    def vision_potion_count(self, v_potion):
+    @property
+    def vision_potion_count(self):
         """
-        Sets and gets vision potion count
         return: int vision potion count
         """
-        self.stats["v_potion_ct"] += v_potion
+        return self.stats["v_potion_ct"]
 
-    def pillar_count(self, pillar):
+    @vision_potion_count.setter
+    def vision_potion_count(self, v_potion=0):
         """
-        Sets and gets pillar count
+        Sets vision potion count
+        """
+        try:
+            self.stats["v_potion_ct"] = v_potion
+        except ValueError:
+            print("\nMust be an int.")
+
+    @property
+    def pillar_count(self):
+        """
         return: int pillar count
         """
-        self.stats["pillar"] += pillar
+        return self.stats["pillar_ct"]
 
-    def calculate_damage(self, damage):
-        """ This method decrements hit_points to calculate damage """
-        self.stats["hit_points"] -= damage
+    @pillar_count.setter
+    def pillar_count(self, pillar):
+        """
+        Sets pillar count
+        """
+        try:
+            self.stats["pillar_ct"] = pillar
+        except ValueError:
+            print("\nMust be an int.")
 
     def get_damage(self):
         """ This method gets damage points """
@@ -166,41 +206,87 @@ class Priestess(Hero):
         formatted_list = ["   " +str(item) + " : " + str(values) for item, values in self.stats.items()]
         return "\n" + "\n".join(formatted_list) + "\n"
 
-    def current_name(self, name):
+    @property
+    def hero_name(self):
+        """
+        returns player name
+        """
+        return self.stats["name"]
+
+    @hero_name.setter
+    def hero_name(self, name):
         """
         Sets character name
         """
         self.stats["name"] = name
 
+    @property
+    def hit_points(self):
+        """
+        returns character hit-points
+        """
+        return self.stats["hit_points"]
+
+    @hit_points.setter
     def hit_points(self, hit_points):
         """
-        Sets character hitpoints
+        Sets character hit-points
         """
-        self.stats["hit_points"] += hit_points
+        try:
+            self.stats["hit_points"] = hit_points
+        except ValueError:
+            print("\nMust be an int.")
 
+    @property
+    def healing_potion_count(self):
+        """
+        returns healing potion count
+        """
+        return self.stats["h_potion_ct"]
+
+    @healing_potion_count.setter
     def healing_potion_count(self, h_potion):
         """
-        Sets healing potion count
+        Sets vision potion count
         """
-        self.stats["h_potion_ct"] += h_potion
+        try:
+            self.stats["h_potion_ct"] = h_potion
+        except ValueError:
+            print("\nMust be an int.")
 
-    def vision_potion_count(self, v_potion):
+    @property
+    def vision_potion_count(self):
         """
-        Sets and gets vision potion count
         return: int vision potion count
         """
-        self.stats["v_potion_ct"] += v_potion
+        return self.stats["v_potion_ct"]
 
-    def pillar_count(self, pillar):
+    @vision_potion_count.setter
+    def vision_potion_count(self, v_potion):
         """
-        Sets and gets pillar count
+        Sets vision potion count
+        """
+        try:
+            self.stats["v_potion_ct"] = v_potion
+        except ValueError:
+            print("\nMust be an int.")
+
+    @property
+    def pillar_count(self):
+        """
         return: int pillar count
         """
-        self.stats["pillar"] += pillar
+        return self.stats["pillar_ct"]
 
-    def calculate_damage(self, damage):
-        """ This method decrements hit_points to calculate damage """
-        self.stats["hit_points"] -= damage
+    @pillar_count.setter
+    def pillar_count(self, pillar):
+        """
+        Sets pillar count
+        """
+        try:
+            self.stats["pillar_ct"] = pillar
+        except ValueError:
+            print("\nMust be an int.")
 
     def get_damage(self):
         """ This method gets damage points """
@@ -241,41 +327,87 @@ class Thief(Hero):
         formatted_list = ["   " +str(item) + " : " + str(values) for item, values in self.stats.items()]
         return "\n" + "\n".join(formatted_list) + "\n"
 
-    def current_name(self, name):
+    @property
+    def hero_name(self):
+        """
+        returns player name
+        """
+        return self.stats["name"]
+
+    @hero_name.setter
+    def hero_name(self, name):
         """
         Sets character name
         """
         self.stats["name"] = name
 
+    @property
+    def hit_points(self):
+        """
+        returns character hit-points
+        """
+        return self.stats["hit_points"]
+
+    @hit_points.setter
     def hit_points(self, hit_points):
         """
-        Sets character hitpoints
+        Sets character hit-points
         """
-        self.stats["hit_points"] += hit_points
+        try:
+            self.stats["hit_points"] = hit_points
+        except ValueError:
+            print("\nMust be an int.")
 
+    @property
+    def healing_potion_count(self):
+        """
+        returns healing potion count
+        """
+        return self.stats["h_potion_ct"]
+
+    @healing_potion_count.setter
     def healing_potion_count(self, h_potion):
         """
-        Sets healing potion count
+        Sets vision potion count
         """
-        self.stats["h_potion_ct"] += h_potion
+        try:
+            self.stats["h_potion_ct"] = h_potion
+        except ValueError:
+            print("\nMust be an int.")
 
-    def vision_potion_count(self, v_potion):
+    @property
+    def vision_potion_count(self):
         """
-        Sets and gets vision potion count
         return: int vision potion count
         """
-        self.stats["v_potion_ct"] += v_potion
+        return self.stats["v_potion_ct"]
 
-    def pillar_count(self, pillar):
+    @vision_potion_count.setter
+    def vision_potion_count(self, v_potion):
         """
-        Sets and gets pillar count
+        Sets vision potion count
+        """
+        try:
+            self.stats["v_potion_ct"] = v_potion
+        except ValueError:
+            print("\nMust be an int.")
+
+    @property
+    def pillar_count(self):
+        """
         return: int pillar count
         """
-        self.stats["pillar"] += pillar
+        return self.stats["pillar_ct"]
 
-    def calculate_damage(self, damage):
-        """ This method decrements hit_points to calculate damage """
-        self.stats["hit_points"] -= damage
+    @pillar_count.setter
+    def pillar_count(self, pillar):
+        """
+        Sets pillar count
+        """
+        try:
+            self.stats["pillar_ct"] = pillar
+        except ValueError:
+            print("\nMust be an int.")
 
     def get_damage(self):
         """ This method gets damage points """

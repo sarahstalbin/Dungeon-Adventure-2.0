@@ -20,6 +20,41 @@ class DungeonCharacter:
                  "max_damage": max_damage, "h_potion_ct": h_potion_ct, "v_potion_ct": v_potion_ct, "pillar_ct": pillar_ct}
 
     @abstractmethod
+    def hero_name(self):
+        """
+        abstract method for hero_name method used in child classes
+        """
+        pass
+
+    @abstractmethod
+    def hit_points(self):
+        """
+        abstract method for get_hit-points method used in child classes
+        """
+        pass
+
+    @abstractmethod
+    def healing_potion_count(self):
+        """
+        abstract method for healing potion count method used in child classes
+        """
+        pass
+
+    @abstractmethod
+    def vision_potion_count(self):
+        """
+        abstract method for vision potion count method used in child classes
+        """
+        pass
+
+    @abstractmethod
+    def pillar_count(self):
+        """
+        abstract method for pillar count method used in child classes
+        """
+        pass
+
+    @abstractmethod
     def can_attack(self):
         """ abstract method for can_attack method used in subclasses """
         pass
@@ -29,10 +64,10 @@ class DungeonCharacter:
         """ abstract method for attack method used in subclasses """
         pass
 
-    @abstractmethod
-    def calculate_damage(self, damage):
-        """ abstract method for calculate_damage method used in subclasses """
-        pass
+    # @abstractmethod
+    # def calculate_damage(self, damage):
+    #     """ abstract method for calculate_damage method used in subclasses """
+    #     pass
 
     @abstractmethod
     def get_damage(self):
