@@ -131,6 +131,8 @@ class Room:
         """ setting player_traveled using setter property
          :param player_traveled
          :return boolean value"""
+        if not isinstance(player_traveled, bool):
+            raise ValueError("player_traveled must be a boolean")
         self.__player_traveled = player_traveled
 
     @healing_potion.setter
@@ -138,6 +140,8 @@ class Room:
         """ setting healing_potion using setter property
         :param add_potion
         :return boolean value"""
+        if not isinstance(add_potion, bool):
+            raise ValueError("healing_potion must be a boolean")
         self.__healing_potion = add_potion
 
     @vision_potion.setter
@@ -145,6 +149,8 @@ class Room:
         """ setting vision_potion using setter property
             :param vision_potion
             :return boolean value"""
+        if not isinstance(vision_potion, bool):
+            raise ValueError("vision_potion must be a boolean")
         self.__vision_potion = vision_potion
 
     @pit.setter
@@ -152,6 +158,8 @@ class Room:
         """ setting pit using setter property
             :param reduce_potion
             :return boolean value"""
+        if not isinstance(reduce_potion, bool):
+            raise ValueError("pit must be a boolean")
         self.__pit = reduce_potion
 
     @north_door.setter
@@ -159,6 +167,8 @@ class Room:
         """ setting north_door using setter property
             :param north_door
             :return boolean value"""
+        if not isinstance(north_door, bool):
+            raise ValueError("north_door must be a boolean")
         self.__north_door = north_door
 
     @south_door.setter
@@ -166,6 +176,8 @@ class Room:
         """ setting south_door using setter property
             :param south_door
             :return boolean value"""
+        if not isinstance(south_door, bool):
+            raise ValueError("south_door must be a boolean")
         self.__south_door = south_door
 
     @east_door.setter
@@ -173,6 +185,8 @@ class Room:
         """ setting east_door using setter property
             :param east_door
             :return boolean value """
+        if not isinstance(east_door, bool):
+            raise ValueError("east_door must be a boolean")
         self.__east_door = east_door
 
     @west_door.setter
@@ -180,6 +194,8 @@ class Room:
         """setting west_door using setter property
             :param west_door
             :return boolean value """
+        if not isinstance(west_door, bool):
+            raise ValueError("west_door must be a boolean")
         self.__west_door = west_door
 
     @abstraction_pillar.setter
@@ -187,6 +203,8 @@ class Room:
         """ setting abstraction_pillar using setter property
             :param abstraction_pillar
             :return boolean value """
+        if not isinstance(abstraction_pillar, bool):
+            raise ValueError("abstraction_pillar must be a boolean")
         self.__abstraction_pillar = abstraction_pillar
 
     @encapsulation_pillar.setter
@@ -194,6 +212,8 @@ class Room:
         """ setting encapsulation_pillar using setter property
             :param encapsulation_pillar
             :return boolean value """
+        if not isinstance(encapsulation_pillar, bool):
+            raise ValueError("encapsulation_pillar must be a boolean")
         self.__encapsulation_pillar = encapsulation_pillar
 
     @inheritance_pillar.setter
@@ -201,6 +221,8 @@ class Room:
         """ setting inheritance_pillar using setter property
             :param inheritance_pillar
             :return boolean value"""
+        if not isinstance(inheritance_pillar, bool):
+            raise ValueError("inheritance_pillar must be a boolean")
         self.__inheritance_pillar = inheritance_pillar
 
     @polymorphism_pillar.setter
@@ -208,6 +230,8 @@ class Room:
         """ setting polymorphism_pillar using setter property
             :param polymorphism_pillar
             :return boolean value """
+        if not isinstance(polymorphism_pillar, bool):
+            raise ValueError("polymorphism_pillar must be a boolean")
         self.__polymorphism_pillar = polymorphism_pillar
 
     @empty_room.setter
@@ -215,6 +239,8 @@ class Room:
         """ setting empty_room using setter property
             :param is_empty
             :return boolean value """
+        if not isinstance(is_empty, bool):
+            raise ValueError("empty_room must be a boolean")
         self.__empty_room = is_empty
 
     @entrance.setter
@@ -222,6 +248,8 @@ class Room:
         """ setting entrance using setter property
             :param entrance
             :return boolean value """
+        if not isinstance(entrance, bool):
+            raise ValueError("entrance must be a boolean")
         self.__entrance = entrance
 
     @exit.setter
@@ -229,6 +257,8 @@ class Room:
         """ setting exit using setter property
             :param exit_room
             :return boolean value """
+        if not isinstance(exit_room, bool):
+            raise ValueError("exit must be a boolean")
         self.__exit = exit_room
 
     @impasse.setter
@@ -236,6 +266,8 @@ class Room:
         """ setting impasse using setter property
             :param impasse
             :return boolean value """
+        if not isinstance(impasse, bool):
+            raise ValueError("impasse must be a boolean")
         self.__impasse = impasse
 
     @visited.setter
@@ -243,6 +275,8 @@ class Room:
         """ setting visited using setter property
             :param visited
             :return boolean value """
+        if not isinstance(visited, bool):
+            raise ValueError("visited must be a boolean")
         self.__visited = visited
 
     @multiple_items.setter
@@ -250,6 +284,8 @@ class Room:
         """ setting multiple_items using setter property
             :param multiple_items
             :return boolean value """
+        if not isinstance(multiple_items, bool):
+            raise ValueError("multiple_items must be a boolean")
         self.__multiple_items = multiple_items
 
     @current_room.setter
@@ -257,6 +293,8 @@ class Room:
         """ setting current_room using setter property
             :param current_room
             :return boolean value """
+        if not isinstance(current_room, bool):
+            raise ValueError("current_room must be a boolean")
         self.__current_room = current_room
 
     def can_enter(self):
