@@ -193,11 +193,12 @@ class DungeonAdventure:
         Sets up the game by creating the dungeon maze and locating the starting coordinates
         :return: None
         """
-        self.player_str = self.dungeon.get_entrance()
+        self.player_str = self.dungeon.entrance
 
         self.player_loc_col = 0
         self.player_loc_row = 0
-        self.dungeon.set_player_traveled((self.player_loc_row,self.player_loc_col))
+        self.dungeon.player_traveled =(self.player_loc_row, self.player_loc_col)
+        # self.dungeon.set_player_traveled((self.player_loc_row,self.player_loc_col))
 
     def player_command(self):
         """
@@ -232,8 +233,8 @@ class DungeonAdventure:
             elif str(menu_command).lower() == "v":
                 if self.hero.vision_potion_count > 0:
                     self.hero.vision_potion_count -= 1
-                    self.item.create_item("V").use_vision(self.player_loc_row, self.player_loc_col, self.dungeon.get_col_length(),
-                                           self.dungeon.get_row_length(), self.dungeon)
+                    self.item.create_item("V").use_vision(self.player_loc_row, self.player_loc_col,
+                                                    self.dungeon.col_length, self.dungeon.row_length, self.dungeon)
                 else:
                     print("You don't have any vision potions left")
             # print hero statistics
@@ -288,20 +289,20 @@ class DungeonAdventure:
         else:
             return menu_command
         #get coordinates for next move
-        new_row, new_col = self.dungeon._get_neighbor_coords(self.player_loc_row, self.player_loc_col,
+        new_row, new_col = self.dungeon._return_neighbor_coordinates(self.player_loc_row, self.player_loc_col,
                                                              real_direction)
         # checking to see if next move is going to an actual room
         if self.dungeon.is_valid_room(new_row, new_col):
-            new_key = self.dungeon._get_neighbor_coords(self.player_loc_row, self.player_loc_col, real_direction)
+            new_key = self.dungeon._return_neighbor_coordinates(self.player_loc_row, self.player_loc_col, real_direction)
             current_key = self.player_loc_row, self.player_loc_col
 
             #If there is a door to enter into the next room
-            if self.dungeon.get_doors(current_key, new_key, real_direction):
+            if self.dungeon.show_doors(current_key, new_key, real_direction):
                 self.player_loc_row, self.player_loc_col = new_row, new_col
                 self.dungeon.print_play_dungeon(self.player_loc_row, self.player_loc_col)
-                print(self.dungeon.get_room_str((new_row, new_col)))
-                self.dungeon.set_player_traveled((self.player_loc_row, self.player_loc_col))
-                item = self.dungeon.get_room_contents((self.player_loc_row, self.player_loc_col)) #item = get room content, str
+                print(self.dungeon.show_room_str((new_row, new_col)))
+                self.dungeon.player_traveled = (self.player_loc_row, self.player_loc_col)
+                item = self.dungeon.show_room_contents((self.player_loc_row, self.player_loc_col)) #item = get room content, str
                 item = self.collect_item(item)  #item = get room content, str
                 if item == "O":
                     print("You found the exit to the dungeon")
@@ -325,17 +326,17 @@ class DungeonAdventure:
         if item == "H":
             self.hero.healing_potion_count += 1
             print(f"Picked up Healing Potion. Total Healing Potions: {self.hero.healing_potion_count}")
-            self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col), False) #removing item from dungeon
+            self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), False) #removing item from dungeon
         # Collect Vision potion
         elif item == "V":
             self.hero.vision_potion_count += 1
             print(f"Picked up Vision Potion. Total Vision Potions: {self.hero.vision_potion_count}")
-            self.dungeon.set_room_empty((self.player_loc_row,self.player_loc_col),False)
+            self.dungeon.set_empty_room((self.player_loc_row,self.player_loc_col), False)
         # Encounter Pit
         elif item == "X":
             pit_points = self.item.create_item("X", 1, 15)
-            self.hero.healing_potion_count -= pit_points.use_item() #check if it returns negative
-            print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.healing_potion_count}.")
+            self.hero.hit_points -= pit_points.use_item() #check if it returns negative
+            print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
         # find exit
         elif item == "O":
             return item
@@ -344,27 +345,23 @@ class DungeonAdventure:
             self.multi_items()
         # collect Abstraction pillar
         elif item == "A":  # abstraction
-            print(self.hero.pillar_count)
             self.hero.pillar_count +=1
-            self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
             print(f"You found the Abstraction pillar! Total Pillars: {self.hero.pillar_count}")
         # collect polymorphism pillar
         elif item == "P":
-            print(self.hero.pillar_count)
             self.hero.pillar_count +=1
-            self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
             print(f"You found the Polymorphism pillar! Total Pillars: {self.hero.pillar_count}")
         # collect inheritance pillar
         elif item == "I":  # inheritance
-            print(self.hero.pillar_count)
             self.hero.pillar_count +=1
-            self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
             print(f"You found the Inheritance pillar! Total Pillars: {self.hero.pillar_count}")
         # collect encapsulation pillar
         elif item == "E":  # encapsulation
-            print(self.hero.pillar_count)
             self.hero.pillar_count +=1
-            self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
             print(f"You found the Encapsulation pillar! Total Pillars: {self.hero.pillar_count}")
         else:
             return item
@@ -389,7 +386,7 @@ class DungeonAdventure:
                 self.hero.hit_points -= -pit_points.use_item()
                 print(
                     f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
-        self.dungeon.set_room_empty((self.player_loc_row, self.player_loc_col), pit)
+        self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col), pit)
 
     def player_results(self):
         """
