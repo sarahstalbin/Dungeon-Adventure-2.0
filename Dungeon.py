@@ -138,12 +138,12 @@ class Dungeon:
         room.encapsulation_pillar = False
         room.current_room = True
 
-    @property
-    def empty_room(self):
+
+    def get_empty_room(self):
         return self.__empty_room
 
-    @empty_room.setter
-    def empty_room(self, key=(0, 0), pit=False):
+
+    def set_empty_room(self, key=(0, 0), pit=False):
         """
         If room traveled, removes items but leaves pit
         """
