@@ -193,8 +193,6 @@ class DungeonAdventure:
         Sets up the game by creating the dungeon maze and locating the starting coordinates
         :return: None
         """
-        self.player_str = self.dungeon.entrance
-
         self.player_loc_col = 0
         self.player_loc_row = 0
         self.dungeon.player_traveled =(self.player_loc_row, self.player_loc_col)
@@ -299,7 +297,7 @@ class DungeonAdventure:
             #If there is a door to enter into the next room
             if self.dungeon.show_doors(current_key, new_key, real_direction):
                 self.player_loc_row, self.player_loc_col = new_row, new_col
-                self.dungeon.print_play_dungeon(self.player_loc_row, self.player_loc_col)
+                print(self.dungeon.print_play_dungeon(self.player_loc_row, self.player_loc_col))
                 print(self.dungeon.show_room_str((new_row, new_col)))
                 self.dungeon.player_traveled = (self.player_loc_row, self.player_loc_col)
                 item = self.dungeon.show_room_contents((self.player_loc_row, self.player_loc_col)) #item = get room content, str
@@ -342,51 +340,58 @@ class DungeonAdventure:
             return item
         # Collect multiple items
         elif item == "M":
-            self.multi_items()
+            multi_items = self.dungeon.multi_item_room()
+            #Health, vision, pit
+            pit = False
+            for value in multi_items:
+                if item == "V":
+                    self.hero.vision_potion_count += 1
+                    print(f"Gained 1 Vision Potion. Total Vision Potion count: {self.hero.vision_potion_count}")
+                if value == "H":
+                    self.hero.healing_potion_count += 1
+                    print(f"Gained 1 Healing Potion. Total Healing Potion count: {self.hero.healing_potion_count}")
+                if value == "X":
+                    pit_points = self.item.create_item("X", 1, 15)
+                    self.hero.hit_points -= -pit_points.use_item()
+                    print(
+                        f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
+            self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), pit)
+
         # collect Abstraction pillar
         elif item == "A":  # abstraction
             self.hero.pillar_count +=1
-            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col),False)
             print(f"You found the Abstraction pillar! Total Pillars: {self.hero.pillar_count}")
         # collect polymorphism pillar
         elif item == "P":
             self.hero.pillar_count +=1
-            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), False)
             print(f"You found the Polymorphism pillar! Total Pillars: {self.hero.pillar_count}")
         # collect inheritance pillar
         elif item == "I":  # inheritance
             self.hero.pillar_count +=1
-            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), False)
             print(f"You found the Inheritance pillar! Total Pillars: {self.hero.pillar_count}")
         # collect encapsulation pillar
         elif item == "E":  # encapsulation
             self.hero.pillar_count +=1
-            self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col),False)
+            self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), False)
             print(f"You found the Encapsulation pillar! Total Pillars: {self.hero.pillar_count}")
         else:
             return item
 
-    def multi_items(self):
-        """
-        When player encounters multi item room
-        :return: None
-        """
-        items = ["V", "H", "X", ""]
-        results = random.sample(items, 3)
-        pit = False
-        for value in results:
-            if value == "V":
-                self.hero.vision_potion_count += 1
-                print(f"Gained 1 Vision Potion. Total Vision Potion count: {self.hero.vision_potion_count}")
-            if value == "H":
-                self.hero.healing_potion_count += 1
-                print(f"Gained 1 Healing Potion. Total Healing Potion count: {self.hero.healing_potion_count}")
-            if value == "X":
-                pit_points = self.item.create_item("X", 1, 15)
-                self.hero.hit_points -= -pit_points.use_item()
-                print(
-                    f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
-        self.dungeon.room_empty = ((self.player_loc_row, self.player_loc_col), pit)
+    # def attack_opponent_based_on_attack_speed(self, opponent):
+    #     if self._attack_speed >= opponent._attack_speed:  # self is the hero and opponent is the monster
+    #         a_attack_speed = self._attack_speed / self._attack_speed
+    #         b_attack_speed = opponent._attack_speed / self._attack_speed
+    #     else:
+    #         a_attack_speed = self._attack_speed / opponent._attack_speed
+    #         b_attack_speed = opponent._attack_speed / opponent._attack_speed
+    #     while self._hit_points > 0 and opponent._hit_points > 0:
+    #         a_dps = a_attack_speed * self.calculate_damage()  # a_dps means a's damage per second
+    #         b_dps = b_attack_speed * opponent.calculate_damage()  # b_dps means b's damage per second
+    #         self.get_damage(b_dps)
+    #         opponent.get_damage(a_dps)
 
     def player_results(self):
         """
