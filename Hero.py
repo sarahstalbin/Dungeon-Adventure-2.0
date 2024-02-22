@@ -11,6 +11,7 @@ class Hero(DungeonCharacter, ABC):
         super().__init__(name, hit_points, attack_speed, chance_to_hit, min_damage,
                          max_damage, h_potion_ct, v_potion_ct, pillar_ct)
         # self._chance_to_block = chance_to_block
+
         self.stats["chance_to_block"] = chance_to_block
 
     @abstractmethod
@@ -22,7 +23,7 @@ class Hero(DungeonCharacter, ABC):
 
     @abstractmethod
     def hit_points(self):
-        """ 
+        """
         abstract method for get_hit-points method used in child classes
         """
         pass
@@ -48,7 +49,6 @@ class Hero(DungeonCharacter, ABC):
         """
         pass
 
-
     @abstractmethod
     def can_attack(self):
         """ abstract method for can_attack method used in child classes """
@@ -65,6 +65,11 @@ class Hero(DungeonCharacter, ABC):
         pass
 
     @abstractmethod
+    def calculate_damage(self, damage):
+        """ abstract method for calculate_damage method used in child classes """
+        pass
+
+    @abstractmethod
     def special_skill(self, opponent):
         """ abstract method for special_skill method used in child classes """
         pass
@@ -78,7 +83,7 @@ class Warrior(Hero):
                          0.2, 0, 0, 0)
 
     def __str__(self):
-        formatted_list = ["   " +str(item) + " : " + str(values) for item, values in self.stats.items()]
+        formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
         return "\n" + "\n".join(formatted_list) + "\n"
 
     @property
@@ -167,6 +172,10 @@ class Warrior(Hero):
         """ This method gets damage points """
         return random.randint(self.stats["min_damage"], self.stats["max_damage"])
 
+    def calculate_damage(self, damage):
+        """ This method decrements hit_points to calculate damage """
+        self.stats["hit_points"] -= damage
+
     def can_attack(self):
         """ This method gives the chance or probability of chance_to_hit"""
         return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
@@ -190,9 +199,9 @@ class Warrior(Hero):
         if random.random() < 0.4:  # 40% chance for Crushing Blow
             damage = random.randint(75, 175)  # causes damage for 75 to 175 points
             opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
-            print(f"{self.stats["name"]} performs a Crushing Blow for {damage} damage.")
+            print(f"{self.hero_name} performs a Crushing Blow for {damage} damage.")
         else:
-            print(f"{self.stats["name"]} couldn't perform Crushing Blow")
+            print(f"{self.hero_name} couldn't perform Crushing Blow")
 
 
 class Priestess(Hero):
@@ -203,7 +212,7 @@ class Priestess(Hero):
                          0.3, 0, 0, 0)
 
     def __str__(self):
-        formatted_list = ["   " +str(item) + " : " + str(values) for item, values in self.stats.items()]
+        formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
         return "\n" + "\n".join(formatted_list) + "\n"
 
     @property
@@ -291,6 +300,10 @@ class Priestess(Hero):
     def get_damage(self):
         """ This method gets damage points """
         return random.randint(self.stats["min_damage"], self.stats["max_damage"])
+
+    def calculate_damage(self, damage):
+        """ This method decrements hit_points to calculate damage """
+        self.stats["hit_points"] -= damage
 
     def can_attack(self):
         """ This method gives the chance or probability of chance_to_hit"""
@@ -314,6 +327,7 @@ class Priestess(Hero):
         """ This method is the Priestess special_skill"""
         heal = random.randint(25, 50)
         opponent.calculate_damage(-heal)  # heals the damage points
+        print(f" {self.hero_name} performs healing on {opponent.hero_name} for {heal} heal points ")
 
 
 class Thief(Hero):
@@ -324,7 +338,7 @@ class Thief(Hero):
                          0.4, 0, 0, 0)
 
     def __str__(self):
-        formatted_list = ["   " +str(item) + " : " + str(values) for item, values in self.stats.items()]
+        formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
         return "\n" + "\n".join(formatted_list) + "\n"
 
     @property
@@ -413,13 +427,17 @@ class Thief(Hero):
         """ This method gets damage points """
         return random.randint(self.stats["min_damage"], self.stats["max_damage"])
 
+    def calculate_damage(self, damage):
+        """ This method decrements hit_points to calculate damage """
+        self.stats["hit_points"] -= damage
+
     def can_attack(self):
         """ This method gives the chance or probability of chance_to_hit"""
         return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
 
     def attack(self, opponent):
         """ This method attacks the opponent and causes damage to the opponent"""
-        print(f"{self.stats["name"]} is battling against {opponent.hero_name}")
+        print(f"{self.hero_name} is battling against {opponent.hero_name}")
         if self.can_attack():  # if Warrior can attack
             damage = self.get_damage()  # gets minimum amd maximum damage points
             opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
@@ -448,7 +466,7 @@ class Thief(Hero):
 # usage
 w = Warrior()
 o = Thief()
-p= Priestess()
+p = Priestess()
 w.attack(p)
 o.attack(w)
 p.attack(o)

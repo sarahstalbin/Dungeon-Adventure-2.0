@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 
 
-class DungeonCharacter:
+class DungeonCharacter(ABC):
     """ DungeonCharacter class is an abstract class used to override methods in Hero and Monster subclasses"""
+
     def __init__(self, name, hit_points, attack_speed, chance_to_hit, min_damage,
                  max_damage, h_potion_ct, v_potion_ct, pillar_ct):
         # self._name = name
@@ -16,8 +17,9 @@ class DungeonCharacter:
         # self._pillar = pillar_ct
 
         self.stats = {"name": name, "hit_points": hit_points, "attack_speed": attack_speed,
-                           "chance_to_hit": chance_to_hit, "min_damage": min_damage,
-                 "max_damage": max_damage, "h_potion_ct": h_potion_ct, "v_potion_ct": v_potion_ct, "pillar_ct": pillar_ct}
+                      "chance_to_hit": chance_to_hit, "min_damage": min_damage,
+                      "max_damage": max_damage, "h_potion_ct": h_potion_ct, "v_potion_ct": v_potion_ct,
+                      "pillar_ct": pillar_ct}
 
     @abstractmethod
     def hero_name(self):
@@ -64,10 +66,10 @@ class DungeonCharacter:
         """ abstract method for attack method used in subclasses """
         pass
 
-    # @abstractmethod
-    # def calculate_damage(self, damage):
-    #     """ abstract method for calculate_damage method used in subclasses """
-    #     pass
+    @abstractmethod
+    def calculate_damage(self, damage):
+        """ abstract method for calculate_damage method used in subclasses """
+        pass
 
     @abstractmethod
     def get_damage(self):
