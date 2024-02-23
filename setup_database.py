@@ -44,6 +44,7 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
+                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -58,6 +59,7 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
+                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -72,6 +74,7 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
+                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -93,4 +96,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
