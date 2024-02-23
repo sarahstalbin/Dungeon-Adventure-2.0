@@ -7,12 +7,17 @@ class Hero(DungeonCharacter, ABC):
     """ Hero class inherits from DungeonCharacter parent class, and it is an abstract base class"""
 
     def __init__(self, name, hit_points, attack_speed, chance_to_hit, min_damage,
-                 max_damage, chance_to_block, h_potion_ct, v_potion_ct, pillar_ct):
+                 max_damage, chance_to_block, h_potion_ct, v_potion_ct, pillar_ct, player_name):
         super().__init__(name, hit_points, attack_speed, chance_to_hit, min_damage,
-                         max_damage, h_potion_ct, v_potion_ct, pillar_ct)
+                         max_damage)
         # self._chance_to_block = chance_to_block
 
-        self.stats["chance_to_block"] = chance_to_block
+        self.stats["Chance to Block"] = chance_to_block
+        self.stats["Healing Potion Count"] = h_potion_ct
+        self.stats["Vision Potion Count"] = v_potion_ct
+        self.stats["Pillar Count"] = pillar_ct
+        self.stats["Player Name"] = player_name
+
 
     @abstractmethod
     def hero_name(self):
@@ -80,7 +85,7 @@ class Warrior(Hero):
 
     def __init__(self):
         super().__init__("Warrior", 125, 4, 0.8, 35, 60,
-                         0.2, 0, 0, 0)
+                         0.2, 0, 0, 0, "Player One")
 
     def __str__(self):
         formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
@@ -91,21 +96,21 @@ class Warrior(Hero):
         """
         returns player name
         """
-        return self.stats["name"]
+        return self.stats["Player Name"]
 
     @hero_name.setter
     def hero_name(self, name):
         """
         Sets character name
         """
-        self.stats["name"] = name
+        self.stats["Player Name"] = name
 
     @property
     def hit_points(self):
         """
         returns character hit-points
         """
-        return self.stats["hit_points"]
+        return self.stats["Hit Points"]
 
     @hit_points.setter
     def hit_points(self, hit_points):
@@ -113,7 +118,7 @@ class Warrior(Hero):
         Sets character hit-points
         """
         try:
-            self.stats["hit_points"] = hit_points
+            self.stats["Hit Points"] = hit_points
         except ValueError:
             print("\nMust be an int.")
 
@@ -122,7 +127,7 @@ class Warrior(Hero):
         """
         returns healing potion count
         """
-        return self.stats["h_potion_ct"]
+        return self.stats["Healing Potion Count"]
 
     @healing_potion_count.setter
     def healing_potion_count(self, h_potion):
@@ -130,7 +135,7 @@ class Warrior(Hero):
         Sets vision potion count
         """
         try:
-            self.stats["h_potion_ct"] = h_potion
+            self.stats["Healing Potion Count"] = h_potion
         except ValueError:
             print("\nMust be an int.")
 
@@ -139,7 +144,7 @@ class Warrior(Hero):
         """
         return: int vision potion count
         """
-        return self.stats["v_potion_ct"]
+        return self.stats["Vision Potion Count"]
 
     @vision_potion_count.setter
     def vision_potion_count(self, v_potion=0):
@@ -147,7 +152,7 @@ class Warrior(Hero):
         Sets vision potion count
         """
         try:
-            self.stats["v_potion_ct"] = v_potion
+            self.stats["Vision Potion Count"] = v_potion
         except ValueError:
             print("\nMust be an int.")
 
@@ -156,7 +161,7 @@ class Warrior(Hero):
         """
         return: int pillar count
         """
-        return self.stats["pillar_ct"]
+        return self.stats["Pillar Count"]
 
     @pillar_count.setter
     def pillar_count(self, pillar):
@@ -164,21 +169,21 @@ class Warrior(Hero):
         Sets pillar count
         """
         try:
-            self.stats["pillar_ct"] = pillar
+            self.stats["Pillar Count"] = pillar
         except ValueError:
             print("\nMust be an int.")
 
     def get_damage(self):
         """ This method gets damage points """
-        return random.randint(self.stats["min_damage"], self.stats["max_damage"])
+        return random.randint(self.stats["Min Damage"], self.stats["Max Damage"])
 
     def calculate_damage(self, damage):
         """ This method decrements hit_points to calculate damage """
-        self.stats["hit_points"] -= damage
+        self.stats["Hit Points"] -= damage
 
     def can_attack(self):
         """ This method gives the chance or probability of chance_to_hit"""
-        return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
+        return random.random() < self.stats["Chance to Hit"]  # random.random() generates a float value from 0 to 1
 
     def attack(self, opponent):
         """ This method attacks the opponent and causes damage to the opponent"""
@@ -209,7 +214,7 @@ class Priestess(Hero):
 
     def __init__(self):
         super().__init__("Priestess", 75, 5, 0.7, 25, 45,
-                         0.3, 0, 0, 0)
+                         0.3, 0, 0, 0, "Player One")
 
     def __str__(self):
         formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
@@ -220,21 +225,21 @@ class Priestess(Hero):
         """
         returns player name
         """
-        return self.stats["name"]
+        return self.stats["Player Name"]
 
     @hero_name.setter
     def hero_name(self, name):
         """
         Sets character name
         """
-        self.stats["name"] = name
+        self.stats["Player Name"] = name
 
     @property
     def hit_points(self):
         """
         returns character hit-points
         """
-        return self.stats["hit_points"]
+        return self.stats["Hit Points"]
 
     @hit_points.setter
     def hit_points(self, hit_points):
@@ -242,7 +247,7 @@ class Priestess(Hero):
         Sets character hit-points
         """
         try:
-            self.stats["hit_points"] = hit_points
+            self.stats["Hit Points"] = hit_points
         except ValueError:
             print("\nMust be an int.")
 
@@ -251,7 +256,7 @@ class Priestess(Hero):
         """
         returns healing potion count
         """
-        return self.stats["h_potion_ct"]
+        return self.stats["Healing Potion Count"]
 
     @healing_potion_count.setter
     def healing_potion_count(self, h_potion):
@@ -259,7 +264,7 @@ class Priestess(Hero):
         Sets vision potion count
         """
         try:
-            self.stats["h_potion_ct"] = h_potion
+            self.stats["Healing Potion Count"] = h_potion
         except ValueError:
             print("\nMust be an int.")
 
@@ -268,7 +273,7 @@ class Priestess(Hero):
         """
         return: int vision potion count
         """
-        return self.stats["v_potion_ct"]
+        return self.stats["Vision Potion Count"]
 
     @vision_potion_count.setter
     def vision_potion_count(self, v_potion):
@@ -276,7 +281,7 @@ class Priestess(Hero):
         Sets vision potion count
         """
         try:
-            self.stats["v_potion_ct"] = v_potion
+            self.stats["Vision Potion Count"] = v_potion
         except ValueError:
             print("\nMust be an int.")
 
@@ -285,7 +290,7 @@ class Priestess(Hero):
         """
         return: int pillar count
         """
-        return self.stats["pillar_ct"]
+        return self.stats["Pillar Count"]
 
     @pillar_count.setter
     def pillar_count(self, pillar):
@@ -293,21 +298,21 @@ class Priestess(Hero):
         Sets pillar count
         """
         try:
-            self.stats["pillar_ct"] = pillar
+            self.stats["Pillar Count"] = pillar
         except ValueError:
             print("\nMust be an int.")
 
     def get_damage(self):
         """ This method gets damage points """
-        return random.randint(self.stats["min_damage"], self.stats["max_damage"])
+        return random.randint(self.stats["Min Damage"], self.stats["Max Damage"])
 
     def calculate_damage(self, damage):
         """ This method decrements hit_points to calculate damage """
-        self.stats["hit_points"] -= damage
+        self.stats["Hit Points"] -= damage
 
     def can_attack(self):
         """ This method gives the chance or probability of chance_to_hit"""
-        return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
+        return random.random() < self.stats["Chance to Hit"]  # random.random() generates a float value from 0 to 1
 
     def attack(self, opponent):
         """ This method attacks the opponent and causes damage to the opponent"""
@@ -335,7 +340,7 @@ class Thief(Hero):
 
     def __init__(self):
         super().__init__("Thief", 75, 6, 0.8, 20, 40,
-                         0.4, 0, 0, 0)
+                         0.4, 0, 0, 0, "Player One")
 
     def __str__(self):
         formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
@@ -346,21 +351,21 @@ class Thief(Hero):
         """
         returns player name
         """
-        return self.stats["name"]
+        return self.stats["Player Name"]
 
     @hero_name.setter
     def hero_name(self, name):
         """
         Sets character name
         """
-        self.stats["name"] = name
+        self.stats["Player Name"] = name
 
     @property
     def hit_points(self):
         """
         returns character hit-points
         """
-        return self.stats["hit_points"]
+        return self.stats["Hit Points"]
 
     @hit_points.setter
     def hit_points(self, hit_points):
@@ -368,7 +373,7 @@ class Thief(Hero):
         Sets character hit-points
         """
         try:
-            self.stats["hit_points"] = hit_points
+            self.stats["Hit Points"] = hit_points
         except ValueError:
             print("\nMust be an int.")
 
@@ -377,7 +382,7 @@ class Thief(Hero):
         """
         returns healing potion count
         """
-        return self.stats["h_potion_ct"]
+        return self.stats["Healing Potion Count"]
 
     @healing_potion_count.setter
     def healing_potion_count(self, h_potion):
@@ -385,7 +390,7 @@ class Thief(Hero):
         Sets vision potion count
         """
         try:
-            self.stats["h_potion_ct"] = h_potion
+            self.stats["Healing Potion Count"] = h_potion
         except ValueError:
             print("\nMust be an int.")
 
@@ -394,7 +399,7 @@ class Thief(Hero):
         """
         return: int vision potion count
         """
-        return self.stats["v_potion_ct"]
+        return self.stats["Vision Potion Count"]
 
     @vision_potion_count.setter
     def vision_potion_count(self, v_potion):
@@ -402,7 +407,7 @@ class Thief(Hero):
         Sets vision potion count
         """
         try:
-            self.stats["v_potion_ct"] = v_potion
+            self.stats["Vision Potion Count"] = v_potion
         except ValueError:
             print("\nMust be an int.")
 
@@ -411,7 +416,7 @@ class Thief(Hero):
         """
         return: int pillar count
         """
-        return self.stats["pillar_ct"]
+        return self.stats["Pillar Count"]
 
     @pillar_count.setter
     def pillar_count(self, pillar):
@@ -419,21 +424,21 @@ class Thief(Hero):
         Sets pillar count
         """
         try:
-            self.stats["pillar_ct"] = pillar
+            self.stats["Pillar Count"] = pillar
         except ValueError:
             print("\nMust be an int.")
 
     def get_damage(self):
         """ This method gets damage points """
-        return random.randint(self.stats["min_damage"], self.stats["max_damage"])
+        return random.randint(self.stats["Min Damage"], self.stats["Max Damage"])
 
     def calculate_damage(self, damage):
         """ This method decrements hit_points to calculate damage """
-        self.stats["hit_points"] -= damage
+        self.stats["Hit Points"] -= damage
 
     def can_attack(self):
         """ This method gives the chance or probability of chance_to_hit"""
-        return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
+        return random.random() < self.stats["Chance to Hit"]  # random.random() generates a float value from 0 to 1
 
     def attack(self, opponent):
         """ This method attacks the opponent and causes damage to the opponent"""
@@ -464,9 +469,9 @@ class Thief(Hero):
 
 
 # usage
-w = Warrior()
-o = Thief()
-p = Priestess()
-w.attack(p)
-o.attack(w)
-p.attack(o)
+# w = Warrior()
+# o = Thief()
+# p = Priestess()
+# w.attack(p)
+# o.attack(w)
+# p.attack(o)
