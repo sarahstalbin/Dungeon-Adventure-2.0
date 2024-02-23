@@ -3,15 +3,16 @@ Name: Aqueno Nirasmi, Minna Chae, Sarah St. Albin
 TCSS 501 and 502
 Dungeon Adventure
 """
-
+import traceback
 
 from Hero import Warrior, Priestess, Thief
 from Dungeon import Dungeon
 from DungeonItemsFactory import DungeonItemsFactory
-import random
-import sys, time
-import copy
-
+# import random
+import sys, time, copy, random, pickle
+# import copy
+# import pickle
+# from SaveGame import SaveGame
 """ 
 Dungeon Adventure contains the main logic of playing the game. 
 Game play must be initiated by creating an instance of the class and calling the module 
@@ -55,6 +56,9 @@ class DungeonAdventure:
         self.original_dungeon = copy.deepcopy(self.dungeon)
         self.item = DungeonItemsFactory()
         self.play_whole_game()
+        # self.save_file_pickle()
+        # self.pickle_file = ""
+        # self.saved_game = SaveGame(self.dungeon)
 
     def play_whole_game(self):
         """
@@ -64,9 +68,14 @@ class DungeonAdventure:
         self.print_introduction()
         play = "y"
         while play.lower() == "y" or play.lower() == "yes":
-            self.set_play_mode()
-            print(self.menu_str())
-            self.set_up_player()
+            game_type = input("Would you like to play the previously saved game? ").lower() #need to add error handling
+            if game_type == 'y' or game_type == 'yes':
+                self.play_saved_game()
+            else:
+                self.set_play_mode()
+                self.set_up_player()
+                print(self.menu_str())
+            self.dungeon.print_play_dungeon(self.player_loc_row, self.player_loc_col)
             self.player_command()
             print("\nOriginal maze:\n")
             self.original_dungeon.print_dungeon()
@@ -74,7 +83,7 @@ class DungeonAdventure:
             self.dungeon.print_dungeon()
             self.player_results()
             play = input("Would you like to play again? \"y\" to keep playing or enter any key to exit. ")
-        self.print_end()
+        # self.print_end()
 
     def print_introduction(self):
         """
@@ -89,22 +98,25 @@ class DungeonAdventure:
               "\n \nTo travel, press keys w for Up, s for Down, a for Left, and d for Right. "
               "\nPress \"m\" to view menu options for legend key.\n")
 
+    # def play_previously_saved_game(self):
+
+
     def set_play_mode(self):
         """
         Setting up play mode level based on user input. Adventure attributes health, health potion count,
         vision potion count, dungeon dimension are set up in this module
         :return: None
         """
-        input_player = input(f"Please choose a Hero. Type \"Warrior\" or w, \"Priestess\" or p, and \"Thief\" or t ")
-        if input_player.lower()== "Warrior" or input_player.lower() == "w":
+        input_player = input(f"Please choose a Hero. Type \"Warrior\" or w, \"Priestess\" or p, and \"Thief\" or t ").lower()
+        if input_player.lower() == "Warrior" or input_player.lower() == "w":
             self.hero = Warrior()
-        if input_player.lower()== "Priestess" or input_player.lower() == "p":
+        if input_player.lower() == "Priestess" or input_player.lower() == "p":
             self.hero = Priestess()
-        if input_player.lower()== "Thief" or input_player.lower() == "t":
+        if input_player.lower() == "Thief" or input_player.lower() == "t":
             self.hero = Thief()
 
 
-        input_play_mode = input(f"Choose: Easy/e, Medium/m, Hard/h, or players choice (c/choice)? Default will be Easy. ")
+        input_play_mode = input(f"Choose: Easy/e, Medium/m, Hard/h, or players choice (c/choice)? Default will be Easy. ").lower()
         if input_play_mode.lower() == "medium" or input_play_mode.lower() == "m":
             healing_potion_count = random.randint(0, 2)
             vision_potion_count = random.randint(0, 1)
@@ -212,6 +224,9 @@ class DungeonAdventure:
             # while still in maze and not quit
             # quits game
             if menu_command.lower() == "q":
+                # save_game = input("Would you like to save the game? ").lower()
+                # if save_game == "yes" or save_game == "y":
+                    # self.pickle_file()
                 break
             # prints menu
             elif str(menu_command).lower() == "m":
@@ -394,6 +409,7 @@ class DungeonAdventure:
     #         opponent.get_damage(a_dps)
 
     def player_results(self):
+
         """
         Game has ended and prints hero results
         :return: None
@@ -410,6 +426,36 @@ class DungeonAdventure:
             print(self.hero)
         else:
             print("I guess you'll never know")
+
+    # def save_file_pickle(self):
+
+        # with open('dungeon_adventure.pkl', 'wb') as self.pickle_file:
+            # pickle.dump(self.play_whole_game(), self.pickle_file)
+        # self.pickle_file.close()
+
+    def play_saved_game(self):
+        try:
+            with open('dungeon_adventure.pickle', 'rb') as saved_file:
+                read_saved_game = pickle.load(saved_file)
+            self.dungeon = read_saved_game.dungeon
+            self.hero = read_saved_game.hero
+            self.player_loc_col = read_saved_game.player_loc_col
+            self.player_loc_row = read_saved_game.player_loc_row
+            self.original_dungeon = read_saved_game.original_dungeon
+        except pickle.UnpicklingError as e:
+            #normal, somewhat expected
+            print("No saved game found")
+        except (AttributeError, EOFError, ImportError, IndentationError) as e:
+            #secondary errors
+            print("Not a valid file please try again")
+            print(traceback.format_exc(e))
+
+        except Exception as e:
+            #everything else, possibly fatal
+            print(traceback.format_exc(e))
+        else:
+            break
+
 
     def print_end(self):
         """
@@ -432,6 +478,6 @@ class DungeonAdventure:
         print("\n\nWe could not have done it without you.")
 
 
-game_play = DungeonAdventure()
+# game_play = DungeonAdventure()
 # game_play.set_play_mode()
 
