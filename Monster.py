@@ -71,6 +71,10 @@ class Monster(DungeonCharacter, ABC):
         updated_hit_points = previous_hit_points - damage
         self.update_monster_data("hit_points", updated_hit_points)
 
+    def faint(self):
+        """ Changes Monster's has_fainted boolean to True when below minimum hit point count """
+        self.has_fainted = True
+
     @property
     def name(self):
         """ Returns Monster's name """
