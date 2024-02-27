@@ -18,7 +18,6 @@ class Hero(DungeonCharacter, ABC):
         self.stats["Pillar Count"] = pillar_ct
         self.stats["Player Name"] = player_name
 
-
     @abstractmethod
     def hero_name(self):
         """
@@ -55,6 +54,11 @@ class Hero(DungeonCharacter, ABC):
         pass
 
     @abstractmethod
+    def attack_speed(self):
+        """ Returns attack speed """
+        pass
+
+    @abstractmethod
     def can_attack(self):
         """ abstract method for can_attack method used in child classes """
         pass
@@ -80,7 +84,7 @@ class Hero(DungeonCharacter, ABC):
         pass
 
 
-class Warrior(Hero):
+class Warrior(Hero, ABC):
     """ Warrior class is the child class of Hero """
 
     def __init__(self):
@@ -173,6 +177,11 @@ class Warrior(Hero):
         except ValueError:
             print("\nMust be an int.")
 
+    @property
+    def attack_speed(self):
+        """ Returns attack speed """
+        return self.stats("Attack Speed")
+
     def get_damage(self):
         """ This method gets damage points """
         return random.randint(self.stats["Min Damage"], self.stats["Max Damage"])
@@ -209,7 +218,7 @@ class Warrior(Hero):
             print(f"{self.hero_name} couldn't perform Crushing Blow")
 
 
-class Priestess(Hero):
+class Priestess(Hero, ABC):
     """ Priestess class is the child class of Hero """
 
     def __init__(self):
@@ -302,6 +311,11 @@ class Priestess(Hero):
         except ValueError:
             print("\nMust be an int.")
 
+    @property
+    def attack_speed(self):
+        """ Returns attack speed """
+        return self.stats("Attack Speed")
+
     def get_damage(self):
         """ This method gets damage points """
         return random.randint(self.stats["Min Damage"], self.stats["Max Damage"])
@@ -335,7 +349,7 @@ class Priestess(Hero):
         print(f" {self.hero_name} performs healing on {opponent.hero_name} for {heal} heal points ")
 
 
-class Thief(Hero):
+class Thief(Hero, ABC):
     """ Thief class is the child class of Hero """
 
     def __init__(self):
@@ -428,6 +442,11 @@ class Thief(Hero):
         except ValueError:
             print("\nMust be an int.")
 
+    @property
+    def attack_speed(self):
+        """ Returns attack speed """
+        return self.stats["Attack Speed"]
+
     def get_damage(self):
         """ This method gets damage points """
         return random.randint(self.stats["Min Damage"], self.stats["Max Damage"])
@@ -442,16 +461,16 @@ class Thief(Hero):
 
     def attack(self, opponent):
         """ This method attacks the opponent and causes damage to the opponent"""
-        print(f"{self.hero_name} is battling against {opponent.hero_name}")
+        print(f"{self.hero_name} is battling against {opponent.name}")
         if self.can_attack():  # if Warrior can attack
             damage = self.get_damage()  # gets minimum amd maximum damage points
             opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
             # and reduce the points of the opponent
-            print(f" {self.hero_name} attacks {opponent.hero_name} for {damage} damage points")
+            print(f" {self.hero_name} attacks {opponent.name} for {damage} damage points")
             return True  # return True if the attack is successful
 
         else:
-            print(f" {self.hero_name} couldn't attack {opponent.hero_name}  ")
+            print(f" {self.hero_name} couldn't attack {opponent.name}  ")
             return False  # else return False
 
     def special_skill(self, opponent):
@@ -467,11 +486,13 @@ class Thief(Hero):
         else:
             print(f"{self.hero_name} couldn't attack")
 
-
-# usage
-# w = Warrior()
-# o = Thief()
-# p = Priestess()
-# w.attack(p)
-# o.attack(w)
-# p.attack(o)
+#
+if __name__ == "__main__":
+#     # usage
+    w = Warrior()
+    o = Thief()
+    p = Priestess()
+    w.attack(p)
+    o.attack(w)
+    p.attack(o)
+#
