@@ -196,16 +196,16 @@ class Warrior(Hero, ABC):
 
     def attack(self, opponent):
         """ This method attacks the opponent and causes damage to the opponent"""
-        print(f"{self.hero_name} is battling against {opponent.hero_name}")
+        print(f"{self.hero_name} is battling against {opponent.name}")
         if self.can_attack():  # if Warrior can attack
             damage = self.get_damage()  # gets minimum amd maximum damage points
             opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
             # and reduce the points of the opponent
-            print(f" {self.hero_name} attacks {opponent.hero_name} for {damage} damage points")
+            print(f" {self.hero_name} attacks {opponent.name} for {damage} damage points")
             return True  # return True if the attack is successful
 
         else:
-            print(f" {self.hero_name} couldn't attack {opponent.hero_name}  ")
+            print(f" {self.hero_name} couldn't attack {opponent.name}  ")
             return False  # else return False
 
     def special_skill(self, opponent):
@@ -330,24 +330,25 @@ class Priestess(Hero, ABC):
 
     def attack(self, opponent):
         """ This method attacks the opponent and causes damage to the opponent"""
-        print(f"{self.hero_name} is battling against {opponent.hero_name}")
+        print(f"{self.hero_name} is battling against {opponent.name}")
         if self.can_attack():  # if Warrior can attack
             damage = self.get_damage()  # gets minimum amd maximum damage points
             opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
             # and reduce the points of the opponent
-            print(f" {self.hero_name} attacks {opponent.hero_name} for {damage} damage points")
+            print(f" {self.hero_name} attacks {opponent.name} for {damage} damage points")
             return True  # return True if the attack is successful
 
         else:
-            print(f" {self.hero_name} couldn't attack {opponent.hero_name}  ")
+            print(f" {self.hero_name} couldn't attack {opponent.name}  ")
             return False  # else return False
 
     def special_skill(self, opponent):
         """ This method is the Priestess special_skill"""
         heal = random.randint(25, 50)
         opponent.calculate_damage(-heal)  # heals the damage points
-        print(f" {self.hero_name} performs healing on {opponent.hero_name} for {heal} heal points ")
-
+        print(f" {self.hero_name} steals gains {heal} healing points from {opponent.name} ")
+        self.hit_points = + heal
+        print(f" {self.hero_name} how has {self.hit_points} ")
 
 class Thief(Hero, ABC):
     """ Thief class is the child class of Hero """
