@@ -1,10 +1,11 @@
 """
 Name: Aqueno Nirasmi, Minna Chae, Sarah St. Albin
-TCSS 501 and 502
-Dungeon Adventure
+TCSS 504
+Dungeon Adventure 2.0
 """
 
 from Room import Room
+from Monster import Ogre, Gremlin, Skeleton, Troll, Chimera, Dragon
 from DungeonItemsFactory import DungeonItemsFactory
 import random
 
@@ -22,6 +23,10 @@ class Dungeon:
         self.__player_traveled = None  # Temporary?
         self.__items = {}
         self.__maze = []
+        self.__exit_row = None
+        self.__exit_col = None
+        self.__entrance_row = None
+        self.__entrance_col = None
 
         for r in range(0, self.__rows):
             self.__maze.append([Room() for c in range(0, self.__cols)])
@@ -50,13 +55,15 @@ class Dungeon:
         self._make_impassable()
 
         # Verify that the maze is still traversable from entrance to exit
-        if self._is_traversable(0, 0):  # If it's traversable
+        if self._is_traversable(0, 0):
             self.__items = {(row, col): self.__maze[row][col] for row in range(self.__rows) for col
                             in range(self.__cols)}
-            self._place_pillars()  # Randomly add pillars
-            self._place_items()  # Randomly add pillars, potions, and other objects to it
+            self._place_pillars()
+            self._place_monsters()
+            self._place_boss_monster()
+            self._place_items()
         else:
-            self._create_maze(start_room, start_row, start_col)  # Otherwise generate a new maze if not passable
+            self._create_maze(start_room, start_row, start_col)
 
     @property
     def entrance(self):
@@ -258,6 +265,18 @@ class Dungeon:
                 dungeon_info += f"\n  - Vision Potion: {room.vision_potion}"
                 room.pit = True
                 dungeon_info += f"\n  - Pit: {room.pit}"
+                room.ogre = True
+                dungeon_info += f"\n  - Ogre: {room.ogre}"
+                room.gremlin = True
+                dungeon_info += f"\n  - Gremlin: {room.gremlin}"
+                room.skeleton = True
+                dungeon_info += f"\n  - Skeleton: {room.skeleton}"
+                room.dungeon_troll = True
+                dungeon_info += f"\n  - Troll: {room.dungeon_troll}"
+                room.chimera = True
+                dungeon_info += f"\n  - Chimera: {room.chimera}"
+                room.dragon = True
+                dungeon_info += f"\n  - Dragon: {room.dragon}"
                 dungeon_info += "\n\n"
 
         return dungeon_info
@@ -464,6 +483,10 @@ class Dungeon:
         self.__maze[0][0].entrance = True
         self.__maze[self.__rows - 1][self.__cols - 1].exit = True
 
+        # Update exit Room coordinates
+        self.__exit_row = self.__rows - 1
+        self.__exit_col = self.__cols - 1
+
         # Set them as passable
         self.__maze[0][0].impasse = False
         self.__maze[self.__rows - 1][self.__cols - 1].impasse = False
@@ -475,6 +498,9 @@ class Dungeon:
         # Set exterior doors
         self.__maze[0][0].west_door = True
         self.__maze[self.__rows - 1][self.__cols - 1].east_door = True
+
+        # Update items dictionary
+        self.__items[(self.__exit_row, self.__exit_col)] = self.__maze[self.__exit_row][self.__exit_col]
 
     def _make_impassable(self):
         """
@@ -519,7 +545,86 @@ class Dungeon:
         self.__maze[row][col].visited = True  # If no exit is found in any direction, mark Room as unvisited
         return False
 
+    def _place_monsters(self):
+        """
+        Randomly places Monsters throughout the Dungeon maze.
+        :return: None
+        """
+        monster_types = ["Ogre", "Gremlin", "Skeleton"]
+        ogre_names = ["Grommash", "Throg", "Grokk", "Ugg", "Brak", "Grugg", "Thud", "Smashgut", "Grogg", "Gronk"]
+        gremlin_names = ["Gizmo", "Spike", "Scratch", "Snaggletooth", "Sly", "Gnash", "Wretch", "Twitch", "Grime",
+                         "Scuttle"]
+        skeleton_names = ["Skully", "Bonecrusher", "Rattlebones", "Grimm", "Skeletor", "Deathclaw", "Bones", "Marrow",
+                          "Skullcrack", "Dreadbone"]
+
+        total_rooms = len(self.__items)
+        target_monster_rooms = total_rooms // 4
+
+        monster_rooms = 0
+
+        while monster_rooms < target_monster_rooms:
+            random_room = random.choice(list(self.__items.values()))
+            if random_room.entrance or random_room.exit:
+                continue
+            elif random_room.ogre or random_room.gremlin or random_room.skeleton:
+                continue
+
+            if random.random() < 0.5:  # Adjust the probability here as needed
+                choice = random.choice(monster_types)
+                if choice == "Ogre":
+                    ogre_name = random.choice(ogre_names)
+                    ogre = Ogre(ogre_name)
+                    random_room.ogre = True if ogre else False
+                elif choice == "Gremlin":
+                    gremlin_name = random.choice(gremlin_names)
+                    gremlin = Gremlin(gremlin_name)
+                    random_room.gremlin = True if gremlin else False
+                elif choice == "Skeleton":
+                    skeleton_name = random.choice(skeleton_names)
+                    skeleton = Skeleton(skeleton_name)
+                    random_room.skeleton = True if skeleton else False
+                else:
+                    random_room.ogre = False
+                    random_room.gremlin = False
+                    random_room.skeleton = False
+
+                monster_rooms += 1
+
+    def _place_boss_monster(self):
+        """
+        Internal method that places a boss Monster at the end of the maze.
+        :return: None
+        """
+        boss_type = ["Troll", "Chimera", "Dragon"]
+        troll_names = ["Ragnok", "Grimbash", "Boulderfist", "Groggnar", "Gnarlgrip"]
+        chimera_names = ["Hydra", "Nemean", "Typhon", "Simurgh", "Gryphon"]
+        dragon_names = ["Drakar", "Fafnir", "Volcanor", "Pyrax", "Vritra"]
+
+        exit_room = None
+        for room in self.__items.values():
+            if room.exit:
+                exit_room = room
+                break
+
+        if exit_room:
+            choose_monster = random.choice(boss_type)
+            if choose_monster == "Troll":
+                troll_name = random.choice(troll_names)
+                troll = Troll(troll_name)
+                exit_room.troll = True if troll else False
+            elif choose_monster == "Chimera":
+                chimera_name = random.choice(chimera_names)
+                chimera = Chimera(chimera_name)
+                exit_room.chimera = True if chimera else False
+            elif choose_monster == "Dragon":
+                dragon_name = random.choice(dragon_names)
+                dragon = Dragon(dragon_name)
+                exit_room.dragon = True if dragon else False
+            else:
+                raise ValueError("No exit room found")
+
     def _place_items(self):
+        """ Places items throughout the maze """
         for (row, col), room in self.__items.items():
             if room.entrance or room.exit or room.abstraction_pillar \
                     or room.polymorphism_pillar or room.inheritance_pillar or room.encapsulation_pillar:
@@ -616,5 +721,5 @@ class Dungeon:
         return symbols_dict
 
 
-dungeon = Dungeon(5, 5)
+dungeon = Dungeon(10, 10)
 dungeon.print_dungeon()
