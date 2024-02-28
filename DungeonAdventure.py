@@ -12,7 +12,8 @@ from DungeonItemsFactory import DungeonItemsFactory
 import sys, time, copy, random, pickle
 # import copy
 # import pickle
-# from SaveGame import SaveGame
+from SaveGame import pickle, SaveGame
+
 """ 
 Dungeon Adventure contains the main logic of playing the game. 
 Game play must be initiated by creating an instance of the class and calling the module 
@@ -70,7 +71,13 @@ class DungeonAdventure:
         while play.lower() == "y" or play.lower() == "yes":
             game_type = input("Would you like to play the previously saved game? ").lower() #need to add error handling
             if game_type == 'y' or game_type == 'yes':
-                self.play_saved_game()
+                no_saved_game = self.play_saved_game()
+                """---- added 2/27/24---"""
+                if no_saved_game:
+                    print("There is no saved game. Please play a new game.")
+                    self.set_play_mode()
+                    self.set_up_player()
+                    print(self.menu_str())
             else:
                 self.set_play_mode()
                 self.set_up_player()
@@ -427,6 +434,14 @@ class DungeonAdventure:
         else:
             print("I guess you'll never know")
 
+        ####New  print out -------------------------------------------
+        save_game = input("\nDo you want to save the game? y/n ")
+        if save_game.lower() == "y" or save_game.lower() == "yes":
+            self.send_save_data()
+            # self.send_save_data(self)
+        else:
+            print("The game was never saved")
+
     # def save_file_pickle(self):
 
         # with open('dungeon_adventure.pkl', 'wb') as self.pickle_file:
@@ -434,6 +449,10 @@ class DungeonAdventure:
         # self.pickle_file.close()
 
     def play_saved_game(self):
+        """
+        Saves the currently running dungeon adventure game.
+        Returns: Boolean if game was saved
+        """
         try:
             with open('dungeon_adventure.pickle', 'rb') as saved_file:
                 read_saved_game = pickle.load(saved_file)
@@ -445,17 +464,17 @@ class DungeonAdventure:
         except pickle.UnpicklingError as e:
             #normal, somewhat expected
             print("No saved game found")
-        except (AttributeError, EOFError, ImportError, IndentationError) as e:
+            return True
+        except (AttributeError, EOFError, ImportError, IndentationError, IndexError, TypeError, ValueError) as e:
             #secondary errors
             print("Not a valid file please try again")
-            print(traceback.format_exc(e))
-
+            return True
+            # print(traceback.format_exc(e))
         except Exception as e:
             #everything else, possibly fatal
-            print(traceback.format_exc(e))
-        else:
-            break
-
+            # print(traceback.format_exc(e))
+            print("Error in pickling")
+            return True
 
     def print_end(self):
         """
@@ -477,7 +496,13 @@ class DungeonAdventure:
             time.sleep(.05)
         print("\n\nWe could not have done it without you.")
 
+    #save game method pickle
+    def send_save_data(self):
+        save_game = SaveGame()
+        save_game.pickle(self)
 
-# game_play = DungeonAdventure()
-# game_play.set_play_mode()
+
+if __name__ == "__main__":
+    game_play = DungeonAdventure()
+    game_play.set_play_mode()
 
