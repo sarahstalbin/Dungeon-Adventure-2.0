@@ -66,12 +66,60 @@ def select_all_skeleton_rows(conn):
         print(row)
 
 
+def select_all_troll_rows(conn):
+    """
+    Queries all rows in the troll table and displays the data.
+    :param conn: the Connection object
+    :return: None
+    """
+
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM troll")
+
+    rows = cur.fetchall()
+
+    for row in rows:
+        print(row)
+
+
+def select_all_chimera_rows(conn):
+    """
+    Queries all rows in the chimera table and displays the data.
+    :param conn: the Connection object
+    :return: None
+    """
+
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM chimera")
+
+    rows = cur.fetchall()
+
+    for row in rows:
+        print(row)
+
+
+def select_all_dragon_rows(conn):
+    """
+    Queries all rows in the dragon table and displays the data.
+    :param conn: the Connection object
+    :return: None
+    """
+
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM dragon")
+
+    rows = cur.fetchall()
+
+    for row in rows:
+        print(row)
+
+
 def select_monster_attribute(conn, monster_type, attribute, monster_name):
     """
     Queries a specific attribute for a given monster type and name.
     :param conn: the Connection object
-    :param monster_type: the type of monster (e.g., "ogre", "gremlin", "skeleton")
-    :param attribute: the attribute to query (e.g., "name", "hit_points", "heal_points")
+    :param monster_type: the type of monster
+    :param attribute: the attribute to query
     :param monster_name: the name of the monster
     :return: The value of the specified attribute for the given monster
     """
