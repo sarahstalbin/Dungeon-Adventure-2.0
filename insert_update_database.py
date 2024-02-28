@@ -15,6 +15,7 @@ def create_connection(db_file):
 
     return conn
 
+
 def insert_ogre_data(conn, **attributes):
     """
     Insert new Ogre data.
@@ -29,12 +30,12 @@ def insert_ogre_data(conn, **attributes):
     cur.execute(sql, tuple(attributes.values()))
     conn.commit()
 
+
 def insert_gremlin_data(conn, **attributes):
     """
     Insert new Gremlin data.
     :param conn: the Connection object
-    :param attribute_type: the type of attribute to insert data into
-    :param data: the data to insert for the specified attribute
+    :param attributes: the type of attribute to insert data into
     :return: None
     """
     columns = ', '.join(attributes.keys())
@@ -47,15 +48,59 @@ def insert_gremlin_data(conn, **attributes):
 
 def insert_skeleton_data(conn, **attributes):
     """
-    Insert new Gremlin data.
+    Insert new Skeleton data.
     :param conn: the Connection object
-    :param attribute_type: the type of attribute to insert data into
-    :param data: the data to insert for the specified attribute
+    :param attributes: the type of attribute to insert data into
     :return: None
     """
     columns = ', '.join(attributes.keys())
     placeholders = ', '.join(['?'] * len(attributes))
     sql = f'INSERT INTO skeleton ({columns}) VALUES ({placeholders})'
+    cur = conn.cursor()
+    cur.execute(sql, tuple(attributes.values()))
+    conn.commit()
+
+
+def insert_troll_data(conn, **attributes):
+    """
+    Insert new Troll data.
+    :param conn: the Connection object
+    :param attributes: the type of attribute to insert data into
+    :return: None
+    """
+    columns = ', '.join(attributes.keys())
+    placeholders = ', '.join(['?'] * len(attributes))
+    sql = f'INSERT INTO troll ({columns}) VALUES ({placeholders})'
+    cur = conn.cursor()
+    cur.execute(sql, tuple(attributes.values()))
+    conn.commit()
+
+
+def insert_chimera_data(conn, **attributes):
+    """
+    Insert new Chimera data.
+    :param conn: the Connection object
+    :param attributes: the type of attribute to insert data into
+    :return: None
+    """
+    columns = ', '.join(attributes.keys())
+    placeholders = ', '.join(['?'] * len(attributes))
+    sql = f'INSERT INTO chimera ({columns}) VALUES ({placeholders})'
+    cur = conn.cursor()
+    cur.execute(sql, tuple(attributes.values()))
+    conn.commit()
+
+
+def insert_dragon_data(conn, **attributes):
+    """
+    Insert new Dragon data.
+    :param conn: the Connection object
+    :param attributes: the type of attribute to insert data into
+    :return: None
+    """
+    columns = ', '.join(attributes.keys())
+    placeholders = ', '.join(['?'] * len(attributes))
+    sql = f'INSERT INTO dragon ({columns}) VALUES ({placeholders})'
     cur = conn.cursor()
     cur.execute(sql, tuple(attributes.values()))
     conn.commit()
@@ -102,6 +147,54 @@ def update_skeleton_data(conn, monster_name, attribute_type, data):
     :param data: the new data to update for the specified attribute
     """
     sql = f''' UPDATE skeleton
+              SET {attribute_type} = ?
+              WHERE name = ? '''
+    cur = conn.cursor()
+    cur.execute(sql, (data, monster_name))
+    conn.commit()
+
+
+def update_troll_data(conn, monster_name, attribute_type, data):
+    """
+    Update Dungeon Troll data.
+    :param conn: the Connection object
+    :param monster_name: the name of the Dungeon Troll
+    :param attribute_type: the type of attribute to update
+    :param data: the new data to update for the specified attribute
+    """
+    sql = f''' UPDATE troll
+              SET {attribute_type} = ?
+              WHERE name = ? '''
+    cur = conn.cursor()
+    cur.execute(sql, (data, monster_name))
+    conn.commit()
+
+
+def update_chimera_data(conn, monster_name, attribute_type, data):
+    """
+    Update Chimera data.
+    :param conn: the Connection object
+    :param monster_name: the name of the Chimera
+    :param attribute_type: the type of attribute to update
+    :param data: the new data to update for the specified attribute
+    """
+    sql = f''' UPDATE chimera
+              SET {attribute_type} = ?
+              WHERE name = ? '''
+    cur = conn.cursor()
+    cur.execute(sql, (data, monster_name))
+    conn.commit()
+
+
+def update_dragon_data(conn, monster_name, attribute_type, data):
+    """
+    Update Dragon data.
+    :param conn: the Connection object
+    :param monster_name: the name of the Dragon
+    :param attribute_type: the type of attribute to update
+    :param data: the new data to update for the specified attribute
+    """
+    sql = f''' UPDATE dragon
               SET {attribute_type} = ?
               WHERE name = ? '''
     cur = conn.cursor()
