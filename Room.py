@@ -30,6 +30,12 @@ class Room:
         self.__empty_room = False
         self.__current_room = False
         self.__player_traveled = False
+        self.__ogre = False
+        self.__gremlin = False
+        self.__skeleton = False
+        self.__dragon = False
+        self.__dungeon_troll = False
+        self.__chimera = False
 
     @property
     def healing_potion(self):
@@ -90,6 +96,30 @@ class Room:
     def west_door(self):
         """ gets west_door boolean value using property decorator """
         return self.__west_door
+
+    @property
+    def ogre(self):
+        return self.__ogre
+
+    @property
+    def gremlin(self):
+        return self.__gremlin
+
+    @property
+    def skeleton(self):
+        return self.__skeleton
+
+    @property
+    def dragon(self):
+        return self.__dragon
+
+    @property
+    def dungeon_troll(self):
+        return self.__dungeon_troll
+
+    @property
+    def chimera(self):
+        return self.__chimera
 
     @property
     def impasse(self):
@@ -243,6 +273,42 @@ class Room:
             raise ValueError("empty_room must be a boolean")
         self.__empty_room = is_empty
 
+    @ogre.setter
+    def ogre(self, ogre):
+        if not isinstance(ogre, bool):
+            raise ValueError("ogre must be a boolean")
+        self.__ogre = ogre
+
+    @gremlin.setter
+    def gremlin(self, gremlin):
+        if not isinstance(gremlin, bool):
+            raise ValueError("gremlin must be a boolean")
+        self.__gremlin = gremlin
+
+    @skeleton.setter
+    def skeleton(self, skeleton):
+        if not isinstance(skeleton, bool):
+            raise ValueError("skeleton must be a boolean")
+        self.__skeleton = skeleton
+
+    @dragon.setter
+    def dragon(self, dragon):
+        if not isinstance(dragon, bool):
+            raise ValueError("dragon must be a boolean")
+        self.__dragon = dragon
+
+    @dungeon_troll.setter
+    def dungeon_troll(self, dungeon_troll):
+        if not isinstance(dungeon_troll, bool):
+            raise ValueError("dungeon_troll must be a boolean")
+        self.__dungeon_troll = dungeon_troll
+
+    @chimera.setter
+    def chimera(self, chimera):
+        if not isinstance(chimera, bool):
+            raise ValueError("chimera must be a boolean")
+        self.__chimera = chimera
+
     @entrance.setter
     def entrance(self, entrance):
         """ setting entrance using setter property
@@ -329,6 +395,18 @@ class Room:
             layout += " "
         elif self.__current_room:
             layout += "@"
+        elif self.__ogre:
+            layout += "%"
+        elif self.__skeleton:
+            layout += "$"
+        elif self.__gremlin:
+            layout += "&"
+        elif self.__dragon:
+            layout += "^"
+        elif self.__chimera:
+            layout += "~"
+        elif self.__dungeon_troll:
+            layout += "#"
         elif self.__abstraction_pillar:
             layout += "A"
         elif self.__polymorphism_pillar:
@@ -347,3 +425,5 @@ class Room:
         else:
             layout += "***"
         return layout
+
+
