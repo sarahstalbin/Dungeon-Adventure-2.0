@@ -12,7 +12,7 @@ from DungeonItemsFactory import DungeonItemsFactory
 import sys, time, copy, random, pickle
 # import copy
 # import pickle
-from SaveGame import pickle, SaveGame
+
 
 """ 
 Dungeon Adventure contains the main logic of playing the game. 
@@ -498,8 +498,8 @@ class DungeonAdventure:
 
     #save game method pickle
     def send_save_data(self):
-        save_game = SaveGame()
-        save_game.pickle(self)
+        with open('dungeon_adventure.pickle', 'wb') as saved_file:
+            pickle.dump(self, saved_file)
 
 
 if __name__ == "__main__":
