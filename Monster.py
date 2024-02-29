@@ -1,8 +1,8 @@
 import random
 from DungeonCharacter import DungeonCharacter
 from abc import ABC, abstractmethod
-import sqlite_insert_update
-import sqlite_query
+import insert_update_database
+import query_database
 
 
 class Monster(DungeonCharacter, ABC):
@@ -21,7 +21,7 @@ class Monster(DungeonCharacter, ABC):
         self._heal_points = heal_points
         self._has_fainted = False
         self._name = name
-        self._conn = sqlite_insert_update.create_connection("monster_db.sqlite")
+        self._conn = insert_update_database.create_connection("monster_db.sqlite")
 
     def get_attribute(self, attribute):
         """
@@ -29,7 +29,7 @@ class Monster(DungeonCharacter, ABC):
         :param attribute: the attribute whose data will be returned
         :return: the data of the provided attribute
         """
-        return sqlite_query.select_monster_attribute(self._conn, self.__class__.__name__.lower(), attribute, self._name)
+        return query_database.select_monster_attribute(self._conn, self.__class__.__name__.lower(), attribute, self._name)
 
     def update_monster_data(self, attribute_type, data):
         """
@@ -39,17 +39,17 @@ class Monster(DungeonCharacter, ABC):
         :return: None
         """
         if isinstance(self, Ogre):
-            sqlite_insert_update.update_ogre_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_ogre_data(self._conn, self.name, attribute_type, data)
         elif isinstance(self, Gremlin):
-            sqlite_insert_update.update_gremlin_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_gremlin_data(self._conn, self.name, attribute_type, data)
         elif isinstance(self, Skeleton):
-            sqlite_insert_update.update_skeleton_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_skeleton_data(self._conn, self.name, attribute_type, data)
         elif isinstance(self, Troll):
-            sqlite_insert_update.update_troll_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_troll_data(self._conn, self.name, attribute_type, data)
         elif isinstance(self, Chimera):
-            sqlite_insert_update.update_chimera_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_chimera_data(self._conn, self.name, attribute_type, data)
         elif isinstance(self, Dragon):
-            sqlite_insert_update.update_dragon_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_dragon_data(self._conn, self.name, attribute_type, data)
         else:
             print("Unknown Monster type")
 
@@ -254,8 +254,8 @@ class Ogre(Monster):
         """ Creates an instance of an Ogre. Attributes are added to the Monster database. """
         super().__init__(name, 200, 2, 0.6, 0, 30, 60,
                          0.1, 30, 60, 60)
-        conn = sqlite_insert_update.create_connection("monster_db.sqlite")
-        sqlite_insert_update.insert_ogre_data(conn,
+        conn = insert_update_database.create_connection("monster_db.sqlite")
+        insert_update_database.insert_ogre_data(conn,
                                               name=name, hit_points=200, attack_speed=2, chance_to_hit=0.6,
                                               damage=0, minimum_damage=30, maximum_damage=60,
                                               chance_to_heal=0.1, minimum_heal_points=30, maximum_heal_points=60,
@@ -291,8 +291,8 @@ class Gremlin(Monster):
         """ Creates an instance of a Gremlin. Attributes are added to the Monster database. """
         super().__init__(name, 70, 5, 0.8, 0, 15, 30,
                          0.4, 20, 40, 40)
-        conn = sqlite_insert_update.create_connection("monster_db.sqlite")
-        sqlite_insert_update.insert_gremlin_data(conn,
+        conn = insert_update_database.create_connection("monster_db.sqlite")
+        insert_update_database.insert_gremlin_data(conn,
                                                  name=name, hit_points=70, attack_speed=5, chance_to_hit=0.8,
                                                  damage=0, minimum_damage=15, maximum_damage=30,
                                                  chance_to_heal=0.4, minimum_heal_points=20, maximum_heal_points=40,
@@ -328,8 +328,8 @@ class Skeleton(Monster):
         """ Creates an instance of a Skeleton. Attributes are added to the Monster database. """
         super().__init__(name, 100, 3, 0.8, 0, 30, 50,
                          0.3, 30, 50, 50)
-        conn = sqlite_insert_update.create_connection("monster_db.sqlite")
-        sqlite_insert_update.insert_skeleton_data(conn,
+        conn = insert_update_database.create_connection("monster_db.sqlite")
+        insert_update_database.insert_skeleton_data(conn,
                                                   name=name, hit_points=100, attack_speed=3, chance_to_hit=0.8,
                                                   damage=0, minimum_damage=30, maximum_damage=50,
                                                   chance_to_heal=0.3, minimum_heal_points=30, maximum_heal_points=50,
@@ -364,8 +364,8 @@ class Troll(Monster):
         """ Creates an instance of a Dragon. Attributes are added to the Monster database. """
         super().__init__(name, 850, 4, 0.9, 0, 40, 200,
                          0.7, 50, 100, 100)
-        conn = sqlite_insert_update.create_connection("monster_db.sqlite")
-        sqlite_insert_update.insert_troll_data(conn,
+        conn = insert_update_database.create_connection("monster_db.sqlite")
+        insert_update_database.insert_troll_data(conn,
                                                  name=name, hit_points=850, attack_speed=4, chance_to_hit=0.9,
                                                  damage=0, minimum_damage=40, maximum_damage=200,
                                                  chance_to_heal=0.7, minimum_heal_points=50, maximum_heal_points=100,
@@ -400,8 +400,8 @@ class Chimera(Monster):
         """ Creates an instance of a Dragon. Attributes are added to the Monster database. """
         super().__init__(name, 800, 8, 0.9, 0, 45, 180,
                          0.5, 50, 100, 100)
-        conn = sqlite_insert_update.create_connection("monster_db.sqlite")
-        sqlite_insert_update.insert_chimera_data(conn,
+        conn = insert_update_database.create_connection("monster_db.sqlite")
+        insert_update_database.insert_chimera_data(conn,
                                                  name=name, hit_points=800, attack_speed=8, chance_to_hit=0.9,
                                                  damage=0, minimum_damage=45, maximum_damage=180,
                                                  chance_to_heal=0.5, minimum_heal_points=50, maximum_heal_points=100,
@@ -437,8 +437,8 @@ class Dragon(Monster):
         """ Creates an instance of a Dragon. Attributes are added to the Monster database. """
         super().__init__(name, 1000, 7, 0.9, 0, 50, 200,
                          0.75, 50, 100, 100)
-        conn = sqlite_insert_update.create_connection("monster_db.sqlite")
-        sqlite_insert_update.insert_dragon_data(conn,
+        conn = insert_update_database.create_connection("monster_db.sqlite")
+        insert_update_database.insert_dragon_data(conn,
                                                 name=name, hit_points=1000, attack_speed=7, chance_to_hit=0.9,
                                                 damage=0, minimum_damage=40, maximum_damage=200,
                                                 chance_to_heal=0.6, minimum_heal_points=50, maximum_heal_points=100,
