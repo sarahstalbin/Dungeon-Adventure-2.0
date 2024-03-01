@@ -3,7 +3,6 @@ from sqlite3 import Error
 
 """ Establishes connection and setup to Monster SQLite Database """
 
-
 def create_connection(db_file):
     """ Creates a database connection to the Monster database.
     :param db_file: database file
@@ -44,7 +43,6 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
-                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -59,7 +57,6 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
-                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -74,7 +71,6 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
-                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -89,7 +85,6 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
-                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -104,7 +99,6 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
-                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
@@ -119,7 +113,6 @@ def main():
                                     hit_points INTEGER,
                                     attack_speed INTEGER,
                                     chance_to_hit REAL,
-                                    damage INTEGER,
                                     minimum_damage INTEGER,
                                     maximum_damage INTEGER,
                                     chance_to_heal REAL,
