@@ -1,6 +1,6 @@
 import random
 from DungeonCharacter import DungeonCharacter
-from abc import ABC, abstractmethod
+from abc import ABC
 import insert_update_database
 import query_database
 
@@ -10,11 +10,10 @@ class Monster(DungeonCharacter, ABC):
 
     All subclasses of Monster must implement its abstract methods."""
 
-    def __init__(self, name, hit_points, attack_speed, chance_to_hit, damage, min_damage, max_damage, chance_to_heal,
+    def __init__(self, name, hit_points, attack_speed, chance_to_hit, min_damage, max_damage, chance_to_heal,
                  minimum_heal_points, maximum_heal_points, heal_points):
         super().__init__(name, hit_points, attack_speed, chance_to_hit, min_damage,
                          max_damage)
-        self._damage = damage
         self._chance_to_heal = chance_to_heal
         self._minimum_heal_points = minimum_heal_points
         self._maximum_heal_points = maximum_heal_points
@@ -29,7 +28,8 @@ class Monster(DungeonCharacter, ABC):
         :param attribute: the attribute whose data will be returned
         :return: the data of the provided attribute
         """
-        return query_database.select_monster_attribute(self._conn, self.__class__.__name__.lower(), attribute, self._name)
+        return query_database.select_monster_attribute(self._conn, self.__class__.__name__.lower(), attribute,
+                                                       self._name)
 
     def update_monster_data(self, attribute_type, data):
         """
@@ -52,6 +52,29 @@ class Monster(DungeonCharacter, ABC):
             insert_update_database.update_dragon_data(self._conn, self.name, attribute_type, data)
         else:
             print("Unknown Monster type")
+
+    def attack(self, opponent):
+        """ Attacks and causes damage to a Hero """
+        print(f"The Dragon {self.name} is attacking {opponent.hero_name}")
+        if self.can_attack():
+            damage = self.get_damage()
+            self.calculate_damage(damage)
+            print(f"The Dragon {self.name} attacks {opponent.hero_name} for {damage} damage points")
+            return True
+
+    def heal(self):
+        """ Heals the Dragon based on chance to heal within range of its min/max heal points """
+        chance_to_heal = self.chance_to_heal
+        heal_points = self.get_random_heal_points()
+        has_fainted = self.has_fainted
+
+        if not has_fainted and chance_to_heal:
+            hit_point_count = self.hit_points
+            heal_amount = hit_point_count + heal_points
+            self.hit_points = heal_amount
+            print(f"The Dragon {self.name} has healed itself! Watch out!")
+        else:
+            print(f"You defeated the Dragon {self.name}! You win!")
 
     def get_random_heal_points(self):
         """ Returns a random integer between the range of a Monsters minimum and maximum heal points """
@@ -236,233 +259,85 @@ class Monster(DungeonCharacter, ABC):
         else:
             raise ValueError("has_fainted must be a boolean value")
 
-    @abstractmethod
-    def heal(self):
-        """ Abstract method based on chance to heal and then range of heal points for the monster """
-        pass
-
-    @abstractmethod
-    def attack(self, opponent):
-        """ Abstract method for attack method used in subclasses """
-        pass
-
 
 class Ogre(Monster):
 
     def __init__(self, name):
 
         """ Creates an instance of an Ogre. Attributes are added to the Monster database. """
-        super().__init__(name, 200, 2, 0.6, 0, 30, 60,
+        super().__init__(name, 200, 2, 0.6, 30, 60,
                          0.1, 30, 60, 60)
         conn = insert_update_database.create_connection("monster_db.sqlite")
         insert_update_database.insert_ogre_data(conn,
-                                              name=name, hit_points=200, attack_speed=2, chance_to_hit=0.6,
-                                              damage=0, minimum_damage=30, maximum_damage=60,
-                                              chance_to_heal=0.1, minimum_heal_points=30, maximum_heal_points=60,
-                                              heal_points=60, has_fainted=False)
-
-    def attack(self, opponent):
-        """ Attacks and causes damage to a Hero """
-        if self.can_attack():
-            print(f"The Ogre {self.name} is attacking {opponent.hero_name}")
-            damage = self.get_damage()
-            self.calculate_damage(damage)
-            print(f"{self.name} attacks {opponent.hero_name} for {damage} damage points")
-            return True
-
-    def heal(self):
-        """ Heals Ogre based on chance to heal within range of its min/max heal points """
-        chance_to_heal = self.chance_to_heal
-        heal_points = self.get_random_heal_points()
-        has_fainted = self.has_fainted
-
-        if not has_fainted and chance_to_heal:
-            hit_point_count = self.hit_points
-            heal_amount = hit_point_count + heal_points
-            self.hit_points = heal_amount
-            print(f"The Ogre {self.name} has healed itself!")
-        else:
-            print(f"The Ogre {self.name} cannot heal itself, you're safe!")
+                                                name=name, hit_points=200, attack_speed=2, chance_to_hit=0.6,
+                                                minimum_damage=30, maximum_damage=60,
+                                                chance_to_heal=0.1, minimum_heal_points=30, maximum_heal_points=60,
+                                                heal_points=60, has_fainted=False)
 
 
 class Gremlin(Monster):
 
     def __init__(self, name):
         """ Creates an instance of a Gremlin. Attributes are added to the Monster database. """
-        super().__init__(name, 70, 5, 0.8, 0, 15, 30,
-                         0.4, 20, 40, 40)
+        super().__init__(name, 70, 5, 0.8, 15, 30, 0.4,
+                         20, 40, 40)
         conn = insert_update_database.create_connection("monster_db.sqlite")
         insert_update_database.insert_gremlin_data(conn,
-                                                 name=name, hit_points=70, attack_speed=5, chance_to_hit=0.8,
-                                                 damage=0, minimum_damage=15, maximum_damage=30,
-                                                 chance_to_heal=0.4, minimum_heal_points=20, maximum_heal_points=40,
-                                                 heal_points=40, has_fainted=False)
-
-    def attack(self, opponent):
-        """ Attacks and causes damage to a Hero """
-        print(f"{self.name} is attacking {opponent.hero_name}")
-        if self.can_attack():
-            damage = self.get_damage()
-            self.calculate_damage(damage)
-            print(f"{self.name} attacks {opponent.hero_name} for {damage} damage points")
-            return True
-
-    def heal(self):
-        """ Heals Gremlin based on chance to heal within range of its min/max heal points """
-        chance_to_heal = self.chance_to_heal
-        heal_points = self.get_random_heal_points()
-        has_fainted = self.has_fainted
-
-        if not has_fainted and chance_to_heal:
-            hit_point_count = self.hit_points
-            heal_amount = hit_point_count + heal_points
-            self.hit_points = heal_amount
-            print(f"The Gremlin {self.name} has healed itself!")
-        else:
-            print(f"The Gremlin {self.name} cannot heal itself, you're safe!")
+                                                   name=name, hit_points=70, attack_speed=5, chance_to_hit=0.8,
+                                                   minimum_damage=15, maximum_damage=30,
+                                                   chance_to_heal=0.4, minimum_heal_points=20, maximum_heal_points=40,
+                                                   heal_points=40, has_fainted=False)
 
 
 class Skeleton(Monster):
 
     def __init__(self, name):
         """ Creates an instance of a Skeleton. Attributes are added to the Monster database. """
-        super().__init__(name, 100, 3, 0.8, 0, 30, 50,
-                         0.3, 30, 50, 50)
+        super().__init__(name, 100, 3, 0.8, 30, 50, 0.3,
+                         30, 50, 50)
         conn = insert_update_database.create_connection("monster_db.sqlite")
         insert_update_database.insert_skeleton_data(conn,
-                                                  name=name, hit_points=100, attack_speed=3, chance_to_hit=0.8,
-                                                  damage=0, minimum_damage=30, maximum_damage=50,
-                                                  chance_to_heal=0.3, minimum_heal_points=30, maximum_heal_points=50,
-                                                  heal_points=50, has_fainted=False)
-
-    def attack(self, opponent):
-        """ Attacks and causes damage to a Hero """
-        print(f"{self.name} is attacking {opponent.hero_name}")
-        if self.can_attack():
-            damage = self.get_damage()
-            self.calculate_damage(damage)
-            print(f"{self.name} attacks {opponent.hero_name} for {damage} damage points")
-            return True
-
-    def heal(self):
-        """ Heals Skeleton based on chance to heal within range of its min/max heal points """
-        chance_to_heal = self.chance_to_heal
-        heal_points = self.get_random_heal_points()
-        has_fainted = self.has_fainted
-
-        if not has_fainted and chance_to_heal:
-            hit_point_count = self.hit_points
-            heal_amount = hit_point_count + heal_points
-            self.hit_points = heal_amount
-            print(f"The Skeleton {self.name} has healed itself!")
-        else:
-            print(f"The Skeleton {self.name} cannot heal itself, you're safe!")
+                                                    name=name, hit_points=100, attack_speed=3, chance_to_hit=0.8,
+                                                    minimum_damage=30, maximum_damage=50,
+                                                    chance_to_heal=0.3, minimum_heal_points=30, maximum_heal_points=50,
+                                                    heal_points=50, has_fainted=False)
 
 
 class Troll(Monster):
     def __init__(self, name):
         """ Creates an instance of a Dragon. Attributes are added to the Monster database. """
-        super().__init__(name, 850, 4, 0.9, 0, 40, 200,
-                         0.7, 50, 100, 100)
+        super().__init__(name, 850, 4, 0.9, 45, 60, 0.7,
+                         50, 100, 100)
         conn = insert_update_database.create_connection("monster_db.sqlite")
         insert_update_database.insert_troll_data(conn,
                                                  name=name, hit_points=850, attack_speed=4, chance_to_hit=0.9,
-                                                 damage=0, minimum_damage=40, maximum_damage=200,
+                                                 minimum_damage=45, maximum_damage=60,
                                                  chance_to_heal=0.7, minimum_heal_points=50, maximum_heal_points=100,
                                                  heal_points=100, has_fainted=False)
-
-    def attack(self, opponent):
-        """ Attacks and causes damage to a Hero """
-        print(f"The Troll {self.name} is attacking {opponent.hero_name}")
-        if self.can_attack():
-            damage = self.get_damage()
-            self.calculate_damage(damage)
-            print(f"The Troll {self.name} attacks {opponent.hero_name} for {damage} damage points")
-            return True
-
-    def heal(self):
-        """ Heals Troll based on chance to heal within range of its min/max heal points """
-        chance_to_heal = self.chance_to_heal
-        heal_points = self.get_random_heal_points()
-        has_fainted = self.has_fainted
-
-        if not has_fainted and chance_to_heal:
-            hit_point_count = self.hit_points
-            heal_amount = hit_point_count + heal_points
-            self.hit_points = heal_amount
-            print(f"The Troll {self.name} has healed itself! Watch out!")
-        else:
-            print(f"You defeated the Troll {self.name}! You win!")
 
 
 class Chimera(Monster):
     def __init__(self, name):
         """ Creates an instance of a Dragon. Attributes are added to the Monster database. """
-        super().__init__(name, 800, 8, 0.9, 0, 45, 180,
-                         0.5, 50, 100, 100)
+        super().__init__(name, 800, 8, 0.9, 50, 65, 0.5,
+                         50, 100, 100)
         conn = insert_update_database.create_connection("monster_db.sqlite")
         insert_update_database.insert_chimera_data(conn,
-                                                 name=name, hit_points=800, attack_speed=8, chance_to_hit=0.9,
-                                                 damage=0, minimum_damage=45, maximum_damage=180,
-                                                 chance_to_heal=0.5, minimum_heal_points=50, maximum_heal_points=100,
-                                                 heal_points=100, has_fainted=False)
-
-    def attack(self, opponent):
-        """ Attacks and causes damage to a Hero """
-        print(f"The Chimera {self.name} is attacking {opponent.hero_name}")
-        if self.can_attack():
-            damage = self.get_damage()
-            self.calculate_damage(damage)
-            print(f"The Chimera {self.name} attacks {opponent.hero_name} for {damage} damage points")
-            return True
-
-    def heal(self):
-        """ Heals the Chimera based on chance to heal within range of its min/max heal points """
-        chance_to_heal = self.chance_to_heal
-        heal_points = self.get_random_heal_points()
-        has_fainted = self.has_fainted
-
-        if not has_fainted and chance_to_heal:
-            hit_point_count = self.hit_points
-            heal_amount = hit_point_count + heal_points
-            self.hit_points = heal_amount
-            print(f"The Chimera {self.name} has healed itself! Watch out!")
-        else:
-            print(f"You defeated the Chimera {self.name}! You win!")
+                                                   name=name, hit_points=800, attack_speed=8, chance_to_hit=0.9,
+                                                   minimum_damage=50, maximum_damage=65,
+                                                   chance_to_heal=0.5, minimum_heal_points=50, maximum_heal_points=100,
+                                                   heal_points=100, has_fainted=False)
 
 
 class Dragon(Monster):
 
     def __init__(self, name):
         """ Creates an instance of a Dragon. Attributes are added to the Monster database. """
-        super().__init__(name, 1000, 7, 0.9, 0, 50, 200,
-                         0.75, 50, 100, 100)
+        super().__init__(name, 1000, 7, 0.9, 60, 75, 200,
+                         0.75, 50, 100)
         conn = insert_update_database.create_connection("monster_db.sqlite")
         insert_update_database.insert_dragon_data(conn,
-                                                name=name, hit_points=1000, attack_speed=7, chance_to_hit=0.9,
-                                                damage=0, minimum_damage=40, maximum_damage=200,
-                                                chance_to_heal=0.6, minimum_heal_points=50, maximum_heal_points=100,
-                                                heal_points=100, has_fainted=False)
-
-    def attack(self, opponent):
-        """ Attacks and causes damage to a Hero """
-        print(f"The Dragon {self.name} is attacking {opponent.hero_name}")
-        if self.can_attack():
-            damage = self.get_damage()
-            self.calculate_damage(damage)
-            print(f"The Dragon {self.name} attacks {opponent.hero_name} for {damage} damage points")
-            return True
-
-    def heal(self):
-        """ Heals the Dragon based on chance to heal within range of its min/max heal points """
-        chance_to_heal = self.chance_to_heal
-        heal_points = self.get_random_heal_points()
-        has_fainted = self.has_fainted
-
-        if not has_fainted and chance_to_heal:
-            hit_point_count = self.hit_points
-            heal_amount = hit_point_count + heal_points
-            self.hit_points = heal_amount
-            print(f"The Dragon {self.name} has healed itself! Watch out!")
-        else:
-            print(f"You defeated the Dragon {self.name}! You win!")
+                                                  name=name, hit_points=1000, attack_speed=7, chance_to_hit=0.9,
+                                                  minimum_damage=60, maximum_damage=75,
+                                                  chance_to_heal=0.6, minimum_heal_points=50, maximum_heal_points=100,
+                                                  heal_points=100, has_fainted=False)
