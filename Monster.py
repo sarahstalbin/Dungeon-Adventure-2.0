@@ -28,8 +28,11 @@ class Monster(DungeonCharacter, ABC):
         :param attribute: the attribute whose data will be returned
         :return: the data of the provided attribute
         """
-        return query_database.select_monster_attribute(self._conn, self.__class__.__name__.lower(), attribute,
-                                                       self._name)
+        if isinstance(attribute, str):
+            return query_database.select_monster_attribute(self._conn, self.__class__.__name__.lower(), attribute,
+                                                           self._name)
+        else:
+            raise ValueError("Attribute must be a string")
 
     def update_monster_data(self, attribute_type, data):
         """
@@ -38,23 +41,30 @@ class Monster(DungeonCharacter, ABC):
         :param data: the data with which the attribute will be updated
         :return: None
         """
+        if not isinstance(attribute_type, str):
+            raise ValueError("Attribute type must be a string.")
+
+        if not isinstance(data, (int, float, bool)):
+            raise ValueError("Invalid data type")
+
         if isinstance(self, Ogre):
-            insert_update_database.update_ogre_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_ogre_data(self._conn, self._name, attribute_type, data)
         elif isinstance(self, Gremlin):
-            insert_update_database.update_gremlin_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_gremlin_data(self._conn, self._name, attribute_type, data)
         elif isinstance(self, Skeleton):
-            insert_update_database.update_skeleton_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_skeleton_data(self._conn, self._name, attribute_type, data)
         elif isinstance(self, Troll):
-            insert_update_database.update_troll_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_troll_data(self._conn, self._name, attribute_type, data)
         elif isinstance(self, Chimera):
-            insert_update_database.update_chimera_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_chimera_data(self._conn, self._name, attribute_type, data)
         elif isinstance(self, Dragon):
-            insert_update_database.update_dragon_data(self._conn, self.name, attribute_type, data)
+            insert_update_database.update_dragon_data(self._conn, self._name, attribute_type, data)
         else:
-            print("Unknown Monster type")
+            raise ValueError("Invalid monster type.")
 
     def attack(self, opponent):
         """ Attacks and causes damage to a Hero """
+        # if isinstance(opponent, Hero) --> not sure where to put this method
         print(f"The Dragon {self.name} is attacking {opponent.hero_name}")
         if self.can_attack():
             damage = self.get_damage()
@@ -95,9 +105,12 @@ class Monster(DungeonCharacter, ABC):
 
     def calculate_damage(self, damage):
         """ Decrements Monster's hit point count after damage is incurred """
-        previous_hit_points = self.hit_points
-        updated_hit_points = previous_hit_points - damage
-        self.update_monster_data("hit_points", updated_hit_points)
+        if isinstance(damage, int):
+            previous_hit_points = self.hit_points
+            updated_hit_points = previous_hit_points - damage
+            self.update_monster_data("hit_points", updated_hit_points)
+        else:
+            raise ValueError("Damage must be an integer")
 
     def faint(self):
         """ Changes Monster's has_fainted boolean to True when below minimum hit point count """
@@ -137,7 +150,7 @@ class Monster(DungeonCharacter, ABC):
     @attack_speed.setter
     def attack_speed(self, value):
         """ Sets new attack speed """
-        if isinstance(value, int):
+        if isinstance(value, int) and value > 0:
             self.update_monster_data("attack_speed", value)
         else:
             raise ValueError("attack_speed value must be an int")
@@ -150,7 +163,7 @@ class Monster(DungeonCharacter, ABC):
     @chance_to_hit.setter
     def chance_to_hit(self, value):
         """ Sets new chance to hit percentage """
-        if isinstance(value, float):
+        if isinstance(value, float) and value > 0:
             self.update_monster_data("chance_to_hit", value)
         else:
             raise ValueError("chance_to_hit value must be a float")
@@ -163,7 +176,7 @@ class Monster(DungeonCharacter, ABC):
     @damage.setter
     def damage(self, value):
         """ Sets new damage value """
-        if isinstance(value, int):
+        if isinstance(value, int) and value > 0:
             self.update_monster_data("damage", value)
         raise ValueError("damage value must be an int")
 
@@ -175,7 +188,7 @@ class Monster(DungeonCharacter, ABC):
     @minimum_damage.setter
     def minimum_damage(self, value):
         """ Sets new minimum damage value """
-        if isinstance(value, int):
+        if isinstance(value, int) and value > 0:
             self.update_monster_data("minimum_damage", value)
         else:
             raise ValueError("minimum_damage value must be an int")
@@ -188,7 +201,7 @@ class Monster(DungeonCharacter, ABC):
     @maximum_damage.setter
     def maximum_damage(self, value):
         """ Sets new maximum damage value """
-        if isinstance(value, int):
+        if isinstance(value, int) and value > self.minimum_damage:
             self.update_monster_data("maximum_damage", value)
         else:
             raise ValueError("maximum_damage value must be an int")
@@ -201,7 +214,7 @@ class Monster(DungeonCharacter, ABC):
     @chance_to_heal.setter
     def chance_to_heal(self, value):
         """ Sets new chance to heal percentage """
-        if isinstance(value, float):
+        if isinstance(value, float) and value > 0:
             self.update_monster_data("chance_to_heal", value)
         else:
             raise ValueError("chance_to_heal value must be a float")
@@ -214,7 +227,7 @@ class Monster(DungeonCharacter, ABC):
     @minimum_heal_points.setter
     def minimum_heal_points(self, value):
         """ Sets new minimum heal point value """
-        if isinstance(value, int):
+        if isinstance(value, int) and value > 0:
             self.update_monster_data("minimum_heal_points", value)
         else:
             raise ValueError("minimum_heal_points value must be an int")
@@ -227,7 +240,7 @@ class Monster(DungeonCharacter, ABC):
     @maximum_heal_points.setter
     def maximum_heal_points(self, value):
         """ Sets new maximum heal point value """
-        if isinstance(value, int):
+        if isinstance(value, int) and value > self.minimum_heal_points:
             self.update_monster_data("maximum_heal_points", value)
         else:
             raise ValueError("maximum_heal_points value must be an int")
@@ -240,7 +253,7 @@ class Monster(DungeonCharacter, ABC):
     @heal_points.setter
     def heal_points(self, value):
         """ Sets new heal point value"""
-        if isinstance(value, int):
+        if isinstance(value, int) and value > 0:
             self.update_monster_data("heal_points", value)
         else:
             raise ValueError("heal_point value must be an int")
@@ -263,7 +276,6 @@ class Monster(DungeonCharacter, ABC):
 class Ogre(Monster):
 
     def __init__(self, name):
-
         """ Creates an instance of an Ogre. Attributes are added to the Monster database. """
         super().__init__(name, 200, 2, 0.6, 30, 60,
                          0.1, 30, 60, 60)
