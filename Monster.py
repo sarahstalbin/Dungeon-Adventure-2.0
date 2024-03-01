@@ -22,6 +22,42 @@ class Monster(DungeonCharacter, ABC):
         self._name = name
         self._conn = insert_update_database.create_connection("monster_db.sqlite")
 
+    def __str__(self):
+        """
+        Returns a string representation of the Monster class.
+        :return: string
+        """
+        monster_info = ""
+        if isinstance(self, Ogre):
+            monster_info += "The Ogre "
+        elif isinstance(self, Gremlin):
+            monster_info += "The Gremlin "
+        elif isinstance(self, Skeleton):
+            monster_info += "The Skeleton "
+        elif isinstance(self, Troll):
+            monster_info += "The Troll "
+        elif isinstance(self, Chimera):
+            monster_info += "The Chimera "
+        elif isinstance(self, Dragon):
+            monster_info += "The Dragon "
+
+        monster_info += f"{self._name}\n"
+        monster_info += f"Hit Points: {self.hit_points}\n"
+        monster_info += f"Heal Points: {self.heal_points}\n"
+        monster_info += f"Attack Speed: {self.attack_speed}\n"
+        monster_info += f"Chance to Hit: {self.chance_to_hit}\n"
+        monster_info += f"Minimum Damage: {self.minimum_damage}\n"
+        monster_info += f"Maximum Damage: {self.maximum_damage}\n"
+        monster_info += f"Chance to Heal: {self.chance_to_heal}\n"
+        monster_info += f"Minimum Heal Points: {self.minimum_heal_points}\n"
+        monster_info += f"Maximum Heal Points: {self.maximum_heal_points}\n"
+        monster_info += f"Heal Points: {self.heal_points}\n"
+        if self.has_fainted:
+            monster_info += f"Fainted: Yes\n"
+        else:
+            monster_info += f"Fainted: No\n"
+        return monster_info
+
     def get_attribute(self, attribute):
         """
         Gets the data of the provided attribute
