@@ -400,8 +400,6 @@ class Room:
             layout += "H"
         if self.__vision_potion:
             layout += "V"
-        if self.__pit:
-            layout += "X"
         if self.__entrance:
             layout += "i"
         if self.__exit:
@@ -432,6 +430,8 @@ class Room:
             layout += "I"
         if self.__encapsulation_pillar:
             layout += "E"
+        if self.__pit:
+            layout += "X"
         if self.__east_door:
             layout += "|"
         else:
