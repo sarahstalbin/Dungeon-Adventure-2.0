@@ -20,16 +20,16 @@ class MonsterFactory:
         :return: the Monster object.
         """
         if monster_type.lower() == "ogre":
-            return Monster.Ogre(name)
+            return Ogre(name)
         elif monster_type.lower() == "gremlin":
-            return Monster.Gremlin(name)
+            return Gremlin(name)
         elif monster_type.lower() == "skeleton":
-            return Monster.Skeleton(name)
+            return Skeleton(name)
         elif monster_type.lower() == "troll":
-            return Monster.Troll(name)
+            return Troll(name)
         elif monster_type.lower() == "chimera":
-            return Monster.Chimera(name)
+            return Chimera(name)
         elif monster_type.lower() == "dragon":
-            return Monster.Dragon(name)
+            return Dragon(name)
         else:
             raise ValueError("Invalid monster type.")
