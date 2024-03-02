@@ -1,4 +1,4 @@
-import Monster
+from Monster import Ogre, Gremlin, Skeleton, Troll, Chimera, Dragon
 
 
 class MonsterFactory:
@@ -33,7 +33,3 @@ class MonsterFactory:
             return Monster.Dragon(name)
         else:
             raise ValueError("Invalid monster type.")
-
-
-monster = MonsterFactory.create_monster("ogre", "Bob")
-print(monster)
