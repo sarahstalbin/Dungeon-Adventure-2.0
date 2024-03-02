@@ -5,7 +5,7 @@ Dungeon Adventure 2.0
 """
 
 from Room import Room
-from Monster import Ogre, Gremlin, Skeleton, Troll, Chimera, Dragon
+from MonsterFactory import MonsterFactory
 from DungeonItemsFactory import DungeonItemsFactory
 import random
 
@@ -573,15 +573,15 @@ class Dungeon:
                 choice = random.choice(monster_types)
                 if choice == "Ogre":
                     ogre_name = random.choice(ogre_names)
-                    ogre = Ogre(ogre_name)
+                    ogre = MonsterFactory.create_monster("ogre", ogre_name)
                     random_room.ogre = True if ogre else False
                 elif choice == "Gremlin":
                     gremlin_name = random.choice(gremlin_names)
-                    gremlin = Gremlin(gremlin_name)
+                    gremlin = MonsterFactory.create_monster("gremlin", gremlin_name)
                     random_room.gremlin = True if gremlin else False
                 elif choice == "Skeleton":
                     skeleton_name = random.choice(skeleton_names)
-                    skeleton = Skeleton(skeleton_name)
+                    skeleton = MonsterFactory.create_monster("skeleton", skeleton_name)
                     random_room.skeleton = True if skeleton else False
                 else:
                     random_room.ogre = False
@@ -622,15 +622,15 @@ class Dungeon:
                 choose_monster = random.choice(boss_type)
                 if choose_monster == "Troll":
                     troll_name = random.choice(troll_names)
-                    troll = Troll(troll_name)
+                    troll = MonsterFactory.create_monster("troll", troll_name)
                     room.troll = True if troll else False
                 elif choose_monster == "Chimera":
                     chimera_name = random.choice(chimera_names)
-                    chimera = Chimera(chimera_name)
+                    chimera = MonsterFactory.create_monster("chimera", chimera_name)
                     room.chimera = True if chimera else False
                 elif choose_monster == "Dragon":
                     dragon_name = random.choice(dragon_names)
-                    dragon = Dragon(dragon_name)
+                    dragon = MonsterFactory.create_monster("dragon", dragon_name)
                     room.dragon = True if dragon else False
                 else:
                     raise ValueError("No exit room found")
@@ -750,6 +750,3 @@ if __name__ == "__main__":
     d= Dungeon(5,5)
     d.print_dungeon()
     # d.print_maze(0,0)
-
-
-
