@@ -600,28 +600,23 @@ class Dungeon:
         chimera_names = ["Hydra", "Nemean", "Typhon", "Simurgh", "Gryphon"]
         dragon_names = ["Drakar", "Fafnir", "Volcanor", "Pyrax", "Vritra"]
 
-        exit_room = None
         for room in self.__items.values():
             if room.exit:
-                exit_room = room
-                break
-
-        if exit_room:
-            choose_monster = random.choice(boss_type)
-            if choose_monster == "Troll":
-                troll_name = random.choice(troll_names)
-                troll = Troll(troll_name)
-                exit_room.troll = True if troll else False
-            elif choose_monster == "Chimera":
-                chimera_name = random.choice(chimera_names)
-                chimera = Chimera(chimera_name)
-                exit_room.chimera = True if chimera else False
-            elif choose_monster == "Dragon":
-                dragon_name = random.choice(dragon_names)
-                dragon = Dragon(dragon_name)
-                exit_room.dragon = True if dragon else False
-            else:
-                raise ValueError("No exit room found")
+                choose_monster = random.choice(boss_type)
+                if choose_monster == "Troll":
+                    troll_name = random.choice(troll_names)
+                    troll = Troll(troll_name)
+                    room.troll = True if troll else False
+                elif choose_monster == "Chimera":
+                    chimera_name = random.choice(chimera_names)
+                    chimera = Chimera(chimera_name)
+                    room.chimera = True if chimera else False
+                elif choose_monster == "Dragon":
+                    dragon_name = random.choice(dragon_names)
+                    dragon = Dragon(dragon_name)
+                    room.dragon = True if dragon else False
+                else:
+                    raise ValueError("No exit room found")
 
     def _place_items(self):
         """ Places items throughout the maze """
