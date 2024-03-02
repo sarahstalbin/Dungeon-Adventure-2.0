@@ -29,7 +29,7 @@ class Dungeon:
         self.__entrance_col = None
 
         for r in range(0, self.__rows):
-            self.__maze.append([Room() for c in range(0, self.__cols)])
+            self.__maze.append([Room() for _ in range(0, self.__cols)])
 
         self.build_dungeon()
 
@@ -145,10 +145,8 @@ class Dungeon:
         room.encapsulation_pillar = False
         room.current_room = True
 
-
     def get_empty_room(self):
         return self.__empty_room
-
 
     def set_empty_room(self, key=(0, 0), pit=False):
         """
@@ -367,7 +365,7 @@ class Dungeon:
                 if row == current_row and col == current_col:
                     current = str(self.__maze[row][col])[4]
                     current += "@"
-                    current += str(self.__maze[row][col])[6]  + "     "
+                    current += str(self.__maze[row][col])[6] + "     "
                     mid.append(current)
                 else:
                     if len(str(self.__maze[row][col])) == 10:
@@ -491,9 +489,8 @@ class Dungeon:
         self.__maze[0][0].impasse = False
         self.__maze[self.__rows - 1][self.__cols - 1].impasse = False
 
-        # Set them as empty
+        # # Set entrance as empty
         self.__maze[0][0].empty_room = True
-        self.__maze[self.__rows - 1][self.__cols - 1].empty_room = True
 
         # Set exterior doors
         self.__maze[0][0].west_door = True
@@ -567,6 +564,9 @@ class Dungeon:
             if random_room.entrance or random_room.exit:
                 continue
             elif random_room.ogre or random_room.gremlin or random_room.skeleton:
+                continue
+            elif (random_room.abstraction_pillar or random_room.polymorphism_pillar or random_room.inheritance_pillar or
+                  random_room.encapsulation_pillar):
                 continue
 
             if random.random() < 0.5:  # Adjust the probability here as needed
@@ -714,7 +714,3 @@ class Dungeon:
                 symbols += "E"
             symbols_dict[(row, col)] = symbols
         return symbols_dict
-
-
-dungeon = Dungeon(10, 10)
-dungeon.print_dungeon()
