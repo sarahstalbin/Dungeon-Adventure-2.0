@@ -600,8 +600,25 @@ class Dungeon:
         chimera_names = ["Hydra", "Nemean", "Typhon", "Simurgh", "Gryphon"]
         dragon_names = ["Drakar", "Fafnir", "Volcanor", "Pyrax", "Vritra"]
 
+        exit_room = None
+        abstraction_room = None
+        encapsulation_room = None
+        inheritance_room = None
+        polymorphism_room = None
+
         for room in self.__items.values():
             if room.exit:
+                exit_room = room
+            elif room.abstraction_pillar:
+                abstraction_room = room
+            elif room.encapsulation_pillar:
+                encapsulation_room = room
+            elif room.inheritance_pillar:
+                inheritance_room = room
+            elif room.polymorphism_pillar:
+                polymorphism_room = room
+
+            if exit_room or abstraction_room or encapsulation_room or inheritance_room or polymorphism_room:
                 choose_monster = random.choice(boss_type)
                 if choose_monster == "Troll":
                     troll_name = random.choice(troll_names)
