@@ -27,7 +27,7 @@ class Room:
         self.__encapsulation_pillar = False
         self.__inheritance_pillar = False
         self.__polymorphism_pillar = False
-        self.__empty_room = False
+        self.__empty_room = True
         self.__current_room = False
         self.__player_traveled = False
         self.__ogre = False
@@ -173,6 +173,7 @@ class Room:
         if not isinstance(add_potion, bool):
             raise ValueError("healing_potion must be a boolean")
         self.__healing_potion = add_potion
+        self.__empty_room = False
 
     @vision_potion.setter
     def vision_potion(self, vision_potion):
@@ -182,6 +183,7 @@ class Room:
         if not isinstance(vision_potion, bool):
             raise ValueError("vision_potion must be a boolean")
         self.__vision_potion = vision_potion
+        self.__empty_room = False
 
     @pit.setter
     def pit(self, reduce_potion):
@@ -191,6 +193,7 @@ class Room:
         if not isinstance(reduce_potion, bool):
             raise ValueError("pit must be a boolean")
         self.__pit = reduce_potion
+        self.__empty_room = False
 
     @north_door.setter
     def north_door(self, north_door):
@@ -236,6 +239,7 @@ class Room:
         if not isinstance(abstraction_pillar, bool):
             raise ValueError("abstraction_pillar must be a boolean")
         self.__abstraction_pillar = abstraction_pillar
+        self.__empty_room = False
 
     @encapsulation_pillar.setter
     def encapsulation_pillar(self, encapsulation_pillar):
@@ -245,6 +249,7 @@ class Room:
         if not isinstance(encapsulation_pillar, bool):
             raise ValueError("encapsulation_pillar must be a boolean")
         self.__encapsulation_pillar = encapsulation_pillar
+        self.__empty_room = False
 
     @inheritance_pillar.setter
     def inheritance_pillar(self, inheritance_pillar):
@@ -254,6 +259,7 @@ class Room:
         if not isinstance(inheritance_pillar, bool):
             raise ValueError("inheritance_pillar must be a boolean")
         self.__inheritance_pillar = inheritance_pillar
+        self.__empty_room = False
 
     @polymorphism_pillar.setter
     def polymorphism_pillar(self, polymorphism_pillar):
@@ -263,6 +269,7 @@ class Room:
         if not isinstance(polymorphism_pillar, bool):
             raise ValueError("polymorphism_pillar must be a boolean")
         self.__polymorphism_pillar = polymorphism_pillar
+        self.__empty_room = False
 
     @empty_room.setter
     def empty_room(self, is_empty):
@@ -278,18 +285,21 @@ class Room:
         if not isinstance(ogre, bool):
             raise ValueError("ogre must be a boolean")
         self.__ogre = ogre
+        self.__empty_room = False
 
     @gremlin.setter
     def gremlin(self, gremlin):
         if not isinstance(gremlin, bool):
             raise ValueError("gremlin must be a boolean")
         self.__gremlin = gremlin
+        self.__empty_room = False
 
     @skeleton.setter
     def skeleton(self, skeleton):
         if not isinstance(skeleton, bool):
             raise ValueError("skeleton must be a boolean")
         self.__skeleton = skeleton
+        self.__empty_room = False
 
     @dragon.setter
     def dragon(self, dragon):
@@ -302,12 +312,14 @@ class Room:
         if not isinstance(dungeon_troll, bool):
             raise ValueError("dungeon_troll must be a boolean")
         self.__dungeon_troll = dungeon_troll
+        self.__empty_room = False
 
     @chimera.setter
     def chimera(self, chimera):
         if not isinstance(chimera, bool):
             raise ValueError("chimera must be a boolean")
         self.__chimera = chimera
+        self.__empty_room = False
 
     @entrance.setter
     def entrance(self, entrance):
@@ -317,6 +329,7 @@ class Room:
         if not isinstance(entrance, bool):
             raise ValueError("entrance must be a boolean")
         self.__entrance = entrance
+        self.__is_empty = False
 
     @exit.setter
     def exit(self, exit_room):
@@ -326,6 +339,7 @@ class Room:
         if not isinstance(exit_room, bool):
             raise ValueError("exit must be a boolean")
         self.__exit = exit_room
+        self.__is_empty = False
 
     @impasse.setter
     def impasse(self, impasse):
@@ -353,6 +367,7 @@ class Room:
         if not isinstance(multiple_items, bool):
             raise ValueError("multiple_items must be a boolean")
         self.__multiple_items = multiple_items
+        self.__empty_room = False
 
     @current_room.setter
     def current_room(self, current_room):
@@ -366,6 +381,7 @@ class Room:
     def can_enter(self):
         """ This method can be called if there is no impasse and if it is not visited """
         return not self.__impasse and not self.__visited
+
 
     def __str__(self):
         """ str method prints the layout of the room class with its abbreviated names and symbols"""
@@ -381,39 +397,39 @@ class Room:
             layout += "*"
         if self.__healing_potion:
             layout += "H"
-        elif self.__vision_potion:
+        if self.__vision_potion:
             layout += "V"
-        elif self.__pit:
+        if self.__pit:
             layout += "X"
-        elif self.__entrance:
+        if self.__entrance:
             layout += "i"
-        elif self.__exit:
+        if self.__exit:
             layout += "O"
-        elif self.__multiple_items:
+        if self.__multiple_items:
             layout += "M"
-        elif self.__empty_room:
+        if self.__empty_room:
             layout += " "
-        elif self.__current_room:
+        if self.__current_room:
             layout += "@"
-        elif self.__ogre:
+        if self.__ogre:
             layout += "%"
-        elif self.__skeleton:
+        if self.__skeleton:
             layout += "$"
-        elif self.__gremlin:
+        if self.__gremlin:
             layout += "&"
-        elif self.__dragon:
+        if self.__dragon:
             layout += "^"
-        elif self.__chimera:
+        if self.__chimera:
             layout += "~"
-        elif self.__dungeon_troll:
+        if self.__dungeon_troll:
             layout += "#"
-        elif self.__abstraction_pillar:
+        if self.__abstraction_pillar:
             layout += "A"
-        elif self.__polymorphism_pillar:
+        if self.__polymorphism_pillar:
             layout += "P"
-        elif self.__inheritance_pillar:
+        if self.__inheritance_pillar:
             layout += "I"
-        elif self.__encapsulation_pillar:
+        if self.__encapsulation_pillar:
             layout += "E"
         if self.__east_door:
             layout += "|"
