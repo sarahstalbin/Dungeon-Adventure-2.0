@@ -73,17 +73,17 @@ class Dungeon:
         """
         return self.__maze[0][0]
 
-    @property
-    def maze_array(self):
-        return self.__maze
+    # @property
+    # def maze_array(self):
+    #     return self.__maze
 
-    @property
-    def maze_dictionary(self):
-        """
-        Internal getter method that returns the dictionary.
-        :return: the dictionary instantiated in the class constructor.
-        """
-        return self.__items
+    # @property
+    # def maze_dictionary(self):
+    #     """
+    #     Internal getter method that returns the dictionary.
+    #     :return: the dictionary instantiated in the class constructor.
+    #     """
+    #     return self.__items
 
     def show_room_str(self, key):
         """
@@ -133,10 +133,10 @@ class Dungeon:
         """
         Sets player's current coordinates as current room. Used in vision potion
         """
+        room.multiple_items = False
         room.healing_potion = False
         room.vision_potion = False
         room.pit = False
-        room.multiple_items = False
         room.entrance = False
         room.empty_room = False
         room.abstraction_pillar = False
@@ -145,37 +145,39 @@ class Dungeon:
         room.encapsulation_pillar = False
         room.current_room = True
 
-    def get_empty_room(self):
-        return self.__empty_room
+    # def get_empty_room(self):
+    #     return self.__empty_room
 
-    def set_empty_room(self, key=(0, 0), pit=False):
+    # def set_empty_room(self, key=(0, 0), pit=False):
+    def set_empty_room(self, key=(0, 0)):
         """
         If room traveled, removes items but leaves pit
         """
         item = self.__items.get(key)
-        if item.healing_potion:
+
+        if item.pit:
+            item.pit = True
+        elif item.healing_potion:
             item.healing_potion = False
-            item.empty_room = True
+            # item.empty_room = True
         elif item.vision_potion:
             item.vision_potion = False
-            item.empty_room = True
+            # item.empty_room = True
         elif item.multiple_items:
             item.multiple_items = False
-            if pit:
-                item.pit = True
-            else:
-                item.empty_room = True
         elif item.abstraction_pillar:
             item.abstraction_pillar = False
-            item.empty_room = True
+            # item.empty_room = True
         elif item.polymorphism_pillar:
             item.polymorphism_pillar = False
-            item.empty_room = True
+            # item.empty_room = True
         elif item.inheritance_pillar:
             item.inheritance_pillar = False
-            item.empty_room = True
+            # item.empty_room = True
         elif item.encapsulation_pillar:
             item.encapsulation_pillar = False
+            # item.empty_room = True
+        else:
             item.empty_room = True
 
     def show_room_contents(self, key):
@@ -186,40 +188,40 @@ class Dungeon:
        """
 
         item = self.__items.get(key)
-        symbols = ""
+        symbols = []
+        if item.multiple_items:
+            symbols.append("M")
         if item.healing_potion:
-            symbols += "H"
-        elif item.vision_potion:
-            symbols += "V"
-        elif item.pit:
-            symbols += "X"
-        elif item.entrance:
-            symbols += "i"
-        elif item.exit:
-            symbols += "O"
-        elif item.multiple_items:
-            symbols += "M"
+            symbols.append("H")
+        if item.vision_potion:
+            symbols.append("V")
+        if item.pit:
+            symbols.append("X")
+        if item.entrance:
+            symbols.append("i")
+        if item.exit:
+            symbols.append("O")
         elif item.empty_room:
-            symbols += " "
+            symbols.append(" ")
         elif item.abstraction_pillar:
-            symbols += "A"
+            symbols.append("A")
         elif item.polymorphism_pillar:
-            symbols += "P"
+            symbols.append("P")
         elif item.inheritance_pillar:
-            symbols += "I"
+            symbols.append("I")
         elif item.encapsulation_pillar:
-            symbols += "E"
+            symbols.append("E")
         return symbols
 
-    def print_dictionary(self):
-        """
-        Prints the contents of each Room without the symbols from Room's __str__() method.
-        Uses the format (row, col) : contents.
-        :return: None
-        """
-        symbols_dict = self._get_object_symbols()
-        for key, value in symbols_dict.items():
-            print(f"Room at ({key[0]}, {key[1]}): {value}")
+    # def print_dictionary(self):
+    #     """
+    #     Prints the contents of each Room without the symbols from Room's __str__() method.
+    #     Uses the format (row, col) : contents.
+    #     :return: None
+    #     """
+    #     symbols_dict = self._get_object_symbols()
+    #     for key, value in symbols_dict.items():
+    #         print(f"Room at ({key[0]}, {key[1]}): {value}")
 
     def is_valid_room(self, row, col):
         """
@@ -230,60 +232,61 @@ class Dungeon:
         """
         return 0 <= row < self.__rows and 0 <= col < self.__cols
 
-    def __str__(self):
-        """
-        External method that builds a string containing information about the entire Dungeon.
-        :return: String
-        """
-        dungeon_info = ""
-        for row in range(self.__rows):
-            for col in range(self.__cols):
-                room = self.__maze[row][col]
-                dungeon_info += f"Room at ({row}, {col}):"
-                dungeon_info += f"\n  - North Door: {room.north_door}"
-                dungeon_info += f"\n  - South Door: {room.south_door}"
-                dungeon_info += f"\n  - East Door: {room.east_door}"
-                dungeon_info += f"\n  - West Door: {room.west_door}"
-                dungeon_info += f"\n  - Visited: {room.visited}"
-                dungeon_info += f"\n  - Entrance: {room.entrance}"
-                dungeon_info += f"\n  - Exit: {room.exit}"
-                dungeon_info += f"\n  - Impasse: {room.impasse}"
-                dungeon_info += f"\n  - Empty Room: {room.empty_room}"
-                room.abstraction_pillar = True
-                dungeon_info += f"\n  - Abstraction Pillar: {room.abstraction_pillar}"
-                room.encapsulation_pillar = True
-                dungeon_info += f"\n  - Encapsulation Pillar: {room.encapsulation_pillar}"
-                room.inheritance_pillar = True
-                dungeon_info += f"\n  - Inheritance Pillar: {room.inheritance_pillar}"
-                room.polymorphism_pillar = True
-                dungeon_info += f"\n  - Polymorphism Pillar: {room.polymorphism_pillar}"
-                room.healing_potion = True
-                dungeon_info += f"\n  - Healing Potion: {room.healing_potion}"
-                room.vision_potion = True
-                dungeon_info += f"\n  - Vision Potion: {room.vision_potion}"
-                room.pit = True
-                dungeon_info += f"\n  - Pit: {room.pit}"
-                room.ogre = True
-                dungeon_info += f"\n  - Ogre: {room.ogre}"
-                room.gremlin = True
-                dungeon_info += f"\n  - Gremlin: {room.gremlin}"
-                room.skeleton = True
-                dungeon_info += f"\n  - Skeleton: {room.skeleton}"
-                room.dungeon_troll = True
-                dungeon_info += f"\n  - Troll: {room.dungeon_troll}"
-                room.chimera = True
-                dungeon_info += f"\n  - Chimera: {room.chimera}"
-                room.dragon = True
-                dungeon_info += f"\n  - Dragon: {room.dragon}"
-                dungeon_info += "\n\n"
-
-        return dungeon_info
+    # def __str__(self):
+    #     """
+    #     External method that builds a string containing information about the entire Dungeon.
+    #     :return: String
+    #     """
+    #     dungeon_info = ""
+    #     for row in range(self.__rows):
+    #         for col in range(self.__cols):
+    #             room = self.__maze[row][col]
+    #             dungeon_info += f"Room at ({row}, {col}):"
+    #             dungeon_info += f"\n  - North Door: {room.north_door}"
+    #             dungeon_info += f"\n  - South Door: {room.south_door}"
+    #             dungeon_info += f"\n  - East Door: {room.east_door}"
+    #             dungeon_info += f"\n  - West Door: {room.west_door}"
+    #             dungeon_info += f"\n  - Visited: {room.visited}"
+    #             dungeon_info += f"\n  - Entrance: {room.entrance}"
+    #             dungeon_info += f"\n  - Exit: {room.exit}"
+    #             dungeon_info += f"\n  - Impasse: {room.impasse}"
+    #             dungeon_info += f"\n  - Empty Room: {room.empty_room}"
+    #             room.abstraction_pillar = True
+    #             dungeon_info += f"\n  - Abstraction Pillar: {room.abstraction_pillar}"
+    #             room.encapsulation_pillar = True
+    #             dungeon_info += f"\n  - Encapsulation Pillar: {room.encapsulation_pillar}"
+    #             room.inheritance_pillar = True
+    #             dungeon_info += f"\n  - Inheritance Pillar: {room.inheritance_pillar}"
+    #             room.polymorphism_pillar = True
+    #             dungeon_info += f"\n  - Polymorphism Pillar: {room.polymorphism_pillar}"
+    #             room.healing_potion = True
+    #             dungeon_info += f"\n  - Healing Potion: {room.healing_potion}"
+    #             room.vision_potion = True
+    #             dungeon_info += f"\n  - Vision Potion: {room.vision_potion}"
+    #             room.pit = True
+    #             dungeon_info += f"\n  - Pit: {room.pit}"
+    #             room.ogre = True
+    #             dungeon_info += f"\n  - Ogre: {room.ogre}"
+    #             room.gremlin = True
+    #             dungeon_info += f"\n  - Gremlin: {room.gremlin}"
+    #             room.skeleton = True
+    #             dungeon_info += f"\n  - Skeleton: {room.skeleton}"
+    #             room.dungeon_troll = True
+    #             dungeon_info += f"\n  - Troll: {room.dungeon_troll}"
+    #             room.chimera = True
+    #             dungeon_info += f"\n  - Chimera: {room.chimera}"
+    #             room.dragon = True
+    #             dungeon_info += f"\n  - Dragon: {room.dragon}"
+    #             dungeon_info += "\n\n"
+    #
+    #     return dungeon_info
 
     def print_play_dungeon(self, current_row=-1, current_col=-1):
         """
         Prints a simple visual representation of the Dungeon's maze as player is playing
         :return: None.
         """
+        space = " "
         top = []
         for row in range(self.__rows):
             for col in range(self.__cols):
@@ -315,10 +318,7 @@ class Dungeon:
         for row in range(self.__rows):
             for col in range(self.__cols):
                 if row == current_row and col == current_col:
-                    if len(str(self.__maze[row][col])) == 10:
-                        bottom.append(str(self.__maze[row][col])[7:10] + "  ")
-                    else:
-                        bottom.append(str(self.__maze[row][col])[8:11] + "  ")
+                    bottom.append(str(self.__maze[row][col])[-3:] + "  ")
                 else:
                     if self.__items.get((row, col)).player_traveled:
                         bottom.append("---  ")
@@ -353,10 +353,11 @@ class Dungeon:
         :return: None.
         """
         # Saves top strings of all rooms in dungeon
+        space = " "
         top = []
         for row in range(self.__rows):
             for col in range(self.__cols):
-                top.append(str(self.__maze[row][col])[0:3] + "     ")
+                top.append(str(self.__maze[row][col])[0:3] + space*10)
 
         # saves mid string of all rooms in dungeon
         mid = []
@@ -365,22 +366,20 @@ class Dungeon:
                 if row == current_row and col == current_col:
                     current = str(self.__maze[row][col])[4]
                     current += "@"
-                    current += str(self.__maze[row][col])[6] + "     "
+                    current += str(self.__maze[row][col])[6] + space
                     mid.append(current)
                 else:
-                    if len(str(self.__maze[row][col])) == 10:
-                        mid.append(str(self.__maze[row][col])[4:6] + "      ")
-                    else:
-                        mid.append(str(self.__maze[row][col])[4:7] + "     ")
+                    # if len(str(self.__maze[row][col])) >:
+                    # room_len = len(str(self.__maze[row][col])) -6
+                    mid_len = len(str(self.__maze[row][col])[4:-4])
+                    mid.append(str(self.__maze[row][col])[4:-4] + space*(13 - mid_len)) #[4:6]
 
         # Saves bottom strings of all rooms in dungeon
         bottom = []
         for row in range(self.__rows):
             for col in range(self.__cols):
-                if len(str(self.__maze[row][col])) == 10:
-                    bottom.append(str(self.__maze[row][col])[7:10] + "     ")
-                else:
-                    bottom.append(str(self.__maze[row][col])[8:11] + "     ")
+                bottom.append(str(self.__maze[row][col])[-3:] + (space * 10)) #[7:10]
+
 
         # prints dungeon according to the dimensions
         for i in range(0, self.__rows):
@@ -479,6 +478,7 @@ class Dungeon:
         """
         # Set the entrance and exit
         self.__maze[0][0].entrance = True
+        self.__maze[0][0].empty_room = False
         self.__maze[self.__rows - 1][self.__cols - 1].exit = True
 
         # Update exit Room coordinates
@@ -635,37 +635,7 @@ class Dungeon:
                 else:
                     raise ValueError("No exit room found")
 
-    def _place_items(self):
-        """ Places items throughout the maze """
-        for (row, col), room in self.__items.items():
-            if room.entrance or room.exit or room.abstraction_pillar \
-                    or room.polymorphism_pillar or room.inheritance_pillar or room.encapsulation_pillar:
-                continue
-            else:
-                item_list = ["V", "H", "M", "X"]
-                choice = random.choice(item_list)
-                possibility = random.randint(0, 100)
-                # Place the healing potion
-                if possibility <= 30:
-                    # Place the vision potion
-                    if choice == "V":
-                        vision_potion = DungeonItemsFactory.create_item("V")
-                        room.vision_potion = True if vision_potion else False
-                    # Place health potion
-                    if choice == "H":
-                        healing_potion = DungeonItemsFactory.create_item("H", 1, 10)
-                        room.healing_potion = True if healing_potion else False
-                    # Place multi item
-                    if choice == "M":
-                        multiple_items = DungeonItemsFactory.create_multiple_items(1, 10)
-                        room.multiple_items = True if multiple_items else False
-                    # Place the pit
-                    if choice == "X":
-                        pit = DungeonItemsFactory.create_item("X", 1, 10)
-                        room.pit = True if pit else False
-                else:
-                    room.empty_room = True
-
+        # place pillars first
     def _place_pillars(self):
         """
         Internal method that randomly places Pillars in eligible Rooms throughout the maze.
@@ -698,36 +668,88 @@ class Dungeon:
             else:
                 break
 
-    def _get_object_symbols(self):
-        """
-        Internal method that overrides the Room class __str__() method by converting its symbols to shorter, more
-        readable symbols in the Dungeon class dictionary.
-        :return: the dictionary of symbols
-        """
-        symbols_dict = {}
+    #place items 2nd
+    def _place_items(self):
+        """ Places items throughout the maze """
         for (row, col), room in self.__items.items():
-            symbols = ""
-            if room.healing_potion:
-                symbols += "H"
-            elif room.vision_potion:
-                symbols += "V"
-            elif room.pit:
-                symbols += "X"
-            elif room.entrance:
-                symbols += "i"
-            elif room.exit:
-                symbols += "O"
-            elif room.multiple_items:
-                symbols += "M"
-            elif room.empty_room:
-                symbols += " "
-            elif room.abstraction_pillar:
-                symbols += "A"
-            elif room.polymorphism_pillar:
-                symbols += "P"
-            elif room.inheritance_pillar:
-                symbols += "I"
-            elif room.encapsulation_pillar:
-                symbols += "E"
-            symbols_dict[(row, col)] = symbols
-        return symbols_dict
+            if room.entrance or room.exit or room.abstraction_pillar \
+                    or room.polymorphism_pillar or room.inheritance_pillar or room.encapsulation_pillar:
+                continue
+            else:
+                item_list = ["V", "H", "M", "X"]
+                choice = random.choice(item_list)
+                possibility = random.randint(0, 100)
+                # Place the healing potion
+                if possibility <= 30:
+                    # Place the vision potion
+                    if choice == "V":
+                        vision_potion = DungeonItemsFactory.create_item("V")
+                        room.vision_potion = True if vision_potion else False
+                    # Place health potion
+                    if choice == "H":
+                        healing_potion = DungeonItemsFactory.create_item("H", 1, 10)
+                        room.healing_potion = True if healing_potion else False
+                    # Place multi item
+                    if choice == "M":
+                        multiple_items = DungeonItemsFactory.create_item("M")
+                        room.multiple_items = True if multiple_items else False
+                        items = ["V", "H", "X"]
+                        results = random.sample(items, random.randint(2, 3))
+                        for values in results:
+                            if values == 'V':
+                                vision_potion = DungeonItemsFactory.create_item("V")
+                                room.vision_potion = True if vision_potion else False
+                            if values == "H":
+                                healing_potion = DungeonItemsFactory.create_item("H", 1, 10)
+                                room.healing_potion = True if healing_potion else False
+                            if values == "X":
+                                pit = DungeonItemsFactory.create_item("X", 1, 10)
+                                room.pit = True if pit else False
+                    # Place the pit
+                    if choice == "X":
+                        pit = DungeonItemsFactory.create_item("X", 1, 10)
+                        room.pit = True if pit else False
+
+
+    # def _get_object_symbols(self):
+    #     """
+    #     Internal method that overrides the Room class __str__() method by converting its symbols to shorter, more
+    #     readable symbols in the Dungeon class dictionary.
+    #     :return: the dictionary of symbols
+    #     """
+    #     symbols_dict = {}
+    #     for (row, col), room in self.__items.items():
+    #         symbols = ""
+    #         if room.healing_potion:
+    #             symbols += "H"
+    #         elif room.vision_potion:
+    #             symbols += "V"
+    #         elif room.pit:
+    #             symbols += "X"
+    #         elif room.entrance:
+    #             symbols += "i"
+    #         elif room.exit:
+    #             symbols += "O"
+    #         elif room.multiple_items:
+    #             symbols += "M"
+    #         elif room.empty_room:
+    #             symbols += " "
+    #         elif room.abstraction_pillar:
+    #             symbols += "A"
+    #         elif room.polymorphism_pillar:
+    #             symbols += "P"
+    #         elif room.inheritance_pillar:
+    #             symbols += "I"
+    #         elif room.encapsulation_pillar:
+    #             symbols += "E"
+    #         symbols_dict[(row, col)] = symbols
+    #     return symbols_dict
+
+
+if __name__ == "__main__":
+    d= Dungeon(5,5)
+    d.print_dungeon()
+    # d.print_maze(0,0)
+
+
+
