@@ -1,91 +1,68 @@
 from DungeonCharacter import DungeonCharacter
+from View import View
 from abc import ABC, abstractmethod
 import random
 
 
-class HeroModel(DungeonCharacter, ABC):
+class Hero(DungeonCharacter, ABC):
     """ Hero class inherits from DungeonCharacter parent class, and it is an abstract base class"""
 
     def __init__(self, name, hit_points, attack_speed, chance_to_hit, min_damage,
                  max_damage, chance_to_block, h_potion_ct, v_potion_ct, pillar_ct):
         super().__init__(name, hit_points, attack_speed, chance_to_hit, min_damage,
                          max_damage, h_potion_ct, v_potion_ct, pillar_ct)
-        # self._chance_to_block = chance_to_block
 
+        #self.view = View()
         self.stats["chance_to_block"] = chance_to_block
 
     @abstractmethod
     def hero_name(self):
-        """
-        abstract method for hero_name method used in child classes
-        """
         pass
 
     @abstractmethod
     def hit_points(self):
-        """
-        abstract method for get_hit-points method used in child classes
-        """
         pass
 
     @abstractmethod
     def healing_potion_count(self):
-        """
-        abstract method for healing potion count method used in child classes
-        """
         pass
 
     @abstractmethod
     def vision_potion_count(self):
-        """
-        abstract method for vision potion count method used in child classes
-        """
         pass
 
     @abstractmethod
     def pillar_count(self):
-        """
-        abstract method for pillar count method used in child classes
-        """
         pass
 
     @abstractmethod
     def can_attack(self):
-        """ abstract method for can_attack method used in child classes """
         pass
 
     @abstractmethod
     def attack(self, opponent):
-        """ abstract method for attack method used in child classes """
         pass
 
     @abstractmethod
     def get_damage(self):
-        """ abstract method for get_damage method used in child classes """
         pass
 
     @abstractmethod
     def calculate_damage(self, damage):
-        """ abstract method for calculate_damage method used in child classes """
         pass
 
     @abstractmethod
     def special_skill(self, opponent):
-        """ abstract method for special_skill method used in child classes """
         pass
 
 
-class Warrior(HeroModel):
+class Warrior(Hero):
     """ Warrior class is the child class of Hero """
 
     def __init__(self):
         super().__init__("Warrior", 125, 4, 0.8, 35, 60,
                          0.2, 0, 0, 0)
 
-    def __str__(self):
-        formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
-        return "\n" + "\n".join(formatted_list) + "\n"
-
     @property
     def hero_name(self):
         """
@@ -142,7 +119,7 @@ class Warrior(HeroModel):
         return self.stats["v_potion_ct"]
 
     @vision_potion_count.setter
-    def vision_potion_count(self, v_potion=0):
+    def vision_potion_count(self, v_potion):
         """
         Sets vision potion count
         """
@@ -169,54 +146,46 @@ class Warrior(HeroModel):
             print("\nMust be an int.")
 
     def get_damage(self):
-        """ This method gets damage points """
         return random.randint(self.stats["min_damage"], self.stats["max_damage"])
 
     def calculate_damage(self, damage):
-        """ This method decrements hit_points to calculate damage """
         self.stats["hit_points"] -= damage
 
     def can_attack(self):
-        """ This method gives the chance or probability of chance_to_hit"""
-        return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
+        return random.random() < self.stats["chance_to_hit"]
 
     def attack(self, opponent):
-        """ This method attacks the opponent and causes damage to the opponent"""
-        #print(f"{self.hero_name} is battling against {opponent.hero_name}")
-        if self.can_attack():  # if Warrior can attack
-            damage = self.get_damage()  # gets minimum amd maximum damage points
-            opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
-            # and reduce the points of the opponent
-            #print(f" {self.hero_name} attacks {opponent.hero_name} for {damage} damage points")
-            return True  # return True if the attack is successful
+        result = {"attacker": self.hero_name, "opponent": opponent.hero_name, "success": False, "damage": 0}
 
-        else:
-            #print(f" {self.hero_name} couldn't attack {opponent.hero_name}  ")
-            return False  # else return False
+        if self.can_attack():
+            damage = self.get_damage()
+            opponent.calculate_damage(damage)
+            result["success"] = True
+            result["damage"] = damage
+
+        #self.view.display_attack_result(result)
+        return result
 
     def special_skill(self, opponent):
-        """ This method is the Warrior's special skill """
-        if random.random() < 0.4:  # 40% chance for Crushing Blow
-            damage = random.randint(75, 175)  # causes damage for 75 to 175 points
-            opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
-            #print(f"{self.hero_name} performs a Crushing Blow for {damage} damage.")
-            return True
-        else:
-            return False
-            #print(f"{self.hero_name} couldn't perform Crushing Blow")
+        result = {"attacker": self.hero_name, "opponent": opponent.hero_name, "success": False}
+
+        if random.random() < 0.4:
+            damage = random.randint(75, 175)
+            opponent.calculate_damage(damage)
+            result["success"] = True
+            result["damage"] = damage
+        #self.view.warrior_attack_result(result)
+
+        return result
 
 
-class Priestess(HeroModel):
+class Priestess(Hero):
     """ Priestess class is the child class of Hero """
 
     def __init__(self):
         super().__init__("Priestess", 75, 5, 0.7, 25, 45,
                          0.3, 0, 0, 0)
 
-    def __str__(self):
-        formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
-        return "\n" + "\n".join(formatted_list) + "\n"
-
     @property
     def hero_name(self):
         """
@@ -300,50 +269,46 @@ class Priestess(HeroModel):
             print("\nMust be an int.")
 
     def get_damage(self):
-        """ This method gets damage points """
         return random.randint(self.stats["min_damage"], self.stats["max_damage"])
 
     def calculate_damage(self, damage):
-        """ This method decrements hit_points to calculate damage """
         self.stats["hit_points"] -= damage
 
     def can_attack(self):
-        """ This method gives the chance or probability of chance_to_hit"""
-        return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
+        return random.random() < self.stats["chance_to_hit"]
 
     def attack(self, opponent):
-        """ This method attacks the opponent and causes damage to the opponent"""
-        #print(f"{self.hero_name} is battling against {opponent.hero_name}")
-        if self.can_attack():  # if Warrior can attack
-            damage = self.get_damage()  # gets minimum amd maximum damage points
-            opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
-            # and reduce the points of the opponent
-            #print(f" {self.hero_name} attacks {opponent.hero_name} for {damage} damage points")
-            return True  # return True if the attack is successful
+        result = {"attacker": self.hero_name, "opponent": opponent.hero_name, "success": False, "damage": 0}
 
-        else:
-            #print(f" {self.hero_name} couldn't attack {opponent.hero_name}  ")
-            return False  # else return False
+        if self.can_attack():
+            damage = self.get_damage()
+            opponent.calculate_damage(damage)
+            result["success"] = True
+            result["damage"] = damage
+
+        #View.display_attack_result(result)
+        return result
 
     def special_skill(self, opponent):
-        """ This method is the Priestess special_skill"""
+        result = {"attacker": self.hero_name, "opponent": opponent.hero_name, "success": False, "heal": 0}
+
         heal = random.randint(25, 50)
-        opponent.calculate_damage(-heal)  # heals the damage points
-        return True
-        #print(f" {self.hero_name} performs healing on {opponent.hero_name} for {heal} heal points ")
+        opponent.calculate_damage(-heal)
+
+        result["success"] = True
+        result["heal"] = heal
+
+        #View.priestess_attack_result(result)
+        return result
 
 
-class Thief(HeroModel):
+class Thief(Hero):
     """ Thief class is the child class of Hero """
 
     def __init__(self):
         super().__init__("Thief", 75, 6, 0.8, 20, 40,
                          0.4, 0, 0, 0)
 
-    def __str__(self):
-        formatted_list = ["   " + str(item) + " : " + str(values) for item, values in self.stats.items()]
-        return "\n" + "\n".join(formatted_list) + "\n"
-
     @property
     def hero_name(self):
         """
@@ -427,46 +392,69 @@ class Thief(HeroModel):
             print("\nMust be an int.")
 
     def get_damage(self):
-        """ This method gets damage points """
         return random.randint(self.stats["min_damage"], self.stats["max_damage"])
 
     def calculate_damage(self, damage):
-        """ This method decrements hit_points to calculate damage """
         self.stats["hit_points"] -= damage
 
     def can_attack(self):
-        """ This method gives the chance or probability of chance_to_hit"""
-        return random.random() < self.stats["chance_to_hit"]  # random.random() generates a float value from 0 to 1
+        return random.random() < self.stats["chance_to_hit"]
 
     def attack(self, opponent):
-        """ This method attacks the opponent and causes damage to the opponent"""
-        #print(f"{self.hero_name} is battling against {opponent.hero_name}")
-        if self.can_attack():  # if Warrior can attack
-            damage = self.get_damage()  # gets minimum amd maximum damage points
-            opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
-            # and reduce the points of the opponent
-            #print(f" {self.hero_name} attacks {opponent.hero_name} for {damage} damage points")
-            return True  # return True if the attack is successful
+        result = {"attacker": self.hero_name, "opponent": opponent.hero_name, "success": False, "damage": 0}
 
-        else:
-            #print(f" {self.hero_name} couldn't attack {opponent.hero_name}  ")
-            return False  # else return False
+        if self.can_attack():
+            damage = self.get_damage()
+            opponent.calculate_damage(damage)
+            result["success"] = True
+            result["damage"] = damage
+
+        View.display_attack_result(result)
+        return result
 
     def special_skill(self, opponent):
-        """ This method is the Thief's special_skill """
+        result = {"attacker": self.hero_name, "opponent": opponent.hero_name, "success": False, "attacks": 0,
+                  "damage": 0}
+
         chance = random.random()
-        if chance < 0.4:  # 40% chance for Surprise Attack
-            self.attack(opponent)
-            self.attack(opponent)
-            return True
-            #print(f" {self.hero_name} attacked twice")
+        if chance < 1:
+            # if self.can_attack():
+            #     damage = self.get_damage()
+            #     opponent.calculate_damage(damage)
+            #     result["success"] = True
+            #     result["damage"] = damage
+            res = self.attack(opponent)
+            result["damage"] += res["damage"]
+            res = self.attack(opponent)
+            result["damage"] += res["damage"]
+            print(result)
+
+            #self.attack(opponent)
+
+            # print(f" {self.hero_name} attacked twice")
+            result["success"] = True
+            result["attacks"] = 2
+            # result["damage"] = damage
+            # self.view.thief_special_attack_result(result)
         elif chance < 0.8:
-            self.attack(opponent)
-            return True
-            #print(f" {self.hero_name} attacked once")
-        else:
-            return False
-            #print(f"{self.hero_name} couldn't attack")
+            result=self.attack(opponent)
+            # print(f" {self.hero_name} attacked once")
+            result["success"] = True
+            result["attacks"] = 1
+
+            # self.view.thief_special_attack_result(result)
+
+        View.thief_special_attack_result(result)
+        # else:
+        #     self.view.thief_special_attack_result(result)
+        #     #print(f"{self.hero_name} couldn't attack")
+
+        return result
 
 
-
+w = Warrior()
+p = Priestess()
+t = Thief()
+p.attack(w)
+w.special_skill(t)
+t.special_skill(w)
