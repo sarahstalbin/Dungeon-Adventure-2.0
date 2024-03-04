@@ -289,7 +289,7 @@ class Dungeon:
             room = self.__items.get(key)
             room.player_traveled = True
         else:
-            raise ValueError("Must be Room coordinates")
+            raise ValueError("Must be integer Room coordinates")
 
     def __str__(self):
         """
@@ -540,7 +540,7 @@ class Dungeon:
         """
         boss_type = ["Troll", "Chimera", "Dragon"]
         troll_names = ["Ragnok", "Grimbash", "Boulderfist", "Groggnar", "Gnarlgrip"]
-        chimera_names = ["Hydra", "Nemean", "Typhon", "Simurgh", "Gryphon"]
+        chimera_names = ["Hydra", "Nemean", "Typhon", "Thrawn", "Gryphon"]
         dragon_names = ["Drakar", "Fafnir", "Volcanor", "Pyrax", "Vritra"]
 
         exit_room = None
