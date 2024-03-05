@@ -116,93 +116,6 @@ class Dungeon:
             boo_results = attributes_current.west_door and attributes_new.east_door
             return boo_results
 
-    @property
-    def current_room(self):
-        return self.__current_room
-
-    @current_room.setter
-    def current_room(self, room):
-        """
-        Sets player's current coordinates as current room. Used in vision potion
-        """
-        if isinstance(room, Room):
-            room.multiple_items = False
-            room.healing_potion = False
-            room.vision_potion = False
-            room.pit = False
-            room.entrance = False
-            room.empty_room = False
-            room.abstraction_pillar = False
-            room.polymorphism_pillar = False
-            room.inheritance_pillar = False
-            room.encapsulation_pillar = False
-            room.current_room = True
-        else:
-            raise ValueError("Must submit a Room object")
-
-    def set_empty_room(self, key=(0, 0)):
-        """
-        If room traveled, removes items but leaves pit
-        """
-        item = self.__items.get(key)
-
-        if item.pit:
-            item.pit = True
-        elif item.healing_potion:
-            item.healing_potion = False
-            # item.empty_room = True
-        elif item.vision_potion:
-            item.vision_potion = False
-            # item.empty_room = True
-        elif item.multiple_items:
-            item.multiple_items = False
-        elif item.abstraction_pillar:
-            item.abstraction_pillar = False
-            # item.empty_room = True
-        elif item.polymorphism_pillar:
-            item.polymorphism_pillar = False
-            # item.empty_room = True
-        elif item.inheritance_pillar:
-            item.inheritance_pillar = False
-            # item.empty_room = True
-        elif item.encapsulation_pillar:
-            item.encapsulation_pillar = False
-            # item.empty_room = True
-        else:
-            item.empty_room = True
-
-    def show_room_contents(self, key):
-        """
-       Gets the contents of a Room in the dungeon.
-       :param key: a tuple representation of the row, column Room coordinates (0, 0)
-       :return: the contents of the specified Room, in the format specified in the __str__() method in Room class.
-       """
-
-        item = self.__items.get(key)
-        symbols = []
-        if item.multiple_items:
-            symbols.append("M")
-        if item.healing_potion:
-            symbols.append("H")
-        if item.vision_potion:
-            symbols.append("V")
-        if item.pit:
-            symbols.append("X")
-        if item.entrance:
-            symbols.append("i")
-        if item.exit:
-            symbols.append("O")
-        elif item.empty_room:
-            symbols.append(" ")
-        elif item.abstraction_pillar:
-            symbols.append("A")
-        elif item.polymorphism_pillar:
-            symbols.append("P")
-        elif item.inheritance_pillar:
-            symbols.append("I")
-        elif item.encapsulation_pillar:
-            symbols.append("E")
-        return symbols
 
     def is_valid_room(self, row, col):
         """
@@ -285,7 +198,7 @@ class Dungeon:
         :param key: the coordinates of the Room
         :return: None.
         """
-        if isinstance(key, int):
+        if isinstance(key, tuple):
             room = self.__items.get(key)
             room.player_traveled = True
         else:
@@ -656,5 +569,10 @@ class Dungeon:
 
 if __name__ == "__main__":
     d = Dungeon(5, 5)
+    # print(d)
+    d.get_room_str((0, 0)).healing_potion = True
+    # out = str(d.get_room_str((0,0)))[5:7]
+    # for letter in out:
+    #     print (letter)
+    # out = out[5]
     print(d)
-    # d.print_maze(0,0)
