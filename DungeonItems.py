@@ -53,7 +53,7 @@ class VisionPotion(DungeonItems):
         """
         vision_rooms = []
         current_room = copy.deepcopy(dungeon.get_room_str((current_row, current_col)))
-        dungeon.set_current_room(current_room)
+        self.current_room(current_room)
         row = 3
         col = 3
         if current_row == 0 or current_row == dungeon_max_col - 1:
@@ -133,10 +133,10 @@ class VisionPotion(DungeonItems):
         """
 
         # Grab new column
-        temp, north_col = dungeon._get_neighbor_coords(current_row, current_col,
+        temp, north_col = dungeon._return_neighbor_coordinates(current_row, current_col,
                                                        col_direction)
         # Grab new row
-        west_row, temp = dungeon._get_neighbor_coords(current_row, current_col,
+        west_row, temp = dungeon._return_neighbor_coordinates(current_row, current_col,
                                                       row_direction)
         # If it is a true room, return the room
         if dungeon.is_valid_room(west_row, north_col):
@@ -148,11 +148,29 @@ class VisionPotion(DungeonItems):
         Retrieves and returns string room for directly touching rooms
         :return: str
         """
-        row, col = dungeon._get_neighbor_coords(current_row, current_col, direction)
+        row, col = dungeon._return_neighbor_coordinates(current_row, current_col, direction)
         if dungeon.is_valid_room(row, col):
             return dungeon.get_room_str((row, col))
         return ""
 
+    def current_room(self, room):
+        """
+        Sets player's current coordinates as current room. Used in vision potion
+        """
+        # if isinstance(room, Room):
+        room.multiple_items = False
+        room.healing_potion = False
+        room.vision_potion = False
+        room.pit = False
+        room.entrance = False
+        room.empty_room = False
+        room.abstraction_pillar = False
+        room.polymorphism_pillar = False
+        room.inheritance_pillar = False
+        room.encapsulation_pillar = False
+        room.current_room = True
+        # else:
+        #     raise ValueError("Must submit a Room object")
 
 class Pit(DungeonItems):
     def __init__(self, minimum, maximum):
@@ -164,3 +182,13 @@ class Pit(DungeonItems):
     def use_item(self):
         """ Implementing use_item method for Pit class"""
         return self.pit
+
+
+class MultiItem(DungeonItems):
+    def __init__(self):
+        """ Inheriting DungeonItems class initializing name as "X" and passing a minimum amd maximum parameters
+        param: minimum, maximum"""
+        super().__init__("M")
+
+    def use_item(self):
+        pass
