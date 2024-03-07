@@ -18,7 +18,6 @@ class Dungeon:
     def __init__(self, rows, cols):
         self.__rows = rows
         self.__cols = cols
-        self.__player_traveled = None  # Temporary?
         self.__items = {}
         self.__maze = []
         self.__exit_row = None
@@ -70,19 +69,6 @@ class Dungeon:
         """
         return self.__maze[0][0]
 
-    def set_current_room(self, key, current_room = False):
-        """
-        Sets the Room for a given coordinate as true for tracking the player. Used in Vision
-        :return: None
-        """
-        self.get_room_str(key).current_room = current_room
-
-    def get_current_room(self, key):
-        """
-        Returns a boolean if the Room at given key is the current room of the player
-        :return: boolean
-        """
-        return self.get_room_str(key).current_room
 
     def get_room_str(self, key):
         """
@@ -195,27 +181,6 @@ class Dungeon:
                 print(bottom[room], end="")
             print("\n")
 
-    @property
-    def player_traveled(self):
-        """
-        Returns True if player has traveled into a Room, False if not.
-        :return:
-        """
-        return self.__player_traveled
-
-    @player_traveled.setter
-    def player_traveled(self, key):
-        """
-        Sets a player as having traveled in a Room.
-        :param key: the coordinates of the Room
-        :return: None.
-        """
-        if isinstance(key, int):
-            room = self.__items.get(key)
-            room.player_traveled = True
-        else:
-            raise ValueError("Must be integer Room coordinates")
-
     def __str__(self):
         """
         Returns a simple visual representation of the Dungeon's maze.
@@ -236,7 +201,7 @@ class Dungeon:
                 mid_len = len(str(self.__maze[row][col])[4:-4])
 
                 # Mid string
-                if self.get_current_room((row, col)):
+                if self.get_room_str((row, col)).current_room:
                     current = str(self.__maze[row][col])[4]
                     current += "@"
                     current += str(self.__maze[row][col])[-5:-4] + space * (13 - mid_len)
