@@ -217,8 +217,7 @@ class DungeonAdventure:
         """
         self.player_loc_col = 0
         self.player_loc_row = 0
-        self.dungeon.player_traveled =(self.player_loc_row, self.player_loc_col)
-        # self.dungeon.set_player_traveled((self.player_loc_row,self.player_loc_col))
+        self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).player_traveled = True
 
     def player_command(self):
         """
@@ -295,9 +294,11 @@ class DungeonAdventure:
                 self.hero.healing_potion_count = 100
             elif str(menu_command).lower() == "map":
                 # Secret menu prints map and uses @ for player location
-                self.dungeon.set_current_room((self.player_loc_row, self.player_loc_col), True)
+                # self.dungeon.set_current_room((self.player_loc_row, self.player_loc_col), True)
+                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = True
                 print(self.dungeon) #(self.player_loc_row, self.player_loc_col)
-                self.dungeon.set_current_room((self.player_loc_row, self.player_loc_col), False)
+                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = False
+                # self.dungeon.set_current_room((self.player_loc_row, self.player_loc_col), False)
             else:
                 print("Not a valid command")
 
@@ -335,17 +336,12 @@ class DungeonAdventure:
                 self.player_loc_row, self.player_loc_col = new_row, new_col
 
                 print(self.dungeon.print_play_dungeon(self.player_loc_row, self.player_loc_col))
-                # print(self.dungeon.show_room_str((new_row, new_col)))
 
                 print(self.dungeon.get_room_str((new_row, new_col)))
 
-                self.dungeon.player_traveled = (self.player_loc_row, self.player_loc_col)
-                # item_array = self.dungeon.show_room_contents((self.player_loc_row, self.player_loc_col)) #item = get room content, array
-                item_str = str(self.dungeon.get_room_str(
-                    (self.player_loc_row, self.player_loc_col)))[5:-5]  # item = get room content, array
-
-                item_str_len = len(item_str)
-                self.collect_item(item_str, item_str_len)  #item = get room content, array
+                room = self.dungeon.get_room_str(
+                    (self.player_loc_row, self.player_loc_col)) # item = get room content, array
+                self.collect_item(room)  #item = get room content, array
 
 
             else:
@@ -354,7 +350,7 @@ class DungeonAdventure:
             print("Not valid direction")
             return
 
-    def collect_item(self, item_list=" ", item_list_len = 1):
+    def collect_item(self, room=""):
         """
         Items in room affects the player and returns item str if needed
         :return: str
@@ -365,78 +361,79 @@ class DungeonAdventure:
         # print(item_list_len)
         # Collect Health potion
 
-        for item in item_list:
-            print(f"this is item {item}")
-            if item == " " or item == "|" or item == "*":
-                self.__empty_room = True
-
-            elif item == "H":
-                self.hero.healing_potion_count += 1
-                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).healing_potion = False
-                print(f"Picked up Healing Potion. Total Healing Potions: {self.hero.healing_potion_count}")
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col)) #removing item from dungeon
+        if room.healing_potion:
+            self.hero.healing_potion_count += 1
+            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).healing_potion = False
+            print(f"Picked up Healing Potion. Total Healing Potions: {self.hero.healing_potion_count}")
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col)) #removing item from dungeon
             # Collect Vision potion
-            elif item == "V":
-                self.hero.vision_potion_count += 1
-                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).vision_potion = False
-                print(f"Picked up Vision Potion. Total Vision Potions: {self.hero.vision_potion_count}")
-                # self.dungeon.set_empty_room((self.player_loc_row,self.player_loc_col))
-            # Encounter Pit
-            elif item == "X":
-                pit_points = self.item.create_item("X", 1, 15)
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
-                self.hero.hit_points -= pit_points.use_item() #check if it returns negative
-                print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
 
-            elif item == "M":
-                pass
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
-                #Health, vision, pit
-                # pit = False
-                # for value in multi_items:
-                #     if item == "V":
-                #         self.hero.vision_potion_count += 1
-                #         print(f"Gained 1 Vision Potion. Total Vision Potion count: {self.hero.vision_potion_count}")
-                #     if value == "H":
-                #         self.hero.healing_potion_count += 1
-                #         print(f"Gained 1 Healing Potion. Total Healing Potion count: {self.hero.healing_potion_count}")
-                #     if value == "X":
-                #         pit_points = self.item.create_item("X", 1, 15)
-                #         self.hero.hit_points -= -pit_points.use_item()
-                #         print(
-                #             f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), pit)
-            # collect Abstraction pillar
-            elif item == "A":  # abstraction
-                self.hero.pillar_count +=1
-                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).abstraction_pillar = False
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
-                print(f"You found the Abstraction pillar! Total Pillars: {self.hero.pillar_count}")
-            # collect polymorphism pillar
-            elif item == "P":
-                self.hero.pillar_count +=1
-                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).polymorphism_pillar = False
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
-                print(f"You found the Polymorphism pillar! Total Pillars: {self.hero.pillar_count}")
-            # collect inheritance pillar
-            elif item == "I":  # inheritance
-                self.hero.pillar_count +=1
-                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).inheritance_pillar = False
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
-                print(f"You found the Inheritance pillar! Total Pillars: {self.hero.pillar_count}")
-            # collect encapsulation pillar
-            elif item == "E":  # encapsulation
-                self.hero.pillar_count +=1
-                self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).encapsulation_pillar = False
-                # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
-                print(f"You found the Encapsulation pillar! Total Pillars: {self.hero.pillar_count}")
-            # find exit
-            elif item == "O":
-                print("You found the exit to the dungeon")
-                return item
-            elif self.hero.hit_points <= 0:
-                print("You have died and lost the game!")
-                return item
+        # # Collect Vision potion
+        if room.vision_potion:
+            self.hero.vision_potion_count += 1
+            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).vision_potion = False
+            print(f"Picked up Vision Potion. Total Vision Potions: {self.hero.vision_potion_count}")
+            # self.dungeon.set_empty_room((self.player_loc_row,self.player_loc_col))
+        # Encounter Pit
+        if room.pit:
+            pit_points = self.item.create_item("X", 1, 15)
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            self.hero.hit_points -= pit_points.use_item() #check if it returns negative
+            print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
+
+        if room.multiple_items:
+            pass
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            #Health, vision, pit
+            # pit = False
+            # for value in multi_items:
+            #     if item == "V":
+            #         self.hero.vision_potion_count += 1
+            #         print(f"Gained 1 Vision Potion. Total Vision Potion count: {self.hero.vision_potion_count}")
+            #     if value == "H":
+            #         self.hero.healing_potion_count += 1
+            #         print(f"Gained 1 Healing Potion. Total Healing Potion count: {self.hero.healing_potion_count}")
+            #     if value == "X":
+            #         pit_points = self.item.create_item("X", 1, 15)
+            #         self.hero.hit_points -= -pit_points.use_item()
+            #         print(
+            #             f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), pit)
+        # collect Abstraction pillar
+
+        # elif
+        #
+        #     DungeonCharacterFactory.create_character("skeleton", "Dreadbone")
+
+        if room.abstraction_pillar:  # abstraction
+            self.hero.pillar_count +=1
+            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).abstraction_pillar = False
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            print(f"You found the Abstraction pillar! Total Pillars: {self.hero.pillar_count}")
+        # collect polymorphism pillar
+        if room.inheritance_pillar:
+            self.hero.pillar_count +=1
+            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).polymorphism_pillar = False
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            print(f"You found the Polymorphism pillar! Total Pillars: {self.hero.pillar_count}")
+        # collect inheritance pillar
+        if room.polymorphism_pillar:  # inheritance
+            self.hero.pillar_count +=1
+            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).inheritance_pillar = False
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            print(f"You found the Inheritance pillar! Total Pillars: {self.hero.pillar_count}")
+        # collect encapsulation pillar
+        if room.encapsulation_pillar:   # encapsulation
+            self.hero.pillar_count +=1
+            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).encapsulation_pillar = False
+            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            print(f"You found the Encapsulation pillar! Total Pillars: {self.hero.pillar_count}")
+        # find exit
+        if room.exit:
+            print("You found the exit to the dungeon")
+        if self.hero.hit_points <= 0:
+            print("You have died and lost the game!")
+        room.player_traveled = True
 
 
 
