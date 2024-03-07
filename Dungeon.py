@@ -5,7 +5,7 @@ Dungeon Adventure 2.0
 """
 
 from Room import Room
-from MonsterFactory import MonsterFactory
+from DungeonCharacterFactory import DungeonCharacterFactory
 from DungeonItemsFactory import DungeonItemsFactory
 import random
 
@@ -58,7 +58,7 @@ class Dungeon:
             self.__items = {(row, col): self.__maze[row][col] for row in range(self.__rows) for col
                             in range(self.__cols)}
             self._place_pillars()
-            self._place_monsters()
+            # self._place_monsters()
             self._place_boss_monster()
             self._place_items()
         else:
@@ -116,6 +116,93 @@ class Dungeon:
             boo_results = attributes_current.west_door and attributes_new.east_door
             return boo_results
 
+    @property
+    def current_room(self):
+        return self.__current_room
+
+    @current_room.setter
+    def current_room(self, room):
+        """
+        Sets player's current coordinates as current room. Used in vision potion
+        """
+        if isinstance(room, Room):
+            room.multiple_items = False
+            room.healing_potion = False
+            room.vision_potion = False
+            room.pit = False
+            room.entrance = False
+            room.empty_room = False
+            room.abstraction_pillar = False
+            room.polymorphism_pillar = False
+            room.inheritance_pillar = False
+            room.encapsulation_pillar = False
+            room.current_room = True
+        else:
+            raise ValueError("Must submit a Room object")
+
+    def set_empty_room(self, key=(0, 0)):
+        """
+        If room traveled, removes items but leaves pit
+        """
+        item = self.__items.get(key)
+
+        if item.pit:
+            item.pit = True
+        elif item.healing_potion:
+            item.healing_potion = False
+            # item.empty_room = True
+        elif item.vision_potion:
+            item.vision_potion = False
+            # item.empty_room = True
+        elif item.multiple_items:
+            item.multiple_items = False
+        elif item.abstraction_pillar:
+            item.abstraction_pillar = False
+            # item.empty_room = True
+        elif item.polymorphism_pillar:
+            item.polymorphism_pillar = False
+            # item.empty_room = True
+        elif item.inheritance_pillar:
+            item.inheritance_pillar = False
+            # item.empty_room = True
+        elif item.encapsulation_pillar:
+            item.encapsulation_pillar = False
+            # item.empty_room = True
+        else:
+            item.empty_room = True
+
+    def show_room_contents(self, key):
+        """
+       Gets the contents of a Room in the dungeon.
+       :param key: a tuple representation of the row, column Room coordinates (0, 0)
+       :return: the contents of the specified Room, in the format specified in the __str__() method in Room class.
+       """
+
+        item = self.__items.get(key)
+        symbols = []
+        if item.multiple_items:
+            symbols.append("M")
+        if item.healing_potion:
+            symbols.append("H")
+        if item.vision_potion:
+            symbols.append("V")
+        if item.pit:
+            symbols.append("X")
+        if item.entrance:
+            symbols.append("i")
+        if item.exit:
+            symbols.append("O")
+        elif item.empty_room:
+            symbols.append(" ")
+        elif item.abstraction_pillar:
+            symbols.append("A")
+        elif item.polymorphism_pillar:
+            symbols.append("P")
+        elif item.inheritance_pillar:
+            symbols.append("I")
+        elif item.encapsulation_pillar:
+            symbols.append("E")
+        return symbols
 
     def is_valid_room(self, row, col):
         """
@@ -198,7 +285,7 @@ class Dungeon:
         :param key: the coordinates of the Room
         :return: None.
         """
-        if isinstance(key, tuple):
+        if isinstance(key, int):
             room = self.__items.get(key)
             room.player_traveled = True
         else:
@@ -429,15 +516,15 @@ class Dungeon:
                 choice = random.choice(monster_types)
                 if choice == "Ogre":
                     ogre_name = random.choice(ogre_names)
-                    ogre = MonsterFactory.create_monster("ogre", ogre_name)
+                    ogre = DungeonCharacterFactory.create_character("ogre", ogre_name)
                     random_room.ogre = True if ogre else False
                 elif choice == "Gremlin":
                     gremlin_name = random.choice(gremlin_names)
-                    gremlin = MonsterFactory.create_monster("gremlin", gremlin_name)
+                    gremlin = DungeonCharacterFactory.create_character("gremlin", gremlin_name)
                     random_room.gremlin = True if gremlin else False
                 elif choice == "Skeleton":
                     skeleton_name = random.choice(skeleton_names)
-                    skeleton = MonsterFactory.create_monster("skeleton", skeleton_name)
+                    skeleton = DungeonCharacterFactory.create_character("skeleton", skeleton_name)
                     random_room.skeleton = True if skeleton else False
                 else:
                     random_room.ogre = False
@@ -451,6 +538,7 @@ class Dungeon:
         Internal method that places a boss Monster at the end of the maze.
         :return: None
         """
+
         boss_type = ["Troll", "Chimera", "Dragon"]
         troll_names = ["Ragnok", "Grimbash", "Boulderfist", "Groggnar", "Gnarlgrip"]
         chimera_names = ["Hydra", "Nemean", "Typhon", "Thrawn", "Gryphon"]
@@ -478,15 +566,15 @@ class Dungeon:
                 choose_monster = random.choice(boss_type)
                 if choose_monster == "Troll":
                     troll_name = random.choice(troll_names)
-                    troll = MonsterFactory.create_monster("troll", troll_name)
+                    troll = DungeonCharacterFactory.create_character("troll", troll_name)
                     room.troll = True if troll else False
                 elif choose_monster == "Chimera":
                     chimera_name = random.choice(chimera_names)
-                    chimera = MonsterFactory.create_monster("chimera", chimera_name)
+                    chimera = DungeonCharacterFactory.create_character("chimera", chimera_name)
                     room.chimera = True if chimera else False
                 elif choose_monster == "Dragon":
                     dragon_name = random.choice(dragon_names)
-                    dragon = MonsterFactory.create_monster("dragon", dragon_name)
+                    dragon = DungeonCharacterFactory.create_character("dragon", dragon_name)
                     room.dragon = True if dragon else False
                 else:
                     raise ValueError("No exit room found")
@@ -569,10 +657,5 @@ class Dungeon:
 
 if __name__ == "__main__":
     d = Dungeon(5, 5)
-    # print(d)
-    d.get_room_str((0, 0)).healing_potion = True
-    # out = str(d.get_room_str((0,0)))[5:7]
-    # for letter in out:
-    #     print (letter)
-    # out = out[5]
     print(d)
+    # d.print_maze(0,0)
