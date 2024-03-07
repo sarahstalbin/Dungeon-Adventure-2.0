@@ -380,29 +380,19 @@ class DungeonAdventure:
             # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
             self.hero.hit_points -= pit_points.use_item() #check if it returns negative
             print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
-
+        if room.ogre:
+            pass
+        if room.gremlin:
+            pass
+        if room.skelton:
+            pass
+        if room.dragon:
+            pass
+        if room.chimera:
+            pass
         if room.multiple_items:
             pass
-            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
-            #Health, vision, pit
-            # pit = False
-            # for value in multi_items:
-            #     if item == "V":
-            #         self.hero.vision_potion_count += 1
-            #         print(f"Gained 1 Vision Potion. Total Vision Potion count: {self.hero.vision_potion_count}")
-            #     if value == "H":
-            #         self.hero.healing_potion_count += 1
-            #         print(f"Gained 1 Healing Potion. Total Healing Potion count: {self.hero.healing_potion_count}")
-            #     if value == "X":
-            #         pit_points = self.item.create_item("X", 1, 15)
-            #         self.hero.hit_points -= -pit_points.use_item()
-            #         print(
-            #             f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
-            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col), pit)
-        # collect Abstraction pillar
-
-        # elif
-        #
+            #
         #     DungeonCharacterFactory.create_character("skeleton", "Dreadbone")
 
         if room.abstraction_pillar:  # abstraction
