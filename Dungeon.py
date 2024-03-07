@@ -18,7 +18,6 @@ class Dungeon:
     def __init__(self, rows, cols):
         self.__rows = rows
         self.__cols = cols
-        self.__current_room = None  # Temporary?
         self.__player_traveled = None  # Temporary?
         self.__items = {}
         self.__maze = []
@@ -71,6 +70,20 @@ class Dungeon:
         """
         return self.__maze[0][0]
 
+    def set_current_room(self, key, current_room = False):
+        """
+        Sets the Room for a given coordinate as true for tracking the player. Used in Vision
+        :return: None
+        """
+        self.get_room_str(key).current_room = current_room
+
+    def get_current_room(self, key):
+        """
+        Returns a boolean if the Room at given key is the current room of the player
+        :return: boolean
+        """
+        return self.get_room_str(key).current_room
+
     def get_room_str(self, key):
         """
         Gets the entrance Room coordinates of the Dungeon's maze based on the provided key.
@@ -115,94 +128,6 @@ class Dungeon:
         if direction == "W":
             boo_results = attributes_current.west_door and attributes_new.east_door
             return boo_results
-
-    @property
-    def current_room(self):
-        return self.__current_room
-
-    @current_room.setter
-    def current_room(self, room):
-        """
-        Sets player's current coordinates as current room. Used in vision potion
-        """
-        if isinstance(room, Room):
-            room.multiple_items = False
-            room.healing_potion = False
-            room.vision_potion = False
-            room.pit = False
-            room.entrance = False
-            room.empty_room = False
-            room.abstraction_pillar = False
-            room.polymorphism_pillar = False
-            room.inheritance_pillar = False
-            room.encapsulation_pillar = False
-            room.current_room = True
-        else:
-            raise ValueError("Must submit a Room object")
-
-    def set_empty_room(self, key=(0, 0)):
-        """
-        If room traveled, removes items but leaves pit
-        """
-        item = self.__items.get(key)
-
-        if item.pit:
-            item.pit = True
-        elif item.healing_potion:
-            item.healing_potion = False
-            # item.empty_room = True
-        elif item.vision_potion:
-            item.vision_potion = False
-            # item.empty_room = True
-        elif item.multiple_items:
-            item.multiple_items = False
-        elif item.abstraction_pillar:
-            item.abstraction_pillar = False
-            # item.empty_room = True
-        elif item.polymorphism_pillar:
-            item.polymorphism_pillar = False
-            # item.empty_room = True
-        elif item.inheritance_pillar:
-            item.inheritance_pillar = False
-            # item.empty_room = True
-        elif item.encapsulation_pillar:
-            item.encapsulation_pillar = False
-            # item.empty_room = True
-        else:
-            item.empty_room = True
-
-    def show_room_contents(self, key):
-        """
-       Gets the contents of a Room in the dungeon.
-       :param key: a tuple representation of the row, column Room coordinates (0, 0)
-       :return: the contents of the specified Room, in the format specified in the __str__() method in Room class.
-       """
-
-        item = self.__items.get(key)
-        symbols = []
-        if item.multiple_items:
-            symbols.append("M")
-        if item.healing_potion:
-            symbols.append("H")
-        if item.vision_potion:
-            symbols.append("V")
-        if item.pit:
-            symbols.append("X")
-        if item.entrance:
-            symbols.append("i")
-        if item.exit:
-            symbols.append("O")
-        elif item.empty_room:
-            symbols.append(" ")
-        elif item.abstraction_pillar:
-            symbols.append("A")
-        elif item.polymorphism_pillar:
-            symbols.append("P")
-        elif item.inheritance_pillar:
-            symbols.append("I")
-        elif item.encapsulation_pillar:
-            symbols.append("E")
-        return symbols
 
     def is_valid_room(self, row, col):
         """
@@ -308,18 +233,18 @@ class Dungeon:
             for col in range(self.__cols):
                 # Top string
                 top.append(str(self.__maze[row][col])[0:3] + space * 10)
+                mid_len = len(str(self.__maze[row][col])[4:-4])
 
                 # Mid string
-                if row == current_row and col == current_col:
+                if self.get_current_room((row, col)):
                     current = str(self.__maze[row][col])[4]
                     current += "@"
-                    current += str(self.__maze[row][col])[6] + space
+                    current += str(self.__maze[row][col])[-5:-4] + space * (13 - mid_len)
                     mid.append(current)
                 else:
-                    mid_len = len(str(self.__maze[row][col])[4:-4])
                     mid.append(str(self.__maze[row][col])[4:-4] + space * (13 - mid_len))
 
-                # Bottom string
+                    # Bottom string
                 bottom.append(str(self.__maze[row][col])[-3:] + (space * 10))
 
         # Construct the visual representation of the dungeon
