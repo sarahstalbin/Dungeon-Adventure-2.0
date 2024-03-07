@@ -59,7 +59,7 @@ class VisionPotion(DungeonItems):
         row = 1
         col = 1
 
-        if current_row >0 and current_col > 0: #upper left
+        if current_row > 0 and current_col > 0: #upper left
             vision_rooms.append(dungeon.get_room_str((current_row-1, current_col-1)))
         if current_row > 0: #directly up
             vision_rooms.append(dungeon.get_room_str((current_row - 1, current_col)))
@@ -68,20 +68,21 @@ class VisionPotion(DungeonItems):
             if current_col +1 < dungeon_max_col: # upper right
                 vision_rooms.append(dungeon.get_room_str((current_row - 1, current_col+1)))
         if current_col > 0: #left
-            vision_rooms.append(dungeon.get_room_str((current_row, current_col-1)))
-            row += 1
-            if current_row + 1 < dungeon_max_row: #below left
-                vision_rooms.append(dungeon.get_room_str((current_row - 1, current_col + 1)))
+            vision_rooms.append(dungeon.get_room_str((current_row, current_col - 1)))
+            col += 1
+
         vision_rooms.append(dungeon.get_room_str((current_row, current_col))) #current room
         if current_col + 1 < dungeon_max_col: #right
             vision_rooms.append(dungeon.get_room_str((current_row, current_col+1)))
             col += 1
+        if current_col > 0 and current_row + 1 < dungeon_max_row:  # below left
+            vision_rooms.append(dungeon.get_room_str((current_row - 1, current_col - 1)))
 
-            if current_row + 1 < dungeon_max_row: #below right
-                vision_rooms.append(dungeon.get_room_str((current_row+1, current_col +1)))
         if current_row +1 < dungeon_max_row: #directly below
             vision_rooms.append(dungeon.get_room_str((current_row+1, current_col)))
             row += 1
+        if current_col + 1 < dungeon_max_col and current_row + 1 < dungeon_max_row:  # below right
+            vision_rooms.append(dungeon.get_room_str((current_row + 1, current_col + 1)))
 
     #     if current_row == 0 or current_row == dungeon_max_col - 1:
     #         if 0 < current_col < dungeon_max_row - 1:
@@ -118,10 +119,10 @@ class VisionPotion(DungeonItems):
     #
         # Splitting room view by top, middle, bottom
         # top string
-        print(row)
-        print(col)
-        for rooms in vision_rooms:
-            print(rooms)
+        print(f"rows {row}")
+        print(f"col {col}")
+        # for rooms in vision_rooms:
+        #     print(rooms)
 
 
 
