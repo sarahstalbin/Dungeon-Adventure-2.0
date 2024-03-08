@@ -525,8 +525,8 @@ class Dungeon:
                         room.healing_potion = True if healing_potion else False
                     # Place multi item
                     if choice == "M":
-                        multiple_items = DungeonItemsFactory.create_item("M")
-                        room.multiple_items = True if multiple_items else False
+                        # multiple_items = DungeonItemsFactory.create_item("M")
+                        # room.multiple_items = True if multiple_items else False
                         items = ["V", "H", "X"]
                         results = random.sample(items, random.randint(2, 3))
                         for values in results:
