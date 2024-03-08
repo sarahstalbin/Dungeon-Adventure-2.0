@@ -1,19 +1,7 @@
-# from Dungeon_Model import DungeonModel
-import random
-
-import Dungeon_Model
-from Dungeon_Items_Factory import DungeonItemsFactory
-# from DungeonAdventure import DungeonAdventure
-# from Hero_Model_new import Warrior, Priestess, Thief
 import sys, time, copy, random, pickle
-from SaveGame import SaveGame
 
 
 class View:
-    # def __init__(self):
-    #     # self.dungeon = dungeon
-    #     self.dungeon = Dungeon_Model.DungeonModel(5, 5)
-    #     self.dungeon_adventure = DungeonAdventure()
 
     @staticmethod
     def introduction():
@@ -27,9 +15,7 @@ class View:
               "\n \nTo travel, press keys w for Up, s for Down, a for Left, and d for Right. "
               "\nPress \"m\" to view menu options for legend key.\n")
 
-    # @staticmethod
-    # def print_healing_potion():
-    #     print(f"Picked up Healing Potion. Total Healing Potions: {self.hero.healing_potion_count}")
+
     @staticmethod
     def print_no_saved_game():
         print("There is no saved game. Please play a new game.")
@@ -251,6 +237,10 @@ class View:
         print(f" {result['attacker']} performs healing on {result['opponent']} for {result['heal']} heal points ")
 
     @staticmethod
+    def priestess_adding_hit_points(result):
+        print(f" {result['attacker']} now has {result['hit_points']} ")
+
+    @staticmethod
     def thief_special_attack_result(result):
         if result["success"]:
             if result["attacks"] == 2:
@@ -264,138 +254,75 @@ class View:
             print(f"{result['attacker']} couldn't perform the special attack.")
 
     @staticmethod
-    def gremlin_skeleton_heal(result):
+    def monster_heal(result):
         if result["success"]:
             if result["heal_amount"] > 0:
                 print(f"The Gremlin {result['name']} has healed itself!")
             else:
                 print(f"The Gremlin {result['name']} cannot heal itself, you're safe!")
 
-    @staticmethod
-    def print_dictionary(self):
-        """
-        Prints the contents of each Room without the symbols from Room's __str__() method.
-        Uses the format (row, col) : contents.
-        :return: None
-        """
-        symbols_dict = self.dungeon._get_object_symbols()
-        for key, value in symbols_dict.items():
-            print(f"Room at ({key[0]}, {key[1]}): {value}")
-
-    @staticmethod
     def print_play_dungeon(self, dungeon, current_row=-1, current_col=-1):
         """
         Prints a simple visual representation of the Dungeon's maze as player is playing
         :return: None.
         """
+        space = " "
         top = []
-        for row in range(dungeon.row_length):
-            for col in range(dungeon.col_length):
+        for row in range(dungeon.get_row_length):
+            for col in range(dungeon.get_col_length):
                 if row == current_row and col == current_col:
-                    top.append(str(self.dungeon.maze[row][col])[0:3] + "  ")
+                    top.append(str(dungeon.maze[row][col])[0:3] + "  ")
                 else:
-                    if self.dungeon.items.get((row, col)).player_traveled:
+                    if dungeon.items.get((row, col)).player_traveled:
                         top.append("---  ")
                     else:
                         top.append("^^^  ")
 
         # saves mid string of all rooms in dungeon
         mid = []
-        for row in range(self.dungeon.row_length):
-            for col in range(self.dungeon.col_length):
+        for row in range(dungeon.get_row_length):
+            for col in range(dungeon.get_col_length):
                 if row == current_row and col == current_col:
-                    if len(str(self.dungeon.maze[row][col])) == 10:
-                        mid.append(str(self.dungeon.maze[row][col])[4:6] + "   ")
+                    if len(str(dungeon.maze[row][col])) == 10:
+                        mid.append(str(dungeon.maze[row][col])[4:6] + "   ")
                     else:
-                        mid.append(str(self.dungeon.maze[row][col])[4:7] + "  ")
+                        mid.append(str(dungeon.maze[row][col])[4:7] + "  ")
                 else:
-                    if self.dungeon.items.get((row, col)).player_traveled:
+                    if dungeon.items.get((row, col)).player_traveled:
                         mid.append("---  ")
                     else:
                         mid.append("^^^  ")
 
         # Saves bottom strings of all rooms in dungeon
         bottom = []
-        for row in range(self.dungeon.row_length):
-            for col in range(self.dungeon.col_length):
+        for row in range(dungeon.get_row_length):
+            for col in range(dungeon.get_col_length):
                 if row == current_row and col == current_col:
-                    if len(str(self.dungeon.maze[row][col])) == 10:
-                        bottom.append(str(self.dungeon.maze[row][col])[7:10] + "  ")
-                    else:
-                        bottom.append(str(self.dungeon.maze[row][col])[8:11] + "  ")
+                    bottom.append(str(dungeon.maze[row][col])[-3:] + "  ")
                 else:
-                    if self.dungeon.items.get((row, col)).player_traveled:
+                    if dungeon.items.get((row, col)).player_traveled:
                         bottom.append("---  ")
                     else:
                         bottom.append("^^^  ")
 
-        # prints dungeon according to the dimensons
-        for i in range(0, self.dungeon.row_length):
-            # print(end="\n")
-            for room in range(i * self.dungeon.col_length, (i + 1) * self.dungeon.col_length):
-                print(top[room], end="")
-            print(end="\n")
-            for room in range(i * self.dungeon.col_length, (i + 1) * self.dungeon.col_length):
-                print(mid[room], end="")
-            print(end="\n")
-            for room in range(i * self.dungeon.col_length, (i + 1) * self.dungeon.col_length):
-                print(bottom[room], end="")
-            print("\n")
-
-    @staticmethod
-    def print_dungeon(self, dungeon, current_row=-1, current_col=-1):
-        """
-        Prints a simple visual representation of the Dungeon's maze.
-        :return: None.
-        """
-        # Saves top strings of all rooms in dungeon
-        top = []
-        for row in range(dungeon.row_length):
-            for col in range(self.dungeon.col_length):
-                top.append(str(self.dungeon.maze[row][col])[0:3] + "     ")
-
-        # saves mid string of all rooms in dungeon
-        mid = []
-        for row in range(self.dungeon.row_length):
-            for col in range(self.dungeon.col_length):
-                if row == current_row and col == current_col:
-                    current = str(self.dungeon.maze[row][col])[4]
-                    current += "@"
-                    current += str(self.dungeon.maze[row][col])[6] + "     "
-                    mid.append(current)
-                else:
-                    if len(str(self.dungeon.maze[row][col])) == 10:
-                        mid.append(str(self.dungeon.maze[row][col])[4:6] + "      ")
-                    else:
-                        mid.append(str(self.dungeon.maze[row][col])[4:7] + "     ")
-
-        # Saves bottom strings of all rooms in dungeon
-        bottom = []
-        for row in range(self.dungeon.row_length):
-            for col in range(self.dungeon.col_length):
-                if len(str(self.dungeon.maze[row][col])) == 10:
-                    bottom.append(str(self.dungeon.maze[row][col])[7:10] + "     ")
-                else:
-                    bottom.append(str(self.dungeon.maze[row][col])[8:11] + "     ")
-
         # prints dungeon according to the dimensions
-        for i in range(0, self.dungeon.row_length):
-            print(end="\n")
-            for room in range(i * self.dungeon.col_length, (i + 1) * self.dungeon.col_length):
+        for i in range(0, dungeon.get_row_length):
+            # print(end="\n")
+            for room in range(i * dungeon.get_col_length, (i + 1) * dungeon.get_col_length):
                 print(top[room], end="")
             print(end="\n")
-            for room in range(i * self.dungeon.col_length, (i + 1) * self.dungeon.col_length):
+            for room in range(i * dungeon.get_col_length, (i + 1) * dungeon.get_col_length):
                 print(mid[room], end="")
             print(end="\n")
-            for room in range(i * self.dungeon.col_length, (i + 1) * self.dungeon.col_length):
+            for room in range(i * dungeon.get_col_length, (i + 1) * dungeon.get_col_length):
                 print(bottom[room], end="")
             print("\n")
 
     @staticmethod
     def end():
         """
-                Prints closing title slides
-                """
+        Prints closing title slides
+        """
         time.sleep(.1)
         group_names = ("Aqueno Nirasmi Amalraj \nMinna Chae \nSarah St. Albin \n")
         teacher_names = ("Varik Hoang \nRobert Cordingly \nAshutosh Engavle")
@@ -411,12 +338,3 @@ class View:
             sys.stdout.flush()
             time.sleep(.05)
         print("\n\nWe could not have done it without you.")
-
-        # save game method pickle
-
-    # def send_save_data(self):
-    #     save_game = SaveGame()
-    #     save_game.pickle(self)
-
-# d = View()
-# d.print_dungeon(1,1)
