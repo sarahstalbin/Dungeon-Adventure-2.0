@@ -18,7 +18,7 @@ class Room:
         self.__exit = False
         self.__impasse = False
         self.__visited = False
-        self.__multiple_items = False
+        # self.__multiple_items = False
         self.__north_door = False
         self.__south_door = False
         self.__east_door = False
@@ -34,8 +34,9 @@ class Room:
         self.__gremlin = False
         self.__skeleton = False
         self.__dragon = False
-        self.__dungeon_troll = False
         self.__chimera = False
+        self.__troll = False
+
 
     @property
     def healing_potion(self):
@@ -52,10 +53,10 @@ class Room:
         """ gets pit boolean value using property decorator """
         return self.__pit
 
-    @property
-    def multiple_items(self):
-        """ gets multiple_items boolean value using property decorator """
-        return self.__multiple_items
+    # @property
+    # def multiple_items(self):
+    #     """ gets multiple_items boolean value using property decorator """
+    #     return self.__multiple_items
 
     @property
     def abstraction_pillar(self):
@@ -110,12 +111,13 @@ class Room:
         return self.__skeleton
 
     @property
+    def troll(self):
+        return self.__troll
+
+    @property
     def dragon(self):
         return self.__dragon
 
-    @property
-    def dungeon_troll(self):
-        return self.__dungeon_troll
 
     @property
     def chimera(self):
@@ -130,11 +132,6 @@ class Room:
     def visited(self):
         """ gets visited boolean value using property decorator"""
         return self.__visited
-
-    # @property
-    # def empty_room(self):
-    #     """ gets empty_room boolean value using property decorator """
-    #     return self.__empty_room
 
     @property
     def entrance(self):
@@ -173,7 +170,7 @@ class Room:
         if not isinstance(add_potion, bool):
             raise ValueError("healing_potion must be a boolean")
         self.__healing_potion = add_potion
-        # self.__empty_room = not add_potion
+        self.empty_room()
 
     @vision_potion.setter
     def vision_potion(self, vision_potion):
@@ -183,7 +180,7 @@ class Room:
         if not isinstance(vision_potion, bool):
             raise ValueError("vision_potion must be a boolean")
         self.__vision_potion = vision_potion
-        self.__empty_room = not vision_potion
+        self.empty_room()
 
     @pit.setter
     def pit(self, reduce_potion):
@@ -271,7 +268,6 @@ class Room:
         self.__polymorphism_pillar = polymorphism_pillar
         self.empty_room()
 
-
     def empty_room(self):
         """ setting empty_room using setter property
             :param is_empty
@@ -306,18 +302,19 @@ class Room:
         self.__skeleton = skeleton
         self.empty_room()
 
+    @troll.setter
+    def troll(self, troll):
+        if not isinstance(troll, bool):
+            raise ValueError("skeleton must be a boolean")
+        self.__skeleton = troll
+        self.empty_room()
+
+
     @dragon.setter
     def dragon(self, dragon):
         if not isinstance(dragon, bool):
             raise ValueError("dragon must be a boolean")
         self.__dragon = dragon
-        self.empty_room()
-
-    @dungeon_troll.setter
-    def dungeon_troll(self, dungeon_troll):
-        if not isinstance(dungeon_troll, bool):
-            raise ValueError("dungeon_troll must be a boolean")
-        self.__dungeon_troll = dungeon_troll
         self.empty_room()
 
     @chimera.setter
@@ -365,16 +362,6 @@ class Room:
             raise ValueError("visited must be a boolean")
         self.__visited = visited
 
-    @multiple_items.setter
-    def multiple_items(self, multiple_items):
-        """ setting multiple_items using setter property
-            :param multiple_items
-            :return boolean value """
-        if not isinstance(multiple_items, bool):
-            raise ValueError("multiple_items must be a boolean")
-        self.__multiple_items = multiple_items
-        self.empty_room()
-
     @current_room.setter
     def current_room(self, current_room):
         """ setting current_room using setter property
@@ -410,10 +397,8 @@ class Room:
             layout += "i"
         if self.__exit:
             layout += "O"
-        if self.__multiple_items:
-            layout += "M"
-        # if self.__current_room:
-        #     layout += "@"
+        # if self.__multiple_items:
+        #     layout += "M"
         if self.__ogre:
             layout += "%"
         if self.__skeleton:
@@ -424,7 +409,7 @@ class Room:
             layout += "^"
         if self.__chimera:
             layout += "~"
-        if self.__dungeon_troll:
+        if self.__troll:
             layout += "#"
         if self.__abstraction_pillar:
             layout += "A"
