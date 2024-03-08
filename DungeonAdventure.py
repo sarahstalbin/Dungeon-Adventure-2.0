@@ -9,9 +9,7 @@ import traceback
 from Dungeon import Dungeon
 from DungeonItemsFactory import DungeonItemsFactory
 from DungeonCharacterFactory import DungeonCharacterFactory
-# import random
 import sys, time, copy, random, pickle
-# import copy
 # import pickle
 
 
@@ -115,14 +113,14 @@ class DungeonAdventure:
         Setting up play mode level based on user input. Adventure attributes health, health potion count,
         vision potion count, dungeon dimension are set up in this module
         :return: None
-        """
-        input_player = input(f"Please choose a Hero. Type \"Warrior\" or w, \"Priestess\" or p, and \"Thief\" or t ").lower()
-        if input_player.lower() == "Warrior" or input_player.lower() == "w":
-            self.hero = DungeonCharacterFactory.create_character("warrior", "Warrior")
-        if input_player.lower() == "Priestess" or input_player.lower() == "p":
-            self.hero = DungeonCharacterFactory.create_character("priestess", "Priestess")
-        if input_player.lower() == "Thief" or input_player.lower() == "t":
-            self.hero = DungeonCharacterFactory.create_character("thief", "Thief")
+        # """
+        # input_player = input(f"Please choose a Hero. Type \"Warrior\" or w, \"Priestess\" or p, and \"Thief\" or t ").lower()
+        # if input_player.lower() == "Warrior" or input_player.lower() == "w":
+        #     self.hero = DungeonCharacterFactory.create_character("warrior", "Warrior")
+        # if input_player.lower() == "Priestess" or input_player.lower() == "p":
+        #     self.hero = DungeonCharacterFactory.create_character("priestess", "Priestess")
+        # if input_player.lower() == "Thief" or input_player.lower() == "t":
+        #     self.hero = DungeonCharacterFactory.create_character("thief", "Thief")
 
 
         input_play_mode = input(f"Choose: Easy/e, Medium/m, Hard/h, or players choice (c/choice)? Default will be Easy. ").lower()
@@ -229,30 +227,21 @@ class DungeonAdventure:
             self.dungeon.print_play_dungeon(self.player_loc_row, self.player_loc_col)
 
         while self.hero.hit_points > 0:
-            menu_command = input("What is your next move? Enter \"m\" for menu: ")
+            menu_command = str(input("What is your next move? Enter \"m\" for menu: ")).lower()
             # while still in maze and not quit
             # quits game
-            if menu_command.lower() == "q":
-                # save_game = input("Would you like to save the game? ").lower()
-                # if save_game == "yes" or save_game == "y":
-                    # self.pickle_file()
+            if menu_command == "q":
+            #     save_game = input("Would you like to save the game? ").lower()
+            #     if save_game == "yes" or save_game == "y":
                 break
-            # prints menu
-            elif str(menu_command).lower() == "m":
+        # prints menu
+            elif menu_command == "m":
                 print(self.menu_str())
             # use health potion
-            elif str(menu_command).lower() == "h":
-                if self.hero.healing_potion_count > 0:
-                    health_points = self.item.create_item("H", 1, 10).use_item()
-                    self.hero.hit_points += health_points
-                    self.hero.healing_potion_count -= 1
-                    print(f"You gained {health_points} health points! Your health is now "
-                          f"{self.hero.hit_points} and you have "
-                          f"{self.hero.healing_potion_count} left.")
-                else:
-                    print("You don't have any health potions left")
+            elif menu_command  == "h":
+                self.use_healing_potion()
             # use vision potion
-            elif str(menu_command).lower() == "v":
+            elif menu_command == "v":
                 if self.hero.vision_potion_count > 0:
                     self.hero.vision_potion_count -= 1
                     self.item.create_item("V").use_vision(self.player_loc_row, self.player_loc_col,
@@ -260,11 +249,11 @@ class DungeonAdventure:
                 else:
                     print("You don't have any vision potions left")
             # print hero statistics
-            elif str(menu_command).lower() == "stats":
+            elif menu_command  == "stats":
                 print(self.hero)
             # move hero in dungeon
-            elif (menu_command.lower() == "w" or menu_command.lower() == "a" or menu_command.lower() == "s" or
-                  menu_command.lower() == "d"):
+            elif (menu_command  == "w" or menu_command  == "a" or menu_command  == "s" or
+                  menu_command  == "d"):
                 #moving character
                 item = self.move_hero(menu_command)
 
@@ -275,10 +264,10 @@ class DungeonAdventure:
                 elif item == "O":
                     while True:
                         response = input("You have reached the exit. Would you like to leave the maze? (y to leave, "
-                                         "pillar to view pillar count, or n to stay: ")
-                        if response.lower() == "y" or response.lower() == "yes":
+                                         "pillar to view pillar count, or n to stay: ").lower()
+                        if response == "y" or response == "yes":
                             break
-                        elif response.lower() == "pillar":
+                        elif response == "pillar":
                             if self.hero.pillar_count == 1:
                                 print(f"You have found {self.hero.pillar_count} pillar so far.")
                             else:
@@ -289,9 +278,9 @@ class DungeonAdventure:
                     break
             # cheat test
             elif menu_command == "visions":
-                self.hero.vision_potion_count = 100
+                self.hero.vision_potion_count += 100
             elif menu_command == "healings":
-                self.hero.healing_potion_count = 100
+                self.hero.healing_potion_count += 100
             elif str(menu_command).lower() == "map":
                 # Secret menu prints map and uses @ for player location
                 # self.dungeon.set_current_room((self.player_loc_row, self.player_loc_col), True)
@@ -302,14 +291,24 @@ class DungeonAdventure:
             else:
                 print("Not a valid command")
 
+    def use_healing_potion(self):
+        if self.hero.healing_potion_count > 0:
+            health_points = self.item.create_item("H", 50, 500).use_item()
+            self.hero.hit_points += health_points
+            self.hero.healing_potion_count -= 1
+            print(f"You gained {health_points} health points! Your health is now "
+                  f"{self.hero.hit_points} and you have "
+                  f"{self.hero.healing_potion_count} left.")
+        else:
+            print("You don't have any health potions left")
+
+
     def move_hero(self, menu_command="g"):
         """
         Player's input is a direction, check to see if that direction is possible and move that direction.
         If moving to next room is possible, collect items and make traveled rooms empty unless pit
         :return: str
         """
-
-
 
         #Getting direction
         if menu_command == "w":
@@ -350,16 +349,20 @@ class DungeonAdventure:
             print("Not valid direction")
             return
 
-    def collect_item(self, room=""):
+    def collect_item(self, room):
         """
         Items in room affects the player and returns item str if needed
         :return: str
         """
 
-
-        # print(item_list)
-        # print(item_list_len)
-        # Collect Health potion
+        # boss_type = ["Troll", "Chimera", "Dragon"]
+        troll_names = ["Ragnok", "Grimbash", "Boulderfist", "Groggnar", "Gnarlgrip"]
+        chimera_names = ["Hydra", "Nemean", "Typhon", "Thrawn", "Gryphon"]
+        dragon_names = ["Drakar", "Fafnir", "Volcanor", "Pyrax", "Vritra"]
+        ogre_names = ["Grommash", "Throg", "Grokk", "Ugg", "Gronk"]
+        gremlin_names = ["Gizmo", "Spike", "Scratch", "Snaggletooth", "Gnash"]
+        skeleton_names = ["Skeletor", "Deathclaw", "Rattlebones",
+                          "Skullcrack", "Dreadbone"]
 
         if room.healing_potion:
             self.hero.healing_potion_count += 1
@@ -381,19 +384,42 @@ class DungeonAdventure:
             self.hero.hit_points -= pit_points.use_item() #check if it returns negative
             print(f"You fell into a Pit! You lost {pit_points.use_item()} points. Current HP: {self.hero.hit_points}.")
         if room.ogre:
-            pass
+            ogre_name = random.choice(ogre_names)
+            o_monster = DungeonCharacterFactory.create_character("ogre", ogre_name)
+            self.fight(o_monster)
+            if o_monster.has_fainted:
+                room.ogre = False
         if room.gremlin:
-            pass
-        if room.skelton:
-            pass
+            gremlin_name = random.choice(gremlin_names)
+            g_monster = DungeonCharacterFactory.create_character("gremlin", gremlin_name)
+            gremlin_name = random.choice(gremlin_names)
+            self.fight(g_monster)
+            if g_monster.has_fainted:
+                room.ogre = False
+        if room.skeleton:
+            skeleton_name = random.choice(skeleton_names)
+            s_monster = DungeonCharacterFactory.create_character("skeleton", skeleton_name)
+            self.fight(s_monster)
+            if s_monster.has_fainted:
+                room.ogre = False
         if room.dragon:
-            pass
+            dragon_name = random.choice(dragon_names)
+            d_monster = DungeonCharacterFactory.create_character("dragon", dragon_name)
+            self.fight(d_monster)
+            if d_monster.has_fainted:
+                room.ogre = False
         if room.chimera:
-            pass
-        if room.multiple_items:
-            pass
-            #
-        #     DungeonCharacterFactory.create_character("skeleton", "Dreadbone")
+            chimera_name = random.choice(chimera_names)
+            c_monster = DungeonCharacterFactory.create_character("chimera", chimera_name)
+            self.fight(c_monster)
+            if c_monster.has_fainted:
+                room.ogre = False
+        if room.troll:
+            troll_name = random.choice(troll_names)
+            t_monster = DungeonCharacterFactory.create_character("troll", troll_name)
+            self.fight(t_monster)
+            if t_monster.has_fainted:
+                room.Troll = False
 
         if room.abstraction_pillar:  # abstraction
             self.hero.pillar_count +=1
@@ -425,7 +451,42 @@ class DungeonAdventure:
             print("You have died and lost the game!")
         room.player_traveled = True
 
+    def fight(self, monster):
 
+        while self.hero.hit_points > 0 or not monster.has_fainted:
+            move = input(
+                f"You can encountered a {monster.name}! Would can use 1. normal attack \"n\" or normal, 2. special "
+                f"attack \"s\" or special 3. healing potion \"h\" 4. see stats \"stats\"").lower()
+            if move == "heal me now":
+                self.hero.hit_points += 1000
+            elif move == 'n' or move == "normal" or move == '1':
+                self.hero.attack(monster)
+                monster.attack(self.hero)
+                # if monster.has_fainted:
+                    # room.ogre = False
+                if self.hero.hit_points <= 0:
+                    print("you have died")
+                    break
+                if monster.has_fainted():
+                    print(f"you have killed the monster {monster.name}")
+                    break
+            elif move == 's' or move == 'special' or move == '2':
+                self.hero.special_skill(monster)
+                monster.attack(self.hero)
+                # if monster.has_fainted:
+                    # room.ogre = False
+                if self.hero.hit_points <= 0:
+                    # print("you have died")
+                    break
+                if monster.has_fainted():
+                    print(f"you have killed the monster {monster.name}")
+                    break
+            elif move == '3' or move == 'h' or move == 'h':
+                self.use_healing_potion()
+            elif move == "stats":
+                print(self.hero)
+            else:
+                print("That is not a valid command")
 
     def player_results(self):
 
@@ -450,7 +511,6 @@ class DungeonAdventure:
         save_game = input("\nDo you want to save the game? y/n ")
         if save_game.lower() == "y" or save_game.lower() == "yes":
             self.send_save_data()
-            # self.send_save_data(self)
         else:
             print("The game was never saved")
 
@@ -465,12 +525,12 @@ class DungeonAdventure:
         try:
             with open('dungeon_adventure.pickle', 'rb') as saved_file:
                 read_saved_game = pickle.load(saved_file)
-                self = read_saved_game
-            # self.dungeon = read_saved_game.dungeon
-            # self.hero = read_saved_game.hero
-            # self.player_loc_col = read_saved_game.player_loc_col
-            # self.player_loc_row = read_saved_game.player_loc_row
-            # self.original_dungeon = read_saved_game.original_dungeon
+                # self = read_saved_game
+            self.dungeon = read_saved_game.dungeon
+            self.hero = read_saved_game.hero
+            self.player_loc_col = read_saved_game.player_loc_col
+            self.player_loc_row = read_saved_game.player_loc_row
+            self.original_dungeon = read_saved_game.original_dungeon
         except pickle.UnpicklingError as e:
             #normal, somewhat expected
             print("No saved game found")
