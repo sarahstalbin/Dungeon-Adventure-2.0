@@ -47,7 +47,10 @@ class DungeonAdventure:
 
     def __init__(self):
         self.menu = {"Action Menu": "m", "Go Up": "w", "Go Down": "s", "Go Left": "a", "Go Right": "d",
-                     "Use Health Potion": "h", "Use Vision": "v", "View current status": "stats", "Quit Game": "q"}
+                     "Use Health Potion": "h", "Use Vision": "v", "Normal Attack": "n", "Special Attack": "s",
+                     "View current status": "stats", "Quit Game": "q"}
+        self.cheat = {"win": "win the game!", "lose 1": "lose with pillar", "lose 2": "lose with maze", "lose 3": "lose completely",
+                      "100+ vision potions": "visions", "1000+ HP": "healings", "kill monsters": "kill"}
         self.hidden_menu_option = "map"  # prints dungeon
         self.dungeon = Dungeon(5, 5)
         self.view = View()
@@ -57,7 +60,7 @@ class DungeonAdventure:
         self.original_dungeon = copy.deepcopy(self.dungeon)
         self.item = DungeonItemsFactory()
         self.play_whole_game()
-        self.player_name = ""
+        self.player_name = "Player One"
 
     def play_whole_game(self):
         """
@@ -182,6 +185,13 @@ class DungeonAdventure:
         formatted_list = ["    " + item + " : " + values for item, values in self.menu.items()]
         return "\n".join(formatted_list) + "\n"
 
+    def cheat_list(self):
+        """
+        Creates and returns the menu string. Hidden menu option "map" prints dungeon map
+        :return: str
+        """
+        formatted_list = ["    " + item + " : " + values for item, values in self.cheat.items()]
+        return "\n".join(formatted_list) + "\n"
     def player_name_str(self):
         return self.player_name + str(self.hero.name)
     def set_up_player(self):
@@ -214,6 +224,8 @@ class DungeonAdventure:
             elif menu_command == "m":
                 self.view.menu_str(self.menu_str())
             # use health potion
+            elif menu_command == 'cheat sheet':
+                self.view.cheat_list(self.cheat_list())
             elif menu_command == "h":
                     self.use_healing_potion()
             # use vision potion
@@ -228,6 +240,29 @@ class DungeonAdventure:
             elif menu_command == "stats":
                 self.view.player_stats(self.player_name, self.hero)
             # move hero in dungeon
+            elif menu_command == "win the game!":
+                self.hero.pillar_count = 4
+                self.dungeon.get_room_str(
+                    (self.dungeon.get_row_length() - 1, self.dungeon.get_col_length() - 1)).current_room = True
+                break
+
+            elif menu_command == "lose with pillar":
+                self.hero.pillar_count = 4
+                self.dungeon.get_room_str(
+                    (self.dungeon.get_row_length() - 1, self.dungeon.get_col_length() - 1)).current_room = False
+                break
+            elif menu_command == "lose with maze":
+                self.dungeon.get_room_str(
+                    (self.dungeon.get_row_length() - 1, self.dungeon.get_col_length() - 1)).current_room = True
+                self.hero.pillar_count = 2
+                break
+
+            elif menu_command == "lose completely":
+                self.hero.pillar_count = 2
+                self.dungeon.get_room_str(
+                    (self.dungeon.get_row_length() - 1, self.dungeon.get_col_length() - 1)).current_room = False
+                break
+
             elif (menu_command == "w" or menu_command == "a" or menu_command == "s" or
                   menu_command == "d"):
                 # moving character
@@ -238,6 +273,7 @@ class DungeonAdventure:
                     break
                 # reached exit, ask to leave game
                 elif item == "O":
+                    self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = True
                     while True:
                         response = self.view.continue_or_not()
                         if response == "y" or response == "yes":
@@ -245,6 +281,7 @@ class DungeonAdventure:
                         elif response == "pillar":
                             self.view.pillar_count(self.hero.pillar_count)
                         elif response.lower() == "n" or response.lower() == "no":
+                            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = False
                             break
                 if response.lower() == "y" or response.lower() == "yes":
                     break
@@ -252,7 +289,7 @@ class DungeonAdventure:
             elif menu_command == "visions":
                 self.hero.vision_potion_count += 100
             elif menu_command == "healings":
-                self.hero.healing_potion_count += 100
+                self.hero.healing_potion_count += 1000
             elif str(menu_command).lower() == "map":
                 # Secret menu prints map and uses @ for player location
                 self.print_dungeon()
@@ -475,7 +512,8 @@ class DungeonAdventure:
         Game has ended and prints hero results
         :return: None
         """
-        self.view.game_results(self.hero.pillar_count)
+        end_maze = self.dungeon.get_room_str((self.dungeon.get_row_length()-1,self.dungeon.get_col_length()-1)).current_room
+        self.view.game_results(self.hero.pillar_count, end_maze)
         see_stats = self.view.see_stats()
         if see_stats == "y" or see_stats == "yes":
             self.view.player_stats(self.player_name, self.hero)
@@ -485,6 +523,8 @@ class DungeonAdventure:
         ####New  print out -------------------------------------------
         save_game = self.view.save_game()
         if save_game.lower() == "y" or save_game.lower() == "yes":
+            self.dungeon.get_room_str((self.dungeon.get_row_length()-1,self.dungeon.get_col_length()-1)).current_room = False
+            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = False
             self.send_save_data()
         else:
             self.view.dont_save_game()
