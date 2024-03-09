@@ -43,10 +43,19 @@ class Monster(DungeonCharacter):
 
     def heal(self):
         """ Heals the Monster based on chance to heal within range of its min/max heal points """
-        result = {"attacker": self.name, "success": False, "heal_amount": 0}
+        result = {"name": self.name, "success": False, "heal_amount": 0}
+        # chance_to_heal = random.random() < self.chance_to_heal
+        # heal_points = self.get_random_heal_points()  # Get random heal points to increment hit point count
+        # has_fainted = self.has_fainted()  # Grab the has_fainted variable for reference
+        # print(f"I am in heal and this is heal {chance_to_heal} and not fainted {has_fainted}")
+        # if not has_fainted and chance_to_heal:  # If the monster has NOT fainted and chance_to_heal returned True
+        #     print("we are a success")
+        #     heal_amount = self.hit_points + heal_points
+        #     self.hit_points = heal_amount  # Increment hit points by heal_points
+
         chance_to_heal = self.chance_to_heal
         heal_points = self.get_random_heal_points()
-        has_fainted = self.has_fainted
+        has_fainted = self.has_fainted()
 
         if not has_fainted and chance_to_heal:
             hit_point_count = self.hit_points
