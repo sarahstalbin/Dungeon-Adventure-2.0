@@ -189,11 +189,13 @@ class View:
             print("That is not a pillar!")
 
     @staticmethod
-    def game_results(pillar_count):
+    def game_results(pillar_count, end_maze):
         if pillar_count == 1:
             print(f"Sorry, you only found {pillar_count} pillar. You have lost the game")
-        elif pillar_count == 4:
+        elif pillar_count == 4 and end_maze:
             print(f"You won the game and found all {pillar_count} pillars!")
+        elif  pillar_count == 4:
+            print(f"Sorry, you only found {pillar_count} pillar but you couldn't finish the maze. You have lost the game")
         else:
             print(f"Sorry, you only found {pillar_count} pillars. You have lost the game")
 
@@ -211,13 +213,18 @@ class View:
 
     @staticmethod
     def player_stats(player_name, hero):
-        stats = player_name + str(hero)
+        stats = '\n' + player_name + str(hero)
         print(stats)
 
     @staticmethod
     def menu_str(menu_str):
         # menu_str = DungeonAdventure().menu_str()
         print(menu_str)
+
+    @staticmethod
+    def cheat_list(cheat_str):
+        # menu_str = DungeonAdventure().menu_str()
+        print(cheat_str)
 
     @staticmethod
     def display_hero_stats(hero):
@@ -385,7 +392,7 @@ class View:
         """
         time.sleep(.1)
         group_names = ("Aqueno Nirasmi Amalraj \nMinna Chae \nSarah St. Albin \n")
-        teacher_names = ("Varik Hoang \nRobert Cordingly \nAshutosh Engavle")
+        teacher_names = ("Tom Capaul \nKevin Anderson \nVarik Hoang \nRobert Cordingly \nAshutosh Engavle")
         print("\n")
         print("Thank you for playing Dungeon Adventure. \nThis game was created by\n")
         for character in group_names:
