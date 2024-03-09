@@ -487,7 +487,7 @@ class Dungeon:
 
 
 if __name__ == "__main__":
-    d = Dungeon(10, 10)
-    # print(str(d.get_room_str((1,1)))[0:3])
-    print(d)
+    dungeon = Dungeon(10, 10)
+    print(dungeon.get_room_str((dungeon.get_row_length()-1, dungeon.get_col_length()-1)))
+    # print(d)
     # d.print_maze(0,0)
