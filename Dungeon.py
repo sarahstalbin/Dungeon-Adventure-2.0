@@ -124,104 +124,45 @@ class Dungeon:
         """
         return 0 <= row < self.__rows and 0 <= col < self.__cols
 
-    def print_play_dungeon(self, current_row=-1, current_col=-1):
-        """
-        Prints a simple visual representation of the Dungeon's maze as player is playing
-        :return: None.
-        """
-        space = " "
-        top = []
-        for row in range(self.__rows):
-            for col in range(self.__cols):
-                if row == current_row and col == current_col:
-                    top.append(str(self.__maze[row][col])[0:3] + "  ")
-                else:
-                    if self.__items.get((row, col)).player_traveled:
-                        top.append("---  ")
-                    else:
-                        top.append("^^^  ")
-
-        # saves mid string of all rooms in dungeon
-        mid = []
-        for row in range(self.__rows):
-            for col in range(self.__cols):
-                if row == current_row and col == current_col:
-                    if len(str(self.__maze[row][col])) == 10:
-                        mid.append(str(self.__maze[row][col])[4:6] + "   ")
-                    else:
-                        mid.append(str(self.__maze[row][col])[4:7] + "  ")
-                else:
-                    if self.__items.get((row, col)).player_traveled:
-                        mid.append("---  ")
-                    else:
-                        mid.append("^^^  ")
-
-        # Saves bottom strings of all rooms in dungeon
-        bottom = []
-        for row in range(self.__rows):
-            for col in range(self.__cols):
-                if row == current_row and col == current_col:
-                    bottom.append(str(self.__maze[row][col])[-3:] + "  ")
-                else:
-                    if self.__items.get((row, col)).player_traveled:
-                        bottom.append("---  ")
-                    else:
-                        bottom.append("^^^  ")
-
-        # prints dungeon according to the dimensons
-        for i in range(0, self.__rows):
-            # print(end="\n")
-            for room in range(i * self.__cols, (i + 1) * self.__cols):
-                print(top[room], end="")
-            print(end="\n")
-            for room in range(i * self.__cols, (i + 1) * self.__cols):
-                print(mid[room], end="")
-            print(end="\n")
-            for room in range(i * self.__cols, (i + 1) * self.__cols):
-                print(bottom[room], end="")
-            print("\n")
-
     def __str__(self):
         """
         Returns a simple visual representation of the Dungeon's maze.
         :return: string representation of the Dungeon
         """
-        current_row = -1
-        current_col = -1
 
         space = " "
         top = []
         mid = []
         bottom = []
 
-        for row in range(self.__rows):
-            for col in range(self.__cols):
+        for row in range(self.get_row_length()):
+            for col in range(self.get_col_length()):
                 # Top string
-                top.append(str(self.__maze[row][col])[0:3] + space * 10)
-                mid_len = len(str(self.__maze[row][col])[4:-4])
-
+                top.append(str(self.get_room_str((row, col)))[0:3] + space * 10)
                 # Mid string
+                mid_len = len(str(self.get_room_str((row, col)))[4:-4])
                 if self.get_room_str((row, col)).current_room:
-                    current = str(self.__maze[row][col])[4]
+
+                    current = str(self.get_room_str((row, col)))[4]
                     current += "@"
-                    current += str(self.__maze[row][col])[-5:-4] + space * (13 - mid_len)
+                    current += str(self.get_room_str((row, col)))[-5:-4] + space * (13 - mid_len)
                     mid.append(current)
                 else:
-                    mid.append(str(self.__maze[row][col])[4:-4] + space * (13 - mid_len))
+                    mid.append(str(self.get_room_str((row, col)))[4:-4] + space * (13 - mid_len))
 
                     # Bottom string
-                bottom.append(str(self.__maze[row][col])[-3:] + (space * 10))
+                bottom.append(str(self.get_room_str((row, col)))[-3:] + (space * 10))
 
         # Construct the visual representation of the dungeon
         dungeon_str = ""
-        for i in range(0, self.__rows):
-            for room in range(i * self.__cols, (i + 1) * self.__cols):
+        for i in range(0, self.get_row_length()):
+            for room in range(i * self.get_col_length(), (i + 1) * self.get_col_length()):
                 dungeon_str += top[room]
             dungeon_str += "\n"
-            for room in range(i * self.__cols, (i + 1) * self.__cols):
+            for room in range(i * self.get_col_length(), (i + 1) * self.get_col_length()):
                 dungeon_str += mid[room]
             dungeon_str += "\n"
-            for room in range(i * self.__cols, (i + 1) * self.__cols):
+            for room in range(i * self.get_col_length(), (i + 1) * self.get_col_length()):
                 dungeon_str += bottom[room]
             dungeon_str += "\n\n"
 
@@ -546,6 +487,7 @@ class Dungeon:
 
 
 if __name__ == "__main__":
-    d = Dungeon(5, 5)
+    d = Dungeon(10, 10)
+    # print(str(d.get_room_str((1,1)))[0:3])
     print(d)
     # d.print_maze(0,0)
