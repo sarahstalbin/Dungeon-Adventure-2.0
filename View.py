@@ -1,4 +1,4 @@
-import sys, time, copy, random, pickle
+import sys, time, copy, random, pickle, os
 
 
 class View:
@@ -121,7 +121,9 @@ class View:
     @staticmethod
     def no_vision_potion():
         print("You don't have any vision potions left")
-
+    @staticmethod
+    def no_healing_potion():
+        print("You don't have any healing potions left")
     @staticmethod
     def easy_level():
         print(f"Play mode is Easy with dungeon dimension of 5x5")
@@ -177,14 +179,15 @@ class View:
     def found_pillar(pillar_count, pillar_type):
         if pillar_type == "a":
             print(f"You found the Abstraction pillar! Total Pillars: {pillar_count}")
-        if pillar_type == "p":
+        elif pillar_type == "p":
             print(f"You found the Polymorphism pillar! Total Pillars: {pillar_count}")
-        if pillar_type == "i":
+        elif pillar_type == "i":
             print(f"You found the Inheritance pillar! Total Pillars: {pillar_count}")
-        if pillar_type == "e":
+        elif pillar_type == "e":
             print(f"You found the Encapsulation pillar! Total Pillars: {pillar_count}")
         else:
             print("That is not a pillar!")
+
     @staticmethod
     def game_results(pillar_count):
         if pillar_count == 1:
@@ -208,7 +211,7 @@ class View:
 
     @staticmethod
     def player_stats(player_name, hero):
-        stats = player_name + " " + str(hero)
+        stats = player_name + str(hero)
         print(stats)
 
     @staticmethod
@@ -224,28 +227,45 @@ class View:
     @staticmethod
     def attack_mode(monster):
         return input(
-                f"You can encountered a {monster.name}! Would can use 1. normal attack \"n\", 2. special "
-                f"attack \"s\" \n3. healing potion \"h\" 4. see stats \"stats\" ").lower()
+                f"You've encountered a {monster.name}! Would can use 1. normal attack \"n\", 2. special "
+                f"attack \"s\" \n3. use healing potion \"h\" 4. see \"stats\" ").lower()
 
     @staticmethod
     def monster_dead(monster):
         print(f"you killed the monster {monster.name}!")
+    def next_attack(self):
+        return input(
+            f"Next Move 1. normal attack \"n\", 2. special "
+            f"attack \"s\" or \"help\" ").lower()
+
+    def attack_help(self):
+        print("1 normal attack \"n\", 2. special attack \"s\" \n3. use healing potion \"h\" 4. see stats "
+                     "\"stats\" \"h\" to use healing potion ")
+
+    @staticmethod
+    def clear_screen():
+        # Check if the operating system is Windows
+        if os.name == 'nt':
+            os.system('cls')
+        # For Unix/Linux/Mac
+        else:
+            os.system('clear')
 
     """----------------------------------dungeon characters----------------------------------------------------------"""
     @staticmethod
-    def display_attack_result(result, hero, monster):
+    def display_attack_result(result, hero, hero_name, monster):
         if result["success"]:
-            print(f"{result['attacker']} attacks {result['opponent']} for {result['damage']} damage points. Now "
-                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
+            print(f"{result['attacker']} attacks {result['opponent']} for {result['damage']} damage points. "
+                  f"{hero_name} has {hero.hit_points}HP and {monster.name} has {monster.hit_points}HP")
         else:
             print(f"{result['attacker']} couldn't attack {result['opponent']}")
 
     @staticmethod
-    def special_attack_results(result, hero, monster):
+    def special_attack_results(result, hero, hero_name, monster):
         if hero.name == "warrior":
             if result["success"]:
-                print(f"{result['attacker']} performs a Crushing Blow for {result['damage']} damage points. Now "
-                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
+                print(f"{result['attacker']} performs a Crushing Blow for {result['damage']} damage points. "
+                  f"{hero_name} has {hero.hit_points}HP and {monster.name} has {monster.hit_points}HP")
             else:
                 print(f"{result['attacker']} couldn't perform Crushing Blow")
 
@@ -256,11 +276,11 @@ class View:
                 if result["attacks"] == 2:
                     print(
                         f"{result['attacker']} attacked {result['opponent']} twice for {result['damage']} damage points.  Now "
-                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
+                  f"{hero_name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
                 elif result["attacks"] == 1:
                     print(
                         f"{result['attacker']} attacked {result['opponent']} once for {result['damage']} damage points. Now "
-                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
+                  f"{hero_name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
                 else:
                     print(f"{result['attacker']} couldn't perform the special attack.")
             else:
@@ -304,6 +324,7 @@ class View:
                 print(f"The Gremlin {result['name']} has healed itself!")
             else:
                 print(f"The Gremlin {result['name']} cannot heal itself, you're safe!")
+
     @staticmethod
     def print_room(room_str):
         print(room_str)
