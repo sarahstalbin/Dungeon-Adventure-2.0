@@ -337,7 +337,7 @@ class DungeonAdventure:
 
         if room.healing_potion:
             self.hero.healing_potion_count += 1
-            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).healing_potion = False
+            room.healing_potion = False
             self.view.total_healing_potion(self.hero.healing_potion_count)
             # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col)) #removing item from dungeon
             # Collect Vision potion
@@ -345,13 +345,11 @@ class DungeonAdventure:
         # # Collect Vision potion
         if room.vision_potion:
             self.hero.vision_potion_count += 1
-            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).vision_potion = False
+            room.vision_potion = False
             self.view.total_vision_potion(self.hero.vision_potion_count)
-            # self.dungeon.set_empty_room((self.player_loc_row,self.player_loc_col))
         # Encounter Pit
         if room.pit:
             pit_points = self.item.create_item("X", 1, 15)
-            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
             self.hero.hit_points -= pit_points.use_item()  # check if it returns negative
             self.view.fell_in_pit(pit_points.use_item(), self.hero.hit_points)
         if room.ogre:
@@ -366,54 +364,50 @@ class DungeonAdventure:
             gremlin_name = random.choice(gremlin_names)
             self.fight(g_monster)
             if g_monster.has_fainted:
-                room.ogre = False
+                room.gremlin = False
         if room.skeleton:
             skeleton_name = random.choice(skeleton_names)
             s_monster = DungeonCharacterFactory.create_character("skeleton", skeleton_name)
             self.fight(s_monster)
             if s_monster.has_fainted:
-                room.ogre = False
+                room.skeleton = False
         if room.dragon:
             dragon_name = random.choice(dragon_names)
             d_monster = DungeonCharacterFactory.create_character("dragon", dragon_name)
             self.fight(d_monster)
             if d_monster.has_fainted:
-                room.ogre = False
+                room.dragon = False
         if room.chimera:
             chimera_name = random.choice(chimera_names)
             c_monster = DungeonCharacterFactory.create_character("chimera", chimera_name)
             self.fight(c_monster)
             if c_monster.has_fainted:
-                room.ogre = False
+                room.chimera = False
         if room.troll:
             troll_name = random.choice(troll_names)
             t_monster = DungeonCharacterFactory.create_character("troll", troll_name)
             self.fight(t_monster)
             if t_monster.has_fainted:
-                room.Troll = False
+                room.troll = False
 
         if room.abstraction_pillar:  # abstraction
             self.hero.pillar_count += 1
-            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).abstraction_pillar = False
-            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            room.abstraction_pillar = False
             self.view.found_pillar(self.hero.pillar_count, "a")
         # collect polymorphism pillar
         if room.inheritance_pillar:
             self.hero.pillar_count += 1
-            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).polymorphism_pillar = False
-            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            room.inheritance_pillar = False
             self.view.found_pillar(self.hero.pillar_count, "i")
         # collect inheritance pillar
         if room.polymorphism_pillar:  # inheritance
             self.hero.pillar_count += 1
-            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).inheritance_pillar = False
-            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            room.polymorphism_pillar = False
             self.view.found_pillar(self.hero.pillar_count, "p")
         # collect encapsulation pillar
         if room.encapsulation_pillar:  # encapsulation
             self.hero.pillar_count += 1
-            self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).encapsulation_pillar = False
-            # self.dungeon.set_empty_room((self.player_loc_row, self.player_loc_col))
+            room.encapsulation_pillar = False
             self.view.found_pillar(self.hero.pillar_count, "e")
         # find exit
         if room.exit:
@@ -466,6 +460,11 @@ class DungeonAdventure:
                 break
             elif move == 'help':
                 self.view.attack_help()
+            elif move == 'kill':
+                monster.hit_points = 0
+                monster.has_fainted()
+                self.view.monster_dead(monster)
+                break
             else:
                 self.view.not_valid_command()
             move = self.view.next_attack()
