@@ -84,50 +84,6 @@ class VisionPotion(DungeonItems):
         if current_col + 1 < dungeon_max_col and current_row + 1 < dungeon_max_row:  # below right
             vision_rooms.append(dungeon.get_room_str((current_row + 1, current_col + 1)))
 
-    #     if current_row == 0 or current_row == dungeon_max_col - 1:
-    #         if 0 < current_col < dungeon_max_row - 1:
-    #             row = 2
-    #             col = 3
-    #         elif current_col == 0 or current_col == dungeon_max_row - 1:
-    #             row = 2
-    #             col = 2
-    #
-    #     elif current_col == 0 or current_col == dungeon_max_row - 1:
-    #         if 0 < current_row < dungeon_max_col - 1:
-    #             row = 3
-    #             col = 2
-    #     # NW
-    #     vision_rooms.append(self.get_vision_rm_corner(current_row, current_col, "N", "W", dungeon))
-    #     # N
-    #     vision_rooms.append(self.get_vision_rm_one(current_row, current_col, "N", dungeon))
-    #     # NE
-    #     vision_rooms.append(self.get_vision_rm_corner(current_row, current_col, "N", "E", dungeon))
-    #     # new line
-    #     # W
-    #     vision_rooms.append(self.get_vision_rm_one(current_row, current_col, "W", dungeon))
-    #     # self
-    #     vision_rooms.append(current_room)
-    #     # E
-    #     vision_rooms.append(self.get_vision_rm_one(current_row, current_col, "E", dungeon))
-    #     # /n
-    #     # SW
-    #     vision_rooms.append(self.get_vision_rm_corner(current_row, current_col, "S", "W", dungeon))
-    #     #S
-    #     vision_rooms.append(self.get_vision_rm_one(current_row, current_col, "S", dungeon))
-    #     # SE
-    #     vision_rooms.append(self.get_vision_rm_corner(current_row, current_col, "S", "E", dungeon))
-    #
-        # Splitting room view by top, middle, bottom
-        # top string
-        print(f"rows {row}")
-        print(f"col {col}")
-        # for rooms in vision_rooms:
-        #     print(rooms)
-
-
-
-
-
         top = []
         space = " "
 
@@ -164,51 +120,25 @@ class VisionPotion(DungeonItems):
             for room in range(i * col, (i + 1) * col):
                 print(bottom[room], end="")
             print("\n")
-    #
-    # def get_vision_rm_corner(self, current_row, current_col, row_direction, col_direction, dungeon):
-    #     """
-    #     Retrieves and returns string room for corner rooms
-    #     :return: str
-    #     """
-    #
-    #     # Grab new column
-    #     temp, north_col = dungeon._return_neighbor_coordinates(current_row, current_col,
-    #                                                    col_direction)
-    #     # Grab new row
-    #     west_row, temp = dungeon._return_neighbor_coordinates(current_row, current_col,
-    #                                                   row_direction)
-    #     # If it is a true room, return the room
-    #     if dungeon.is_valid_room(west_row, north_col):
-    #         return dungeon.get_room_str((west_row, north_col))
-    #     return ""
 
-    # def get_vision_rm_one(self, current_row, current_col, direction, dungeon):
-    #     """
-    #     Retrieves and returns string room for directly touching rooms
-    #     :return: str
-    #     """
-    #     row, col = dungeon._return_neighbor_coordinates(current_row, current_col, direction)
-    #     if dungeon.is_valid_room(row, col):
-    #         return dungeon.get_room_str((row, col))
-    #     return ""
 
-    def current_room(self, room):
-        """
-        Sets player's current coordinates as current room. Used in vision potion
-        """
-        # if isinstance(room, Room):
-        room.multiple_items = False
-        room.healing_potion = False
-        room.vision_potion = False
-        room.pit = False
-        room.entrance = False
-        room.empty_room = False
-        room.abstraction_pillar = False
-        room.polymorphism_pillar = False
-        room.inheritance_pillar = False
-        room.encapsulation_pillar = False
-        room.current_room = True
-        # else:
+    # def current_room(self, room):
+    #     """
+    #     Sets player's current coordinates as current room. Used in vision potion
+    #     """
+    #     # if isinstance(room, Room):
+    #     room.multiple_items = False
+    #     room.healing_potion = False
+    #     room.vision_potion = False
+    #     room.pit = False
+    #     room.entrance = False
+    #     room.empty_room = False
+    #     room.abstraction_pillar = False
+    #     room.polymorphism_pillar = False
+    #     room.inheritance_pillar = False
+    #     room.encapsulation_pillar = False
+    #     room.current_room = True
+    #     # else:
         #     raise ValueError("Must submit a Room object")
 
 class Pit(DungeonItems):
