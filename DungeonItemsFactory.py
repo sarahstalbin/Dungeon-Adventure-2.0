@@ -37,25 +37,3 @@ class DungeonItemsFactory:
             return MultiItem()
         else:
             raise ValueError("Invalid item type")
-
-    # @staticmethod
-    # def create_multiple_items(*args):
-    #     """
-    #     Creates multiple Item objects using relevant data for instantiating that object.
-    #     :param args: necessary data for instantiating an object. Some objects require no parameters.
-    #     :return: an array of Item objects.
-    #     """
-    #     items = ["V", "H", "X"]
-    #     results = random.sample(items, randint(2,3))
-    #     created_items = []
-    #
-    #     for value in results:
-    #         if value == "V":
-    #             created_items.append(VisionPotion())
-    #         elif value == "H":
-    #             created_items.append(HealingPotion(*args))
-    #         elif value == "X":
-    #             created_items.append(Pit(*args))
-    #         else:
-    #             raise ValueError("Invalid item type")
-    #     return created_items
