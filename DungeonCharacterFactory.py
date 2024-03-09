@@ -1,5 +1,5 @@
-from Monster_s import Monster
-from Hero_s import Warrior, Priestess, Thief
+from Monster import Monster
+from Hero import Warrior, Priestess, Thief
 import query_database
 
 
@@ -50,18 +50,23 @@ class DungeonCharacterFactory:
         else:
             raise ValueError("Invalid Dungeon Character type")
 
-
-# w = DungeonCharacterFactory.create_character("warrior", "Warrior")
-# p = DungeonCharacterFactory.create_character("priestess", "Priestess")
-# t = DungeonCharacterFactory.create_character("thief", "Thief")
-# o = DungeonCharacterFactory.create_character("ogre", "Throg")
-# g = DungeonCharacterFactory.create_character("gremlin", "Spike")
-# s = DungeonCharacterFactory.create_character("skeleton", "Rattlebones")
-# tr = DungeonCharacterFactory.create_character("troll", "Ragnok")
-# c = DungeonCharacterFactory.create_character("chimera", "Thrawn")
-# d = DungeonCharacterFactory.create_character("dragon", "Fafnir")
-#
-# print(t)
-# print(s)
-# print(c)
-# print(w)
+if __name__ == "__main__":
+    w = DungeonCharacterFactory.create_character("warrior", "Warrior")
+    # p = DungeonCharacterFactory.create_character("priestess", "Priestess")
+    # t = DungeonCharacterFactory.create_character("thief", "Thief")
+    o = DungeonCharacterFactory.create_character("ogre", "Throg")
+    # g = DungeonCharacterFactory.create_character("gremlin", "Spike")
+    # s = DungeonCharacterFactory.create_character("skeleton", "Rattlebones")
+    # tr = DungeonCharacterFactory.create_character("troll", "Ragnok")
+    # c = DungeonCharacterFactory.create_character("chimera", "Thrawn")
+    # d = DungeonCharacterFactory.create_character("dragon", "Fafnir")
+    #
+    # print(t)
+    # print(s)
+    # print(c)
+    # print(w)
+    print(w)
+    print(o)
+    print(o.attack(w))
+    print(w)
+    print(o)

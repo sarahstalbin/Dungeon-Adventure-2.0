@@ -35,7 +35,7 @@ class Monster(DungeonCharacter):
         monster_info += f"Minimum Heal Points: {self.minimum_heal_points}\n"
         monster_info += f"Maximum Heal Points: {self.maximum_heal_points}\n"
         monster_info += f"Heal Points: {self.heal_points}\n"
-        if self.has_fainted:
+        if self.has_fainted():
             monster_info += f"Fainted: Yes\n"
         else:
             monster_info += f"Fainted: No\n"

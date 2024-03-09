@@ -72,7 +72,7 @@ class Hero(DungeonCharacter, ABC):
     @vision_potion_count.setter
     def vision_potion_count(self, vision_potion_count):
         """ Sets new vision potion count """
-        if isinstance(vision_potion_count, int) and vision_potion_count > 0:
+        if isinstance(vision_potion_count, int) and vision_potion_count >= 0:
             self._vision_potion_count = vision_potion_count
         else:
             raise ValueError("Vision potion count must be an integer")
@@ -84,10 +84,10 @@ class Hero(DungeonCharacter, ABC):
     @healing_potion_count.setter
     def healing_potion_count(self, healing_potion_count):
         """ Sets new healing potion count """
-        if isinstance(healing_potion_count, int) and healing_potion_count > 0:
+        if isinstance(healing_potion_count, int) and healing_potion_count >= 0:
             self._healing_potion_count = healing_potion_count
         else:
-            raise ValueError("Healing potion count must be an integer")
+            raise ValueError("Healing potion count must be an integer and greater than 0")
 
 class Warrior(Hero):
     """ Warrior class is the child class of Hero """
