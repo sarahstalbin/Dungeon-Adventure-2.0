@@ -7,14 +7,13 @@ class Hero(DungeonCharacter, ABC):
     """ Hero class inherits from DungeonCharacter parent class, and it is an abstract base class"""
 
     def __init__(self, name, hit_points, attack_speed, chance_to_hit, minimum_damage,
-                 maximum_damage, chance_to_block, healing_potion_count, vision_potion_count, pillar_count, player_name):
+                 maximum_damage, chance_to_block, healing_potion_count, vision_potion_count, pillar_count):
         super().__init__(name, hit_points, attack_speed, chance_to_hit, minimum_damage,
                          maximum_damage)
         self._chance_to_block = chance_to_block
         self._healing_potion_count = healing_potion_count
         self._vision_potion_count = vision_potion_count
         self._pillar_count = pillar_count
-        self._player_name = player_name
 
     def __str__(self):
         """
@@ -90,18 +89,6 @@ class Hero(DungeonCharacter, ABC):
         else:
             raise ValueError("Healing potion count must be an integer")
 
-    @property
-    def player_name(self):
-        return self._player_name
-
-    @player_name.setter
-    def player_name(self, player_name):
-        if isinstance(player_name, str) and player_name.strip():
-            self._name = player_name
-        else:
-            raise ValueError("Player_name must be a non-empty string")
-
-
 class Warrior(Hero):
     """ Warrior class is the child class of Hero """
 
@@ -160,3 +147,7 @@ class Thief(Hero):
             result["attacks"] = 1
 
         return result
+
+if  __name__ == "__main__":
+    t = Thief("thief", "Thief")
+    print(t)

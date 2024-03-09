@@ -7,14 +7,13 @@ class Hero(DungeonCharacter, ABC):
     """ Hero class inherits from DungeonCharacter parent class, and it is an abstract base class"""
 
     def __init__(self, name, hit_points, attack_speed, chance_to_hit, minimum_damage,
-                 maximum_damage, chance_to_block, healing_potion_count, vision_potion_count, pillar_count, player_name):
+                 maximum_damage, chance_to_block, healing_potion_count, vision_potion_count, pillar_count):
         super().__init__(name, hit_points, attack_speed, chance_to_hit, minimum_damage,
                          maximum_damage)
         self._chance_to_block = chance_to_block
         self._healing_potion_count = healing_potion_count
         self._vision_potion_count = vision_potion_count
         self._pillar_count = pillar_count
-        self._player_name = player_name
 
     def __str__(self):
         """
@@ -22,7 +21,7 @@ class Hero(DungeonCharacter, ABC):
         :return: string
         """
         hero_info = ""
-        hero_info += f"{self.player_name} the {self.name}\n"
+        hero_info += f"{self.name}\n"
         hero_info += f"Hit Points: {self.hit_points}\n"
         hero_info += f"Attack Speed: {self.attack_speed}\n"
         hero_info += f"Chance to Hit: {self.chance_to_hit}\n"
@@ -39,18 +38,6 @@ class Hero(DungeonCharacter, ABC):
     def special_skill(self, opponent):
         """ Abstract method to be tailored and implemented by child classes """
         pass
-    @property
-    def player_name(self):
-        return self._player_name
-
-    @player_name.setter
-    def player_name(self, player_name):
-        if isinstance(player_name, str):
-            """sets player's name"""
-            self._player_name = player_name
-        else:
-            raise ValueError("Name must be a string")
-
     @property
     def chance_to_block(self):
         """ Returns the chance to block """
@@ -101,7 +88,6 @@ class Hero(DungeonCharacter, ABC):
         else:
             raise ValueError("Healing potion count must be an integer")
 
-
 class Warrior(Hero):
     """ Warrior class is the child class of Hero """
 
@@ -142,3 +128,5 @@ class Thief(Hero):
             print(f" {self.name} attacked once")
         else:
             print(f"{self.name} couldn't attack")
+
+
