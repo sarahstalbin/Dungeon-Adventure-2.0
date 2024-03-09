@@ -31,9 +31,9 @@ class View:
     @staticmethod
     def print_original_and_player_maze(original, player):
         print("\nOriginal maze:\n")
-        original.print_dungeon()
+        print(original)
         print("Your maze:\n")
-        player.print_dungeon()
+        print(player)
 
     @staticmethod
     def get_play_saved_game():
@@ -41,7 +41,7 @@ class View:
 
     @staticmethod
     def play_again():
-        return input("Would you like to play again? \"y\" to keep playing or enter any key to exit. ")
+        return input("Would you like to play again? \"y\" to keep playing or enter any key to exit. ").lower()
 
     @staticmethod
     def input_player():
@@ -56,7 +56,7 @@ class View:
     @staticmethod
     def continue_or_not():
         return input("You have reached the exit. Would you like to leave the maze? (y to leave, "
-                     "pillar to view pillar count, or n to stay: ")
+                     "pillar to view pillar count, or n to stay: ").lower()
 
     @staticmethod
     def no_health_potion():
@@ -83,12 +83,12 @@ class View:
         return input("Column Dimension? Must be larger than 2. ")
 
     @staticmethod
-    def your_name():
+    def player_name():
         return input("What is your name? ")
 
     @staticmethod
     def see_stats():
-        return input("\nDo you want to see your stats? y/n ")
+        return input("\nDo you want to see your stats? y/n ").lower()
 
     @staticmethod
     def not_see_stats():
@@ -96,7 +96,7 @@ class View:
 
     @staticmethod
     def save_game():
-        return input("\nDo you want to save the game? y/n ")
+        return input("\nDo you want to save the game? y/n ").lower()
 
     @staticmethod
     def dont_save_game():
@@ -116,7 +116,7 @@ class View:
 
     @staticmethod
     def next_move():
-        return input("What is your next move? Enter \"m\" for menu: ")
+        return str(input("What is your next move? Enter \"m\" for menu: ").lower())
 
     @staticmethod
     def no_vision_potion():
@@ -162,35 +162,37 @@ class View:
 
     @staticmethod
     def pillar_count(pillar_count):
-        print(f"You have found {pillar_count} pillar so far.")
+        if pillar_count == 1:
+            print(f"You have found {pillar_count} pillar so far.")
+        else:
+            print(f"You have found {pillar_count} pillars so far.")
 
     @staticmethod
     def total_healing_potion(healing_potion_count):
         print(f"Picked up Healing Potion. Total Healing Potions: {healing_potion_count}")
-
     @staticmethod
-    def found_abstraction_pillar(pillar_count):
-        print(f"You found the Abstraction pillar! Total Pillars: {pillar_count}")
-
+    def total_vision_potion(vision_potion_count):
+        print(f"Picked up Vision Potion. Total Vision Potions: {vision_potion_count}")
     @staticmethod
-    def found_polymorphism_pillar(pillar_count):
-        print(f"You found the Polymorphism pillar! Total Pillars: {pillar_count}")
-
+    def found_pillar(pillar_count, pillar_type):
+        if pillar_type == "a":
+            print(f"You found the Abstraction pillar! Total Pillars: {pillar_count}")
+        if pillar_type == "p":
+            print(f"You found the Polymorphism pillar! Total Pillars: {pillar_count}")
+        if pillar_type == "i":
+            print(f"You found the Inheritance pillar! Total Pillars: {pillar_count}")
+        if pillar_type == "e":
+            print(f"You found the Encapsulation pillar! Total Pillars: {pillar_count}")
+        else:
+            print("That is not a pillar!")
     @staticmethod
-    def found_inheritance_pillar(pillar_count):
-        print(f"You found the Inheritance pillar! Total Pillars: {pillar_count}")
-
-    @staticmethod
-    def found_encapsulation_pillar(pillar_count):
-        print(f"You found the Encapsulation pillar! Total Pillars: {pillar_count}")
-
-    @staticmethod
-    def won_the_game(pillar_count):
-        print(f"You won the game and found all {pillar_count} pillars!")
-
-    @staticmethod
-    def lost_game(pillar_count):
-        print(f"Sorry, you only found {pillar_count} pillar. You have lost the game")
+    def game_results(pillar_count):
+        if pillar_count == 1:
+            print(f"Sorry, you only found {pillar_count} pillar. You have lost the game")
+        elif pillar_count == 4:
+            print(f"You won the game and found all {pillar_count} pillars!")
+        else:
+            print(f"Sorry, you only found {pillar_count} pillars. You have lost the game")
 
     @staticmethod
     def total_vision_potion(vision_potion_count):
@@ -205,8 +207,9 @@ class View:
         print(f"You fell into a Pit! You lost {pit_points} points. Current HP: {hit_points}")
 
     @staticmethod
-    def your_stats(hero):
-        print(f"Your stats: {hero}")
+    def player_stats(player_name, hero):
+        stats = player_name + " " + str(hero)
+        print(stats)
 
     @staticmethod
     def menu_str(menu_str):
@@ -219,39 +222,80 @@ class View:
         print("\n" + "\n".join(formatted_list) + "\n")
 
     @staticmethod
-    def display_attack_result(result):
+    def attack_mode(monster):
+        return input(
+                f"You can encountered a {monster.name}! Would can use 1. normal attack \"n\", 2. special "
+                f"attack \"s\" \n3. healing potion \"h\" 4. see stats \"stats\" ").lower()
+
+    @staticmethod
+    def monster_dead(monster):
+        print(f"you killed the monster {monster.name}!")
+
+    """----------------------------------dungeon characters----------------------------------------------------------"""
+    @staticmethod
+    def display_attack_result(result, hero, monster):
         if result["success"]:
-            print(f"{result['attacker']} attacks {result['opponent']} for {result['damage']} damage points")
+            print(f"{result['attacker']} attacks {result['opponent']} for {result['damage']} damage points. Now "
+                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
         else:
             print(f"{result['attacker']} couldn't attack {result['opponent']}")
 
     @staticmethod
-    def warrior_attack_result(result):
-        if result["success"]:
-            print(f"{result['attacker']} performs a Crushing Blow for {result['damage']} damage points.")
-        else:
-            print(f"{result['attacker']} couldn't perform Crushing Blow")
+    def special_attack_results(result, hero, monster):
+        if hero.name == "warrior":
+            if result["success"]:
+                print(f"{result['attacker']} performs a Crushing Blow for {result['damage']} damage points. Now "
+                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
+            else:
+                print(f"{result['attacker']} couldn't perform Crushing Blow")
 
-    @staticmethod
-    def priestess_attack_result(result):
-        print(f" {result['attacker']} performs healing on {result['opponent']} for {result['heal']} heal points ")
+        elif hero.name == "priestess":
+            print(f" {result['attacker']} performs healing on {result['opponent']} for {result['heal']} heal points ")
+        elif hero.name == "thief":
+            if result["success"]:
+                if result["attacks"] == 2:
+                    print(
+                        f"{result['attacker']} attacked {result['opponent']} twice for {result['damage']} damage points.  Now "
+                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
+                elif result["attacks"] == 1:
+                    print(
+                        f"{result['attacker']} attacked {result['opponent']} once for {result['damage']} damage points. Now "
+                  f"{hero.name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
+                else:
+                    print(f"{result['attacker']} couldn't perform the special attack.")
+            else:
+                print(f"{result['attacker']} couldn't perform the special attack.")
+        else:
+            print(f"{result['attacker']} couldn't perform the special attack.")
+
+
+    # @staticmethod
+    # def warrior_attack_result(result):
+    #     if result["success"]:
+    #         print(f"{result['attacker']} performs a Crushing Blow for {result['damage']} damage points.")
+    #     else:
+    #         print(f"{result['attacker']} couldn't perform Crushing Blow")
+    #
+    # @staticmethod
+    # def priestess_attack_result(result):
+    #     print(f" {result['attacker']} performs healing on {result['opponent']} for {result['heal']} heal points ")
 
     @staticmethod
     def priestess_adding_hit_points(result):
         print(f" {result['attacker']} now has {result['hit_points']} ")
 
-    @staticmethod
-    def thief_special_attack_result(result):
-        if result["success"]:
-            if result["attacks"] == 2:
-                print(
-                    f"{result['attacker']} attacked {result['opponent']} twice for {result['damage']} damage points. ")
-            elif result["attacks"] == 1:
-                print(f"{result['attacker']} attacked {result['opponent']} once for {result['damage']} damage points.")
-            else:
-                print(f"{result['attacker']} couldn't perform the special attack.")
-        else:
-            print(f"{result['attacker']} couldn't perform the special attack.")
+    # @staticmethod
+    # def thief_special_attack_result(result):
+    #     if result["success"]:
+    #         if result["attacks"] == 2:
+    #             print(
+    #                 f"{result['attacker']} attacked {result['opponent']} twice for {result['damage']} damage points. ")
+    #         elif result["attacks"] == 1:
+    #             print(f"{result['attacker']} attacked {result['opponent']} once for {result['damage']} damage points.")
+    #         else:
+    #             print(f"{result['attacker']} couldn't perform the special attack.")
+    #     else:
+    #         print(f"{result['attacker']} couldn't perform the special attack.")
 
     @staticmethod
     def monster_heal(result):
@@ -260,63 +304,58 @@ class View:
                 print(f"The Gremlin {result['name']} has healed itself!")
             else:
                 print(f"The Gremlin {result['name']} cannot heal itself, you're safe!")
+    @staticmethod
+    def print_room(room_str):
+        print(room_str)
 
-    def print_play_dungeon(self, dungeon, current_row=-1, current_col=-1):
+    def print_play_dungeon(self, dungeon):
         """
         Prints a simple visual representation of the Dungeon's maze as player is playing
         :return: None.
         """
         space = " "
         top = []
-        for row in range(dungeon.get_row_length):
-            for col in range(dungeon.get_col_length):
-                if row == current_row and col == current_col:
-                    top.append(str(dungeon.maze[row][col])[0:3] + "  ")
-                else:
-                    if dungeon.items.get((row, col)).player_traveled:
-                        top.append("---  ")
-                    else:
-                        top.append("^^^  ")
-
-        # saves mid string of all rooms in dungeon
         mid = []
-        for row in range(dungeon.get_row_length):
-            for col in range(dungeon.get_col_length):
-                if row == current_row and col == current_col:
-                    if len(str(dungeon.maze[row][col])) == 10:
-                        mid.append(str(dungeon.maze[row][col])[4:6] + "   ")
-                    else:
-                        mid.append(str(dungeon.maze[row][col])[4:7] + "  ")
-                else:
-                    if dungeon.items.get((row, col)).player_traveled:
-                        mid.append("---  ")
-                    else:
-                        mid.append("^^^  ")
-
-        # Saves bottom strings of all rooms in dungeon
         bottom = []
-        for row in range(dungeon.get_row_length):
-            for col in range(dungeon.get_col_length):
-                if row == current_row and col == current_col:
-                    bottom.append(str(dungeon.maze[row][col])[-3:] + "  ")
+
+        for row in range(dungeon.get_row_length()):
+            for col in range(dungeon.get_col_length()):
+                # Top string
+
+                if dungeon.get_room_str((row, col)).current_room:
+                    top.append(str(dungeon.get_room_str((row, col)))[0:3] + "  ")
+                    mid_len = len(str(dungeon.get_room_str((row, col)))[4:-4])
+                    current = str(dungeon.get_room_str((row, col)))[4]
+                    current += "@"
+                    current += str(dungeon.get_room_str((row, col)))[-5:-4] + "  " #space * (13 - mid_len)
+
+                    mid.append(current)
+                    bottom.append(str(dungeon.get_room_str((row, col)))[-3:] + "  ") #(space * 2))
+
+                elif dungeon.get_room_str((row, col)).player_traveled:
+                    top.append("---  ")
+                    mid.append("---  ")
+                    bottom.append("---  ")
                 else:
-                    if dungeon.items.get((row, col)).player_traveled:
-                        bottom.append("---  ")
-                    else:
-                        bottom.append("^^^  ")
+                    top.append("^^^  ")
+                    mid.append("^^^  ")
+                    bottom.append("^^^  ")
 
         # prints dungeon according to the dimensions
-        for i in range(0, dungeon.get_row_length):
+        for i in range(0, dungeon.get_row_length()):
             # print(end="\n")
-            for room in range(i * dungeon.get_col_length, (i + 1) * dungeon.get_col_length):
+            for room in range(i * dungeon.get_col_length(), (i + 1) * dungeon.get_col_length()):
                 print(top[room], end="")
             print(end="\n")
-            for room in range(i * dungeon.get_col_length, (i + 1) * dungeon.get_col_length):
+            for room in range(i * dungeon.get_col_length(), (i + 1) * dungeon.get_col_length()):
                 print(mid[room], end="")
             print(end="\n")
-            for room in range(i * dungeon.get_col_length, (i + 1) * dungeon.get_col_length):
+            for room in range(i * dungeon.get_col_length(), (i + 1) * dungeon.get_col_length()):
                 print(bottom[room], end="")
             print("\n")
+    @staticmethod
+    def print_view(dungeon):
+        print(dungeon)
 
     @staticmethod
     def end():
@@ -338,3 +377,7 @@ class View:
             sys.stdout.flush()
             time.sleep(.05)
         print("\n\nWe could not have done it without you.")
+
+
+
+

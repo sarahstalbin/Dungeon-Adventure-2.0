@@ -1,4 +1,4 @@
-from DungeonCharacter import DungeonCharacter
+from DungeonCharacter_Model import DungeonCharacter
 from abc import ABC, abstractmethod
 import random
 
@@ -89,7 +89,6 @@ class Hero(DungeonCharacter, ABC):
         else:
             raise ValueError("Healing potion count must be an integer")
 
-
 class Warrior(Hero):
     """ Warrior class is the child class of Hero """
 
@@ -148,3 +147,7 @@ class Thief(Hero):
             result["attacks"] = 1
 
         return result
+
+if  __name__ == "__main__":
+    t = Thief("thief", "Thief")
+    print(t)

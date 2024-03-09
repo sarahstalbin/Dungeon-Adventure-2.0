@@ -1,5 +1,5 @@
 import random
-from DungeonCharacter import DungeonCharacter
+from DungeonCharacter_Model import DungeonCharacter
 
 
 class Monster(DungeonCharacter):
@@ -118,15 +118,16 @@ class Monster(DungeonCharacter):
         else:
             raise ValueError("heal_point value must be an int")
 
-    @property
-    def has_fainted(self):
-        """ Returns the status of whether a Monster has fainted or not (boolean) """
-        return self._has_fainted
+    # @property
+    # def has_fainted(self):
+    #     """ Returns the status of whether a Monster has fainted or not (boolean) """
+    #     return self._has_fainted
 
-    @has_fainted.setter
-    def has_fainted(self, boolean):
+    # @has_fainted.setter
+    def has_fainted(self):
         """ Updates the Monster's fainting status """
-        if isinstance(boolean, bool):
-            self._has_fainted = boolean
+        if self.hit_points <= 0:
+            self._has_fainted = True
         else:
-            raise ValueError("has_fainted must be a boolean value")
+            self._has_fainted = False
+        return self._has_fainted
