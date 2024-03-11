@@ -49,7 +49,7 @@ class DungeonAdventure:
         self.menu = {"Action Menu": "m", "Go Up": "w", "Go Down": "s", "Go Left": "a", "Go Right": "d",
                      "Use Health Potion": "h", "Use Vision": "v", "Normal Attack": "n", "Special Attack": "s",
                      "View current status": "stats", "Quit Game": "q"}
-        self.cheat = {"win": "win the game!", "lose 1": "lose with pillar", "lose 2": "lose with maze", "lose 3": "lose completely",
+        self.cheat = {"Map display": "map", "win": "win the game!", "lose 1": "lose with pillar", "lose 2": "lose with maze", "lose 3": "lose completely",
                       "100+ vision potions": "visions", "1000+ HP": "healings", "kill monsters": "kill"}
         self.hidden_menu_option = "map"  # prints dungeon
         self.dungeon = Dungeon(5, 5)
@@ -120,6 +120,8 @@ class DungeonAdventure:
                 choice = self.view.desired_health_points()
                 try:
                     HP = int(choice)
+                    if HP < 0:
+                        HP = 0
                     self.hero.hit_points = HP
                     break
                 except ValueError:
@@ -128,6 +130,8 @@ class DungeonAdventure:
                 choice = self.view.health_potion_count()
                 try:
                     healing_potion_count = int(choice)
+                    if healing_potion_count < 0:
+                        healing_potion_count = 0
                     break
                 except ValueError:
                     self.view.number()
@@ -135,6 +139,8 @@ class DungeonAdventure:
                 choice = self.view.vision_potion_count()
                 try:
                     vision_potion_count = int(choice)
+                    if vision_potion_count < 0:
+                        vision_potion_count = 0
                     break
                 except ValueError:
                     self.view.number()
@@ -232,8 +238,9 @@ class DungeonAdventure:
             elif menu_command == "v":
                 if self.hero.vision_potion_count > 0:
                     self.hero.vision_potion_count -= 1
-                    self.item.create_item("V").use_vision(self.player_loc_row, self.player_loc_col,
+                    vision_str = self.item.create_item("V").use_vision(self.player_loc_row, self.player_loc_col,
                                                           self.dungeon)  # self.dungeon.get_col_length, self.dungeon.get_row_length,
+                    self.view.print_vision(vision_str)
                 else:
                     self.view.no_vision_potion()
             # print hero statistics
@@ -290,7 +297,12 @@ class DungeonAdventure:
                 self.hero.vision_potion_count += 100
             elif menu_command == "healings":
                 self.hero.healing_potion_count += 1000
+            elif menu_command == 'save':
+                self.view.save_game_message()
+                self.send_save_data()
             elif str(menu_command).lower() == "map":
+
+
                 # Secret menu prints map and uses @ for player location
                 self.print_dungeon()
             else:
@@ -456,7 +468,7 @@ class DungeonAdventure:
     def fight(self, monster):
         move = self.view.attack_mode(monster)
         while self.hero.hit_points > 0 or not monster.has_fainted:
-            if move == "heal me now":
+            if move == "healings":
                 self.hero.hit_points += 1000
             elif move == 'n' or move == "normal" or move == '1':
                 result = self.hero.attack(monster)
@@ -530,7 +542,7 @@ class DungeonAdventure:
             self.view.dont_save_game()
 
     def send_save_data(self):
-        with open('dungeon_adventure.pickle', 'wb') as saved_file:
+        with open('saved.pickle', 'wb') as saved_file:
             pickle.dump(self, saved_file)
 
     def play_saved_game(self):
@@ -539,7 +551,7 @@ class DungeonAdventure:
         Returns: Boolean if game was saved
         """
         try:
-            with open('dungeon_adventure.pickle', 'rb') as saved_file:
+            with open('saved.pickle', 'rb') as saved_file:
                 read_saved_game = pickle.load(saved_file)
                 # self = read_saved_game
             self.dungeon = read_saved_game.dungeon
@@ -547,6 +559,7 @@ class DungeonAdventure:
             self.player_loc_col = read_saved_game.player_loc_col
             self.player_loc_row = read_saved_game.player_loc_row
             self.original_dungeon = read_saved_game.original_dungeon
+            self.player_name = read_saved_game.player_name
         except pickle.UnpicklingError as e:
             # normal, somewhat expected
             self.view.no_save_game_found()
@@ -567,4 +580,5 @@ class DungeonAdventure:
 
 if __name__ == "__main__":
     game_play = DungeonAdventure()
-    game_play.set_play_mode()
+#     game_play.play_saved_game()
+    # game_play.set_play_mode()
