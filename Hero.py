@@ -95,11 +95,14 @@ class Warrior(Hero):
     def special_skill(self, opponent):
         """ This method is the Warrior's special skill """
         result = {"attacker": self.name, "opponent": opponent.name, "success": False, "damage": 0}
-        if random.random() < 0.4:  # 40% chance for Crushing Blow
+        # print("I am here")
+        # spot = random.random()
+        spot =.1
+        if spot < 0.4:  # 40% chance for Crushing Blow
             damage = random.randint(75, 175)  # causes damage for 75 to 175 points
-            opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
             result["success"] = True
             result["damage"] = damage
+            opponent.calculate_damage(damage)  # passes the damage points to calculate_damage method
 
         return result
 
@@ -112,11 +115,11 @@ class Priestess(Hero):
         result = {"attacker": self.name, "opponent": opponent.name, "success": False, "heal": 0,
                   "hit_points": self.hit_points}
         heal = random.randint(25, 50)
-        opponent.calculate_damage(-heal)  # heals the damage points
         result["success"] = True
         result["heal"] = heal
+        self.hit_points += heal
+        opponent.calculate_damage(-heal)  # heals the damage points
 
-        self.hit_points = + heal
         return result
 
 
@@ -129,7 +132,8 @@ class Thief(Hero):
         result = {"attacker": self.name, "opponent": opponent.name, "success": False, "attacks": 0,
                   "damage": 0}
 
-        chance = random.random()
+        # chance = random.random()
+        chance = .1
         if chance < 1:
 
             res = DungeonCharacter.attack(self, opponent)
