@@ -95,10 +95,7 @@ class Warrior(Hero):
     def special_skill(self, opponent):
         """ This method is the Warrior's special skill """
         result = {"attacker": self.name, "opponent": opponent.name, "success": False, "damage": 0}
-        # print("I am here")
-        # spot = random.random()
-        spot =.1
-        if spot < 0.4:  # 40% chance for Crushing Blow
+        if random.random() < 0.4:  # 40% chance for Crushing Blow
             damage = random.randint(75, 175)  # causes damage for 75 to 175 points
             result["success"] = True
             result["damage"] = damage
