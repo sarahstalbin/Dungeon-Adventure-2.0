@@ -22,11 +22,11 @@ class View:
 
     @staticmethod
     def number():
-        print("\nMust be a number")
+        print("Must be a number")
 
     @staticmethod
     def row_col():
-        print("\nRow/Column dimension must not be smaller than 2")
+        print("Row/Column dimension must not be smaller than 2")
 
     @staticmethod
     def print_original_and_player_maze(original, player):
@@ -97,7 +97,9 @@ class View:
     @staticmethod
     def save_game():
         return input("\nDo you want to save the game? y/n ").lower()
-
+    @staticmethod
+    def save_game_message():
+        print("Game Saved")
     @staticmethod
     def dont_save_game():
         print("The game was never saved")
@@ -200,10 +202,6 @@ class View:
             print(f"Sorry, you only found {pillar_count} pillars. You have lost the game")
 
     @staticmethod
-    def total_vision_potion(vision_potion_count):
-        print(f"Picked up Healing Potion. Total Healing Potions: {vision_potion_count}")
-
-    @staticmethod
     def player_choice(row, col):
         print(f"Play mode is Player's Choice with dungeon dimension of {row}x{col}")
 
@@ -234,8 +232,8 @@ class View:
     @staticmethod
     def attack_mode(monster):
         return input(
-                f"You've encountered a {monster.name}! Would can use 1. normal attack \"n\", 2. special "
-                f"attack \"s\" \n3. use healing potion \"h\" 4. see \"stats\" ").lower()
+                f"You've encountered a {monster.name}! You can use \n1. normal attack \"n\", 2. special "
+                f"attack \"s\" 3. use healing potion \"h\" 4. see \"stats\" ").lower()
 
     @staticmethod
     def monster_dead(monster):
@@ -246,8 +244,8 @@ class View:
             f"attack \"s\" or \"help\" ").lower()
 
     def attack_help(self):
-        print("1 normal attack \"n\", 2. special attack \"s\" \n3. use healing potion \"h\" 4. see stats "
-                     "\"stats\" \"h\" to use healing potion ")
+        print("1 normal attack \"n\", 2. special attack \"s\" 3. use healing potion \"h\" 4. see "
+                     "\"stats\" ")
 
     @staticmethod
     def clear_screen():
@@ -257,7 +255,9 @@ class View:
         # For Unix/Linux/Mac
         else:
             os.system('clear')
-
+    @staticmethod
+    def print_vision(vision_str):
+        print(vision_str)
     """----------------------------------dungeon characters----------------------------------------------------------"""
     @staticmethod
     def display_attack_result(result, hero, hero_name, monster):
@@ -269,20 +269,20 @@ class View:
 
     @staticmethod
     def special_attack_results(result, hero, hero_name, monster):
-        if hero.name == "warrior":
+        if hero.name == "Warrior":
             if result["success"]:
                 print(f"{result['attacker']} performs a Crushing Blow for {result['damage']} damage points. "
                   f"{hero_name} has {hero.hit_points}HP and {monster.name} has {monster.hit_points}HP")
             else:
                 print(f"{result['attacker']} couldn't perform Crushing Blow")
 
-        elif hero.name == "priestess":
-            print(f" {result['attacker']} performs healing on {result['opponent']} for {result['heal']} heal points ")
-        elif hero.name == "thief":
+        elif hero.name == "Priestess":
+            print(f"{result['attacker']} performs healing on itself {result['heal']} heal points. ")
+        elif hero.name == "Thief":
             if result["success"]:
                 if result["attacks"] == 2:
                     print(
-                        f"{result['attacker']} attacked {result['opponent']} twice for {result['damage']} damage points.  Now "
+                        f"{result['attacker']} attacked {result['opponent']} twice for {result['damage']} damage points. "
                   f"{hero_name} has {hero.hit_points} and {monster.name} has {monster.hit_points}")
                 elif result["attacks"] == 1:
                     print(
@@ -328,9 +328,9 @@ class View:
     def monster_heal(result):
         if result["success"]:
             if result["heal_amount"] > 0:
-                print(f"The Gremlin {result['name']} has healed itself!")
+                print(f"The {result['name']} has healed itself!")
             else:
-                print(f"The Gremlin {result['name']} cannot heal itself, you're safe!")
+                print(f"The {result['name']} cannot heal itself, you're safe!")
 
     @staticmethod
     def print_room(room_str):
@@ -383,6 +383,7 @@ class View:
             print("\n")
     @staticmethod
     def print_view(dungeon):
+        print("You are @")
         print(dungeon)
 
     @staticmethod
