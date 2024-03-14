@@ -1,4 +1,6 @@
+
 import sys, time, copy, random, pickle, os
+from Dungeon_Model import Dungeon
 
 
 class View:
@@ -335,8 +337,8 @@ class View:
     @staticmethod
     def print_room(room_str):
         print(room_str)
-
-    def print_play_dungeon(self, dungeon):
+    @staticmethod
+    def print_play_dungeon( dungeon):
         """
         Prints a simple visual representation of the Dungeon's maze as player is playing
         :return: None.
@@ -406,7 +408,3 @@ class View:
             sys.stdout.flush()
             time.sleep(.05)
         print("\n\nWe could not have done it without you.")
-
-
-
-
