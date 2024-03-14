@@ -1,12 +1,14 @@
 import sqlite3
 from sqlite3 import Error
 
-""" Establishes connection and setup to Monster SQLite Database """
+""" Establishes connection and setup to Dungeon Character SQLite Database """
+
 
 def create_connection(db_file):
-    """ Creates a database connection to the Monster database.
+    """ Creates a database connection to the Dungeon Character database.
     :param db_file: database file
     :return: Connection object or None"""
+
     conn = None
     try:
         # Pass a string that is the name of the file we want to connect to
@@ -33,10 +35,10 @@ def create_table(conn, create_table_sql):
 
 def main():
     """
-    Create tables for Ogres, Gremlins, Skeletons, Dungeon Trolls, Chimeras, and Dragons.
+    Create tables for Dungeon Characters.
     :return:
     """
-    database = r"monster_db.sqlite"
+    database = r"dungeon_character_db.sqlite"
 
     sql_create_ogre_table = """ CREATE TABLE IF NOT EXISTS ogre (
                                     name TEXT,
@@ -122,6 +124,45 @@ def main():
                                     has_fainted INTEGER
                             );"""
 
+    sql_create_warrior_table = """ CREATE TABLE IF NOT EXISTS warrior (
+                                    name TEXT,
+                                    hit_points INTEGER,
+                                    attack_speed INTEGER,
+                                    chance_to_hit REAL,
+                                    minimum_damage INTEGER,
+                                    maximum_damage INTEGER,
+                                    chance_to_block REAL,
+                                    healing_potion_count INTEGER,
+                                    vision_potion_count INTEGER,
+                                    pillar_count INTEGER
+                            );"""
+
+    sql_create_priestess_table = """ CREATE TABLE IF NOT EXISTS priestess (
+                                    name TEXT,
+                                    hit_points INTEGER,
+                                    attack_speed INTEGER,
+                                    chance_to_hit REAL,
+                                    minimum_damage INTEGER,
+                                    maximum_damage INTEGER,
+                                    chance_to_block REAL,
+                                    healing_potion_count INTEGER,
+                                    vision_potion_count INTEGER,
+                                    pillar_count INTEGER
+                            );"""
+
+    sql_create_thief_table = """ CREATE TABLE IF NOT EXISTS thief (
+                                    name TEXT,
+                                    hit_points INTEGER,
+                                    attack_speed INTEGER,
+                                    chance_to_hit REAL,
+                                    minimum_damage INTEGER,
+                                    maximum_damage INTEGER,
+                                    chance_to_block REAL,
+                                    healing_potion_count INTEGER,
+                                    vision_potion_count INTEGER,
+                                    pillar_count INTEGER
+                            );"""
+
     conn = create_connection(database)
 
     if conn is not None:
@@ -131,6 +172,9 @@ def main():
         create_table(conn, sql_create_troll_table)
         create_table(conn, sql_create_chimera_table)
         create_table(conn, sql_create_dragon_table)
+        create_table(conn, sql_create_warrior_table)
+        create_table(conn, sql_create_priestess_table)
+        create_table(conn, sql_create_thief_table)
     else:
         print("Error! Cannot create the database connection")
 
