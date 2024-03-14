@@ -16,6 +16,7 @@ class DungeonCharacterFactoryTests(unittest.TestCase):
     @patch('DungeonCharacterFactory.query_database.create_connection')
     @patch('DungeonCharacterFactory.query_database.select_row')
     def test_create_monster_chimera(self, mock_select_row, mock_create_connection):
+        """ Verifies that a chimera boss Monster is created as expected """
         mock_connection = MagicMock()
         mock_create_connection.return_value = mock_connection
 
@@ -36,6 +37,7 @@ class DungeonCharacterFactoryTests(unittest.TestCase):
     @patch('DungeonCharacterFactory.query_database.create_connection')
     @patch('DungeonCharacterFactory.query_database.select_row')
     def test_create_monster_ogre(self, mock_select_row, mock_create_connection):
+        """ Verifies that an ogre Monster is created as expected """
         mock_connection = MagicMock()
         mock_create_connection.return_value = mock_connection
 
@@ -56,6 +58,7 @@ class DungeonCharacterFactoryTests(unittest.TestCase):
     @patch('DungeonCharacterFactory.query_database.create_connection')
     @patch('DungeonCharacterFactory.query_database.select_row')
     def test_create_monster_gremlin(self, mock_select_row, mock_create_connection):
+        """ Verifies that a gremlin Monster is created as expected """
         mock_connection = MagicMock()
         mock_create_connection.return_value = mock_connection
 
@@ -76,6 +79,7 @@ class DungeonCharacterFactoryTests(unittest.TestCase):
     @patch('DungeonCharacterFactory.query_database.create_connection')
     @patch('DungeonCharacterFactory.query_database.select_row')
     def test_create_monster_dragon(self, mock_select_row, mock_create_connection):
+        """ Verifies that a dragon boss Monster is created as expected """
         mock_connection = MagicMock()
         mock_create_connection.return_value = mock_connection
 
@@ -96,6 +100,7 @@ class DungeonCharacterFactoryTests(unittest.TestCase):
     @patch('DungeonCharacterFactory.query_database.create_connection')
     @patch('DungeonCharacterFactory.query_database.select_row')
     def test_create_warrior(self, mock_select_row, mock_create_connection):
+        """ Verifies that a Warrior is created as expected """
         mock_connection = MagicMock()
         mock_create_connection.return_value = mock_connection
 
@@ -116,6 +121,7 @@ class DungeonCharacterFactoryTests(unittest.TestCase):
     @patch('DungeonCharacterFactory.query_database.create_connection')
     @patch('DungeonCharacterFactory.query_database.select_row')
     def test_create_priestess(self, mock_select_row, mock_create_connection):
+        """ Verifies that a Priestess is created as expected """
         mock_connection = MagicMock()
         mock_create_connection.return_value = mock_connection
 
@@ -136,6 +142,7 @@ class DungeonCharacterFactoryTests(unittest.TestCase):
     @patch('DungeonCharacterFactory.query_database.create_connection')
     @patch('DungeonCharacterFactory.query_database.select_row')
     def test_create_thief(self, mock_select_row, mock_create_connection):
+        """ Verifies that a Thief is created as expected """
         mock_connection = MagicMock()
         mock_create_connection.return_value = mock_connection
 
