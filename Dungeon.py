@@ -16,6 +16,11 @@ class Dungeon:
     """
 
     def __init__(self, rows, cols):
+        if not isinstance(rows, int) or not isinstance(cols, int):
+            raise ValueError("Rows and cols must be integers")
+        if rows < 3 or cols < 3:
+            raise ValueError("Rows and cols must be at least 3")
+
         self.__rows = rows
         self.__cols = cols
         self.__items = {}
@@ -69,6 +74,13 @@ class Dungeon:
         """
         return self.__maze[0][0]
 
+    def get_maze_array(self):
+        """ Returns the 2D array """
+        return self.__maze
+
+    def get_maze_dictionary(self):
+        """ Returns the Dungeon dictionary to see items in Rooms """
+        return self.__items
 
     def get_room_str(self, key):
         """
@@ -232,8 +244,11 @@ class Dungeon:
         :param direction: the direction of the door that will be knocked down ("N," "S," "E," "W")
         :return: None
         """
+        if not isinstance(room, Room) or not isinstance(direction, str):
+            raise ValueError("Must pass a Room object and a string ('N', 'S', 'E', or 'W')")
+
         if direction not in ("N," "S," "E," "W"):
-            raise ValueError("INVALID DIRECTION PROVIDED")
+            raise ValueError("Direction must be 'N', 'S', 'E', or 'W'")
 
         # Update the relevant door based on given direction
         if direction == "N":
@@ -484,10 +499,3 @@ class Dungeon:
                     if choice == "X":
                         pit = DungeonItemsFactory.create_item("X", 1, 10)
                         room.pit = True if pit else False
-
-
-if __name__ == "__main__":
-    dungeon = Dungeon(10, 10)
-    print(dungeon.get_room_str((dungeon.get_row_length()-1, dungeon.get_col_length()-1)))
-    # print(d)
-    # d.print_maze(0,0)
