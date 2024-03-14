@@ -66,8 +66,9 @@ if __name__ == "__main__":
     # print(c)
     # print(w)
     print(o)
-    o.heal
+    # o.heal
+    # print(o.calculate_damage(50))
 
-    # print(o.attack(w))w
+    print(w.special_skill(o))
     # print(w)w
     print(o)
