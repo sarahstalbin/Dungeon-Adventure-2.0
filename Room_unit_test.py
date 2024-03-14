@@ -66,6 +66,18 @@ class TestRoomGettersAndSetters(unittest.TestCase):
         self.room.south_door = True
         self.assertTrue(self.room.south_door)
 
+    def test_east_door(self):
+        """ Test east door method"""
+        self.assertFalse(self.room.east_door)  # Initial value should be False
+        self.room.east_door = True
+        self.assertTrue(self.room.east_door)
+
+    def test_west_door(self):
+        """ Test west door method"""
+        self.assertFalse(self.room.west_door)  # Initial value should be False
+        self.room.west_door = True
+        self.assertTrue(self.room.west_door)
+
     def test_encapsulation_pillar(self):
         """ Test encapsulation pillar method"""
         self.assertFalse(self.room.encapsulation_pillar)  # Initial value should be False
@@ -77,6 +89,18 @@ class TestRoomGettersAndSetters(unittest.TestCase):
         self.assertFalse(self.room.polymorphism_pillar)  # Initial value should be False
         self.room.polymorphism_pillar = True
         self.assertTrue(self.room.polymorphism_pillar)
+
+    def test_inheritance_pillar(self):
+        """ Test inheritance pillar method"""
+        self.assertFalse(self.room.inheritance_pillar)  # Initial value should be False
+        self.room.inheritance_pillar = True
+        self.assertTrue(self.room.inheritance_pillar)
+
+    def test_abstraction_pillar(self):
+        """ Test abstraction pillar method"""
+        self.assertFalse(self.room.abstraction_pillar)  # Initial value should be False
+        self.room.abstraction_pillar = True
+        self.assertTrue(self.room.abstraction_pillar)
 
     def test_empty_room(self):
         """ Test empty room method"""
@@ -114,6 +138,18 @@ class TestRoomGettersAndSetters(unittest.TestCase):
         self.room.chimera = True
         self.assertTrue(self.room.chimera)
 
+    def test_troll(self):
+        """ Test troll method"""
+        self.assertFalse(self.room.troll)  # Initial value should be False
+        self.room.troll = True
+        self.assertTrue(self.room.troll)
+
+    def test_dragon(self):
+        """ Test dragon method"""
+        self.assertFalse(self.room.dragon)  # Initial value should be False
+        self.room.dragon = True
+        self.assertTrue(self.room.dragon)
+
     def test_can_enter(self):
         # Test if can_enter method returns True when there is no impasse and the room is not visited
         self.assertTrue(self.room.can_enter())
@@ -142,6 +178,12 @@ class TestRoomGettersAndSetters(unittest.TestCase):
         expected_layout = "***\n*Hi*\n***"
         self.assertEqual(str(self.room), expected_layout)
 
+        #  Test another layout
+        self.room.west_door = True
+        self.room.chimera = True
+        self.room.encapsulation_pillar = True
+        expected_layout = "***\n|Hi~E*\n***"
+        self.assertEqual(str(self.room), expected_layout)
 
 if __name__ == '__main__':
     unittest.main()
