@@ -151,10 +151,10 @@ class TestView(unittest.TestCase):
 
         self.assert_stdout_dungeon(expected_output, View.print_play_dungeon, dungeon)
 
-    # def test_end(self):
-    #     """ Tests end printing"""
-    #     expected_output = "\n\nThank you for playing Dungeon Adventure. \nThis game was created by\n\nAqueno Nirasmi Amalraj \nMinna Chae \nSarah St. Albin \n\nA special thanks to our instructors \n\nTom Capaul \nKevin Anderson \nVarik Hoang \nRobert Cordingly \nAshutosh Engavle\n\nWe could not have done it without you.\n"
-    #     self.assert_stdout(expected_output, self.view.end)
+    def test_end(self):
+        """ Tests end printing"""
+        expected_output = "\n\nThank you for playing Dungeon Adventure. \nThis game was created by\n\nAqueno Nirasmi Amalraj \nMinna Chae \nSarah St. Albin \n\nA special thanks to our instructors \n\nTom Capaul \nKevin Anderson \nVarik Hoang \nRobert Cordingly \nAshutosh Engavle\n\nWe could not have done it without you.\n"
+        self.assert_stdout(expected_output, self.view.end)
 
 
 if __name__ == '__main__':
