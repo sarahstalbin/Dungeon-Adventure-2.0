@@ -1,6 +1,6 @@
 
-import sys, time, copy, random, pickle, os
-from Dungeon_Model import Dungeon
+import sys, time, os
+from Dungeon import Dungeon
 
 
 class View:
@@ -8,12 +8,13 @@ class View:
     @staticmethod
     def introduction():
 
-        print("\nWelcome to the Dungeon Adventure Game, where you may traverse a dangerous maze in hopes \nof finding "
-              "the 4 pillars of Object Oriented Programing (OOP) - Abstraction, Encapsulation, \nInheritance, "
-              "and Polymorphism. Within the dungeon's maze you will find surprises, such \nas healing potions, "
-              "vision potions, or pits. Items will be stored and healing potions \ncan be used to increase your HP, "
-              "or health points. The Vision potion allows you to see \nthrough the walls of surrounding rooms. Falling "
-              "into a pit will lower your HP. Be careful \nnot to die and lose the game. Survive and find all pillars of OOP to win. "
+        print("\nWelcome to the Dungeon Adventure Game, where you may traverse a dangerous maze in hopes of finding"
+              "\nthe 4 pillars of Object Oriented Programing (OOP) - Abstraction, Encapsulation, Inheritance, and"
+              "\nPolymorphism. Within the dungeon's maze you will find surprises, such as healing potions, vision"
+              "\npotions, monsters, or pits. Items will be stored and healing potions can be used to increase"
+              "\nyour HP, or health points. The Vision potion allows you to see through the walls of surrounding"
+              "\n rooms. Falling into a pit will lower your HP. You will also battle powerful monsters.Be careful"
+              "\nnot to die and lose the game. Survive, find all pillars of OOP and make it to the exit to win. "
               "\n \nTo travel, press keys w for Up, s for Down, a for Left, and d for Right. "
               "\nPress \"m\" to view menu options for legend key.\n")
 
@@ -233,6 +234,87 @@ class View:
 
     @staticmethod
     def attack_mode(monster):
+        troll_names = ["Ragnok", "Grimbash", "Boulderfist", "Groggnar", "Gnarlgrip"]
+        chimera_names = ["Hydra", "Nemean", "Typhon", "Thrawn", "Gryphon"]
+        dragon_names = ["Drakar", "Fafnir", "Volcanor", "Pyrax", "Vritra"]
+        ogre_names = ["Grommash", "Throg", "Grokk", "Ugg", "Gronk"]
+        gremlin_names = ["Gizmo", "Spike", "Scratch", "Snaggletooth", "Gnash"]
+        skeleton_names = ["Skeletor", "Deathclaw", "Rattlebones",
+                          "Skullcrack", "Dreadbone"]
+
+        if monster.name in dragon_names:
+            print("                 ___====-_  _-====___")
+            print("           _--^^^#####//      \\\\#####^^^--_")
+            print("        _-^##########// (    ) \\\\##########^-_")
+            print("       -############//  |\\^^/|  \\\\############-")
+            print("     _/############//   (@::@)   \\\\############\\_")
+            print("    /#############((     \\\\//     ))#############\\")
+            print("   -###############\\\\    (oo)    //###############-")
+            print("  -#################\\\\  / VV \\  //#################-")
+            print(" -###################\\\\/      \\//###################-")
+            print("_#/|##########/\\######(   /\\   )######/\\##########|\\#_")
+            print("|/ |#/\\#/\\#/\\/  \\#/\\##\\  |  |  /##/\\#/  \\/\\#/\\#/\\#| \\|")
+            print("`  |/  V  V  `   V  \\#\\| |  | |/#/  V   '  V  V  \\|  '")
+            print("   `   `  `      `   / | |  | | \\   '      '  '   '")
+            print("                    (  | |  | |  )")
+            print("                   __\\ | |  | | /__")
+            print("                  (vvv(VVV)(VVV)vvv)")
+
+        if monster.name in skeleton_names:
+            print("      .-. ")
+            print("     (o.o) ")
+            print("      |=|  ")
+            print("     __|__ ")
+            print("   //.=|=.\\ ")
+            print("  // .=|=. \\ ")
+            print("  \\ .=|=. // ")
+            print("   \\(_=_)// ")
+            print("    (:| |:) ")
+            print("     || || ")
+            print("     () () ")
+            print("     || || ")
+            print("     || || ")
+            print("    ==' '== ")
+        if monster.name in ogre_names:
+            print("          _......._")
+            print("       .-'.'.'.'.'.'.`-.")
+            print("    /.'.'               '.\\")
+            print("    |.'    _.--...--._     |")
+            print(" .-.'    `.   ((@))  .'   '.-.")
+            print("( ^ \\      `--.   .-'     / ^ )")
+            print(" \\  /         .   .       \\  /")
+            print(" /          .'     '.  .-    \\")
+            print("( _.\\    \\ (_`-._.-'_)    /._\\)")
+            print(" `-' \\   ' .--.          / `-'")
+            print("     |  / /|_| `-._.'\\   |")
+            print("     |   |       |_| |   /-.._")
+            print(" _..-\\   `.--.______.'  |")
+            print("      \\       .....     |")
+            print("       `.  .'      `.  /")
+            print("          `-..___..-`")
+
+        if monster.name == chimera_names:
+            print("       ,'.` ,,,")
+            print("     (( ))().)       _-- __)")
+            print("      _~ /\\.( ) ) --__/   ^ \\ ___------_")
+            print("   _//o_  ))(). ,)       (_ø \\          `-_")
+            print("  /      ))()  . ))     /   \"             |\\__")
+            print("  ø_---\\ )).. )   )                       |   `---.___")
+            print("    (\"\" \\  )) . .)                        |           `--.__")
+            print("     ___/ _/ ( ()   \\         \\          /__                `--._")
+            print("      ---'(  (\\      |      ___\\_        \\  `-_._.-----___.-'    `-")
+            print("         ((..( \\     |___--      \\_      |   /    /¢~~             )")
+            print("           (( ( |   /\"             \\_    |  (.------_             /")
+            print("              ((|   |                |   /_  `_-- ____  \\  ___,--'")
+            print("                 |   |                |  /            --.____|/")
+            print("                 |   |               /  /   ")
+            print("                _|  /              _/ _/")
+            print("              //__/             //__/")
+            print("              ``                ``")
+
+
+
+
         return input(
                 f"You've encountered a {monster.name}! You can use \n1. normal attack \"n\", 2. special "
                 f"attack \"s\" 3. use healing potion \"h\" 4. see \"stats\" ").lower()
@@ -298,33 +380,9 @@ class View:
             print(f"{result['attacker']} couldn't perform the special attack.")
 
 
-    # @staticmethod
-    # def warrior_attack_result(result):
-    #     if result["success"]:
-    #         print(f"{result['attacker']} performs a Crushing Blow for {result['damage']} damage points.")
-    #     else:
-    #         print(f"{result['attacker']} couldn't perform Crushing Blow")
-    #
-    # @staticmethod
-    # def priestess_attack_result(result):
-    #     print(f" {result['attacker']} performs healing on {result['opponent']} for {result['heal']} heal points ")
-
     @staticmethod
     def priestess_adding_hit_points(result):
         print(f" {result['attacker']} now has {result['hit_points']} ")
-
-    # @staticmethod
-    # def thief_special_attack_result(result):
-    #     if result["success"]:
-    #         if result["attacks"] == 2:
-    #             print(
-    #                 f"{result['attacker']} attacked {result['opponent']} twice for {result['damage']} damage points. ")
-    #         elif result["attacks"] == 1:
-    #             print(f"{result['attacker']} attacked {result['opponent']} once for {result['damage']} damage points.")
-    #         else:
-    #             print(f"{result['attacker']} couldn't perform the special attack.")
-    #     else:
-    #         print(f"{result['attacker']} couldn't perform the special attack.")
 
     @staticmethod
     def monster_heal(result):
