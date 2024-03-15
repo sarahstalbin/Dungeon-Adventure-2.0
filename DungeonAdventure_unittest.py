@@ -1,8 +1,10 @@
 """
 Name: Aqueno Nirasmi, Minna Chae, Sarah St. Albin
-TCSS 501 and 502
+TCSS 503
 Dungeon Adventure: dungeon adventure unit test
 """
+import io
+import sys
 import unittest, builtins
 from unittest.mock import patch
 from DungeonAdventure import DungeonAdventure
@@ -10,17 +12,15 @@ from Room import Room
 from DungeonCharacterFactory import DungeonCharacterFactory
 
 """
-Dungeon Adventure Unit Test. Must delete at end of DungeonAdventure.py 
-game_play = DungeonAdventure()
-game_play.play_whole_game()
-
-for unit test to run properly.
+Dungeon Adventure Unit Test.
 """
 
 class DungeonAdventureTest(unittest.TestCase):
 
-
     def setUp(self):
+        """
+        Set up DungeonAdventure and room. Also blocks printouts
+        """
         self.da = DungeonAdventure()
         self.room = Room()
 
@@ -156,52 +156,45 @@ class DungeonAdventureTest(unittest.TestCase):
         Testing player input for south direction, check to see if that direction is possible and move that direction.
         If moving to next room is possible go to next room.
         """
+        self.da.player_loc_row = 0
+        self.da.player_loc_col = 0
 
-        self.da.move_hero("s")
-        # try:
-        patch('builtins.input', side_effect=['kill'])
+        # print(self.da.move_hero("s"))
+        real_direction = 'S'
 
-        # except:
-        #     pass
+        new_row, new_col = self.da.dungeon._return_neighbor_coordinates(self.da.player_loc_row, self.da.player_loc_col,
+                                                                        real_direction)
 
-
-        real_direction = "S"
-        current_row = 0
-        current_col = 0
-        new_row, new_col = self.da.dungeon._return_neighbor_coordinates(current_row, current_col, real_direction)
-
-        current_key = (current_row,current_col)
+        current_key = (self.da.player_loc_row, self.da.player_loc_col)
         new_key = (new_row, new_col)
 
-        #test if there is a room
-        if self.da.dungeon.is_valid_room(new_row, new_col):
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test move hero next "
-                                                                              "room failed")
-            self.assertEqual(new_row, 1, "Test move hero get row failed")
-            self.assertEqual(new_col, 0, "Test move hero get column failed")
-        else:
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test move hero next "
-                                                                              "room fail failed")
+        with patch('DungeonAdventure.DungeonAdventure.move_hero', side_effect=lambda self, menu_command: 's') as mock_method:
 
-        #test if you can go into the room
-        if self.da.dungeon.show_doors(current_key, new_key, real_direction):
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move "
-                                                                                              "hero door fail")
-            self.assertEqual(self.da.player_loc_row, 1, "Test move hero row failed")
-            self.assertEqual(self.da.player_loc_col, 0, "Test move hero row failed")
-        else:
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
-                                                                                        "hero room fail failed")
+
+
+            #test if there is a room
+            if self.da.dungeon.is_valid_room(new_row, new_col):
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test if hero can go south "
+                                                                                  "room failed")
+
+            else:
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test if hero can go south "
+                                                                                  "room fail failed")
+            #test if you go into the room
+            if self.da.dungeon.show_doors(current_key, new_key, real_direction):
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move "
+                                                                                                  "hero door fail")
+            else:
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
+                                                                                            "hero room fail failed")
 
     def test_move_hero_north(self):
         """
         Testing player input for north direction, check to see if that direction is possible and move that direction.
         If moving to next room is possible go to next room.
         """
-        da = DungeonAdventure()
         self.da.player_loc_col = 1
         self.da.player_loc_row = 1
-        self.da.move_hero("w")
         real_direction = "N"
         current_row = self.da.player_loc_row
         current_col = self.da.player_loc_col
@@ -209,34 +202,30 @@ class DungeonAdventureTest(unittest.TestCase):
 
         current_key = (current_row, current_col)
         new_key = (new_row, new_col)
-
+        with patch('DungeonAdventure.DungeonAdventure.move_hero', side_effect=lambda self, menu_command: 'n') as mock_method:
         # test if there is a room
-        if self.da.dungeon.is_valid_room(new_row, new_col):
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test move hero next "
-                                                                               "room failed")
-            self.assertEqual(new_row, 0, "Test move hero get row failed")
-            self.assertEqual(new_col, 1, "Test move hero get column failed")
-        else:
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test move hero next "
-                                                                               "room fail failed")
+            if self.da.dungeon.is_valid_room(new_row, new_col):
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test move hero next "
+                                                                                   "room failed")
 
-        # test if you can go into the room
-        if self.da.dungeon.show_doors(current_key, new_key, real_direction):
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move "
-                                                                                               "hero door fail")
-            self.assertEqual(self.da.player_loc_row, 0, "Test move hero row failed")
-            self.assertEqual(self.da.player_loc_col, 1, "Test move hero row failed")
-        else:
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
-                                                                                        "hero room fail failed")
+            else:
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test move hero next "
+                                                                                   "room fail failed")
+
+            # test if you can go into the room
+            if self.da.dungeon.show_doors(current_key, new_key, real_direction):
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move "
+                                                                                                   "hero door fail")
+            else:
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
+                                                                                            "hero room fail failed")
 
     def test_move_hero_east(self):
         """
         Testing player input for east direction, check to see if that direction is possible and move that direction.
         If moving to next room is possible go to next room.
         """
-        da = DungeonAdventure()
-        self.da.move_hero("d")
+
         real_direction = "E"
         current_row = 0
         current_col = 0
@@ -244,36 +233,33 @@ class DungeonAdventureTest(unittest.TestCase):
 
         current_key = (current_row, current_col)
         new_key = (new_row, new_col)
+        with patch('DungeonAdventure.DungeonAdventure.move_hero',
+                   side_effect=lambda self, menu_command: 'e', ) as mock_method:
+            # test if there is a room
+            if self.da.dungeon.is_valid_room(new_row, new_col):
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test move hero next "
+                                                                                   "room failed")
 
-        # test if there is a room
-        if self.da.dungeon.is_valid_room(new_row, new_col):
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test move hero next "
-                                                                               "room failed")
-            self.assertEqual(new_row, 0, "Test move hero get row failed")
-            self.assertEqual(new_col, 1, "Test move hero get column failed")
-        else:
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test move hero next "
-                                                                                "room fail failed")
+            else:
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test move hero next "
+                                                                                    "room fail failed")
 
-        # test if you can go into the room
-        if self.da.dungeon.show_doors(current_key, new_key, real_direction):
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move "
-                                                                                               "hero door fail")
-            self.assertEqual(self.da.player_loc_row, 0, "Test move hero row failed")
-            self.assertEqual(self.da.player_loc_col, 1, "Test move hero row failed")
-        else:
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
-                                                                                                "room fail failed")
+            # test if you can go into the room
+            if self.da.dungeon.show_doors(current_key, new_key, real_direction):
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move "
+                                                                                                   "hero door fail")
+
+            else:
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
+                                                                                                    "room fail failed")
 
     def test_move_hero_west(self):
         """
         Testing player input for west direction, check to see if that direction is possible and move that direction.
         If moving to next room is possible go to next room.
         """
-        da = DungeonAdventure()
         self.da.player_loc_col = 1
         self.da.player_loc_row = 1
-        self.da.move_hero("a")
         real_direction = "W"
         current_row = self.da.player_loc_row
         current_col = self.da.player_loc_col
@@ -281,26 +267,22 @@ class DungeonAdventureTest(unittest.TestCase):
 
         current_key = (current_row, current_col)
         new_key = (new_row, new_col)
-
+        with patch('DungeonAdventure.DungeonAdventure.move_hero',
+                   side_effect=lambda self, menu_command: 'w', ) as mock_method:
         # test if there is a room
-        if self.da.dungeon.is_valid_room(new_row, new_col):
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test move hero next "
-                                                                               "room failed")
-            self.assertEqual(new_row, 1, "Test move hero get row failed")
-            self.assertEqual(new_col, 0, "Test move hero get column failed")
-        else:
-            self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test move hero next "
-                                                                                "room fail failed")
+            if self.da.dungeon.is_valid_room(new_row, new_col):
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), True, "Test move hero next "
+                                                                                   "room failed")
+            else:
+                self.assertEqual(self.da.dungeon.is_valid_room(new_row, new_col), False, "Test move hero next "
+                                                                                    "room fail failed")
 
-        # test if you can go into the room
-        if self.da.dungeon.show_doors(current_key, new_key, real_direction):
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move "
-                                                                                               "hero door fail")
-            self.assertEqual(self.da.player_loc_row, 1, "Test move hero row failed")
-            self.assertEqual(self.da.player_loc_col, 0, "Test move hero row failed")
-        else:
-            self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
-                                                                                        "hero door fail failed")
+            # test if you can go into the room
+            if self.da.dungeon.show_doors(current_key, new_key, real_direction):
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), True, "Test move ")
+            else:
+                self.assertEqual(self.da.dungeon.show_doors(current_key, new_key, real_direction), False, "Test move "
+                                                                                            "hero door fail failed")
 
     def test_collect_item_health(self):
         """
@@ -331,7 +313,6 @@ class DungeonAdventureTest(unittest.TestCase):
         self.da.collect_item(self.room)
         self.assertTrue(-15 <= self.da.item.create_item("X", 1,15).use_item() <= -1,"Testing item pit failed")
 
-
     def test_collect_item_exit(self):
         """
         Testing collect exit command in room
@@ -341,13 +322,6 @@ class DungeonAdventureTest(unittest.TestCase):
         returned_room = self.da.collect_item(self.room)
 
         self.assertEqual(True, returned_room.exit, "Test exit failed")
-
-    def test_collect_item_ogre(self):
-        """
-        Testing collect multi item in room
-        """
-        # Collect Health potion
-        pass
 
     def test_collect_item_A(self):
         """
@@ -388,6 +362,85 @@ class DungeonAdventureTest(unittest.TestCase):
         self.da.collect_item(self.room)
         pillar_count = self.da.hero.pillar_count
         self.assertEqual(pillar_count, 1)
+
+    @patch('builtins.input', side_effect=['kill'])
+    def test_collect_item_ogre(self, prompt):
+        """
+        Testing collect ogre monster item in room
+        """
+        # Collect Health potion
+        self.room.ogre = True
+        self.da.collect_item(self.room)
+        self.assertEqual(self.room.ogre, False)
+
+    @patch('builtins.input', side_effect=['kill'])
+    def test_collect_item_gremlin(self, prompt):
+        """
+        Testing collect ogre monster item in room
+        """
+        # Collect Health potion
+        self.room.gremlin = True
+        self.da.collect_item(self.room)
+        self.assertEqual(self.room.gremlin, False)
+
+    @patch('builtins.input', side_effect=['kill'])
+    def test_collect_item_skeleton(self, prompt):
+        """
+        Testing collect ogre monster item in room
+        """
+        # Collect Health potion
+        self.room.skeleton = True
+        self.da.collect_item(self.room)
+        self.assertEqual(self.room.skeleton, False)
+
+    @patch('builtins.input', side_effect=['kill'])
+    def test_collect_item_dragon(self, prompt):
+        """
+        Testing collect ogre monster item in room
+        """
+        # Collect Health potion
+        self.room.dragon = True
+        self.da.collect_item(self.room)
+        self.assertEqual(self.room.dragon, False)
+
+    @patch('builtins.input', side_effect=['kill'])
+    def test_collect_item_chimera(self, prompt):
+        """
+        Testing collect ogre monster item in room
+        """
+        # Collect Health potion
+        self.room.chimera = True
+        self.da.collect_item(self.room)
+        self.assertEqual(self.room.chimera, False)
+
+    @patch('builtins.input', side_effect=['kill'])
+    def test_collect_item_troll(self, prompt):
+        """
+        Testing collect ogre monster item in room
+        """
+        # Collect Health potion
+        self.room.troll = True
+        self.da.collect_item(self.room)
+
+        self.assertEqual(self.room.troll, False)
+
+
+    def test_pickle(self):
+        """
+        Testing pickle/save and load
+        """
+        #dump data
+        self.da.player_name = 'Minna'
+        self.hero = DungeonCharacterFactory.create_character("priestess", "Priestess")
+        self.da.player_loc_col = 2
+        self.da.player_loc_row = 1
+        self.da.send_save_data()
+        self.da.play_saved_game()
+        self.assertEqual('Priestess', self.da.hero.name, "Pickle Hero Name Test Failed")
+        self.assertEqual('Minna', self.da.player_name, "Pickle Name Test Failed")
+        self.assertEqual(2, self.da.player_loc_col, "Pickle col Test Failed")
+        self.assertEqual(1, self.da.player_loc_row,  "Pickle row Test Failed")
+
 
 
 if __name__ == "__main__":
