@@ -5,7 +5,6 @@ Dungeon Adventure 2.0
 """
 
 from Room import Room
-from DungeonCharacterFactory import DungeonCharacterFactory
 from DungeonItemsFactory import DungeonItemsFactory
 import random
 
@@ -61,8 +60,8 @@ class Dungeon:
             self.__items = {(row, col): self.__maze[row][col] for row in range(self.__rows) for col
                             in range(self.__cols)}
             self._place_pillars()
-            # self._place_monsters()
             self._place_boss_monster()
+            self._place_monsters()
             self._place_items()
         else:
             self._create_maze(start_room, start_row, start_col)
@@ -337,14 +336,9 @@ class Dungeon:
         :return: None
         """
         monster_types = ["Ogre", "Gremlin", "Skeleton"]
-        ogre_names = ["Grommash", "Throg", "Grokk", "Ugg", "Brak", "Grugg", "Thud", "Smashgut", "Grogg", "Gronk"]
-        gremlin_names = ["Gizmo", "Spike", "Scratch", "Snaggletooth", "Sly", "Gnash", "Wretch", "Twitch", "Grime",
-                         "Scuttle"]
-        skeleton_names = ["Skully", "Bonecrusher", "Rattlebones", "Grimm", "Skeletor", "Deathclaw", "Bones", "Marrow",
-                          "Skullcrack", "Dreadbone"]
 
         total_rooms = len(self.__items)
-        target_monster_rooms = total_rooms // 4
+        target_monster_rooms = total_rooms // 8
 
         monster_rooms = 0
 
@@ -358,20 +352,14 @@ class Dungeon:
                   random_room.encapsulation_pillar):
                 continue
 
-            if random.random() < 0.5:  # Adjust the probability here as needed
+            if random.random() < 0.5:
                 choice = random.choice(monster_types)
                 if choice == "Ogre":
-                    ogre_name = random.choice(ogre_names)
-                    ogre = DungeonCharacterFactory.create_character("ogre", ogre_name)
-                    random_room.ogre = True if ogre else False
+                    random_room.ogre = True
                 elif choice == "Gremlin":
-                    gremlin_name = random.choice(gremlin_names)
-                    gremlin = DungeonCharacterFactory.create_character("gremlin", gremlin_name)
-                    random_room.gremlin = True if gremlin else False
+                    random_room.gremlin = True
                 elif choice == "Skeleton":
-                    skeleton_name = random.choice(skeleton_names)
-                    skeleton = DungeonCharacterFactory.create_character("skeleton", skeleton_name)
-                    random_room.skeleton = True if skeleton else False
+                    random_room.skeleton = True
                 else:
                     random_room.ogre = False
                     random_room.gremlin = False
@@ -386,44 +374,21 @@ class Dungeon:
         """
 
         boss_type = ["Troll", "Chimera", "Dragon"]
-        troll_names = ["Ragnok", "Grimbash", "Boulderfist", "Groggnar", "Gnarlgrip"]
-        chimera_names = ["Hydra", "Nemean", "Typhon", "Thrawn", "Gryphon"]
-        dragon_names = ["Drakar", "Fafnir", "Volcanor", "Pyrax", "Vritra"]
 
-        exit_room = None
-        abstraction_room = None
-        encapsulation_room = None
-        inheritance_room = None
-        polymorphism_room = None
+        qualified_rooms = [room for room in self.__items.values()
+                           if room.exit or room.abstraction_pillar or room.encapsulation_pillar
+                           or room.inheritance_pillar or room.polymorphism_pillar]
 
-        for room in self.__items.values():
-            if room.exit:
-                exit_room = room
-            elif room.abstraction_pillar:
-                abstraction_room = room
-            elif room.encapsulation_pillar:
-                encapsulation_room = room
-            elif room.inheritance_pillar:
-                inheritance_room = room
-            elif room.polymorphism_pillar:
-                polymorphism_room = room
-
-            if exit_room or abstraction_room or encapsulation_room or inheritance_room or polymorphism_room:
-                choose_monster = random.choice(boss_type)
-                if choose_monster == "Troll":
-                    troll_name = random.choice(troll_names)
-                    troll = DungeonCharacterFactory.create_character("troll", troll_name)
-                    room.troll = True if troll else False
-                elif choose_monster == "Chimera":
-                    chimera_name = random.choice(chimera_names)
-                    chimera = DungeonCharacterFactory.create_character("chimera", chimera_name)
-                    room.chimera = True if chimera else False
-                elif choose_monster == "Dragon":
-                    dragon_name = random.choice(dragon_names)
-                    dragon = DungeonCharacterFactory.create_character("dragon", dragon_name)
-                    room.dragon = True if dragon else False
-                else:
-                    raise ValueError("No exit room found")
+        for room in qualified_rooms:
+            monster_choice = random.choice(boss_type)
+            if monster_choice == "Troll":
+                room.troll = True
+            elif monster_choice == "Chimera":
+                room.chimera = True
+            elif monster_choice == "Dragon":
+                room.dragon = True
+            else:
+                break
 
         # place pillars first
     def _place_pillars(self):
@@ -499,3 +464,6 @@ class Dungeon:
                     if choice == "X":
                         pit = DungeonItemsFactory.create_item("X", 1, 10)
                         room.pit = True if pit else False
+
+d = Dungeon(5, 5)
+print(d)
