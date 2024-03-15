@@ -1,6 +1,6 @@
 
+
 import sys, time, os
-from Dungeon import Dungeon
 
 
 class View:
@@ -391,9 +391,9 @@ class View:
             print("     \\_,_>--'")
 
         if monster.name in troll_names:
-            print("   _______                 ")
-            print(" ((      ))    _______ ")
-            print(" ((      ))   /_     _\\ ")
+            print("   _______  ")
+            print(" ((      ))    _______")
+            print(" ((      ))   /_     _\\")
             print(" ((      ))   \\|0   0|/")
             print("  __(())__    (_  ^  _)")
             print("   ( () )   /`\\ |\"\"\"|/`\\")
