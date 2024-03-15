@@ -4,7 +4,7 @@ TCSS 501 and 502
 Dungeon Adventure
 """
 
-from DungeonItems import HealingPotion, VisionPotion, Pit, MultiItem
+from DungeonItems import HealingPotion, VisionPotion, Pit
 from random import randint
 import random
 
@@ -33,7 +33,5 @@ class DungeonItemsFactory:
             return HealingPotion(*args)
         elif item_type == "X":
             return Pit(*args)
-        elif item_type == "M":
-            return MultiItem()
         else:
             raise ValueError("Invalid item type")

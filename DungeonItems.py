@@ -53,9 +53,7 @@ class VisionPotion(DungeonItems):
         """
         dungeon_max_row = dungeon.get_row_length()
         dungeon_max_col = dungeon.get_col_length()
-        vision_rooms = []
-        current_room = copy.deepcopy(dungeon.get_room_str((current_row, current_col)))
-        # self.current_room(current_room)
+
         row = 1
         col = 1
 
@@ -157,13 +155,3 @@ class Pit(DungeonItems):
     def use_item(self):
         """ Implementing use_item method for Pit class"""
         return self.pit
-
-
-class MultiItem(DungeonItems):
-    def __init__(self):
-        """ Inheriting DungeonItems class initializing name as "X" and passing a minimum amd maximum parameters
-        param: minimum, maximum"""
-        super().__init__("M")
-
-    def use_item(self):
-        pass
