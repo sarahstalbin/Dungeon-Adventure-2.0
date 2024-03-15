@@ -18,7 +18,6 @@ class Room:
         self.__exit = False
         self.__impasse = False
         self.__visited = False
-        # self.__multiple_items = False
         self.__north_door = False
         self.__south_door = False
         self.__east_door = False
@@ -37,7 +36,6 @@ class Room:
         self.__chimera = False
         self.__troll = False
 
-
     @property
     def healing_potion(self):
         """ gets healing potion boolean value using property decorator """
@@ -52,11 +50,6 @@ class Room:
     def pit(self):
         """ gets pit boolean value using property decorator """
         return self.__pit
-
-    # @property
-    # def multiple_items(self):
-    #     """ gets multiple_items boolean value using property decorator """
-    #     return self.__multiple_items
 
     @property
     def abstraction_pillar(self):
@@ -117,7 +110,6 @@ class Room:
     @property
     def dragon(self):
         return self.__dragon
-
 
     @property
     def chimera(self):
@@ -270,10 +262,7 @@ class Room:
 
     def empty_room(self):
         """ setting empty_room using setter property
-            :param is_empty
             :return boolean value """
-        # if not isinstance(is_empty, bool):
-        #     raise ValueError("empty_room must be a boolean")
 
         if self.__str__()[5] == " " or self.__str__()[5] == "|" or self.__str__()[5] == "*":
             self.__empty_room = True
@@ -308,7 +297,6 @@ class Room:
             raise ValueError("skeleton must be a boolean")
         self.__skeleton = troll
         self.empty_room()
-
 
     @dragon.setter
     def dragon(self, dragon):
@@ -375,8 +363,6 @@ class Room:
         """ This method can be called if there is no impasse and if it is not visited """
         return not self.__impasse and not self.__visited
 
-
-
     def __str__(self):
         """ str method prints the layout of the room class with its abbreviated names and symbols"""
         layout = ""
@@ -397,8 +383,7 @@ class Room:
             layout += "i"
         if self.__exit:
             layout += "O"
-        # if self.__multiple_items:
-        #     layout += "M"
+
         if self.__ogre:
             layout += "%"
         if self.__skeleton:
@@ -435,8 +420,4 @@ class Room:
         return layout
 
 
-if __name__ == "__main__":
-    r = Room()
-    # r.empty_room = False
-    # r.healing_potion = True
-    print(str(r)[5])
+
