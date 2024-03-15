@@ -269,7 +269,7 @@ class View:
             print("                   (__--~(     ~\\\\\\\\\\\\\\\\\\\\        \\ \\ ")
             print("                   (__--~~(       \\\\\\\\\\\\\\\\\\|        \\/")
 
-        if hero.name == 'Theif':
+        if hero.name == 'Thief':
             print("⠀⠀⠀⠀⢀⣤⣶⣶⣿⣿⣶⣶⣤⣀⠀⠀⠀⠀")
             print("⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⠀⠀")
             print("⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀")
@@ -359,7 +359,7 @@ class View:
             print("       `.  .'      `.  /")
             print("          `-..___..-`")
 
-        if monster.name == chimera_names:
+        if monster.name in chimera_names:
             print("       ,'.` ,,,")
             print("     (( ))().)       _-- __)")
             print("      _~ /\\.( ) ) --__/   ^ \\ ___------_")
@@ -378,7 +378,7 @@ class View:
             print("              //__/             //__/")
             print("              ``                ``")
 
-        if monster.name == gremlin_names:
+        if monster.name in gremlin_names:
             print("   .-',,^,,'.")
             print("  / \\(0)(0)/  \\")
             print("  )/( ,_\\\"_,)\\(")
@@ -390,7 +390,7 @@ class View:
             print("     | |_\\__")
             print("     \\_,_>--'")
 
-        if monster.name == troll_names:
+        if monster.name in troll_names:
             print("   _______                 ")
             print(" ((      ))    _______ ")
             print(" ((      ))   /_     _\\ ")
