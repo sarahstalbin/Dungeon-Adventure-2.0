@@ -128,9 +128,8 @@ class DungeonAdventureTest(unittest.TestCase):
         """
         self.da.menu_str()
         menu = {"Action Menu": "m", "Go Up": "w", "Go Down": "s", "Go Left": "a", "Go Right": "d",
-                     "Use Health Potion": "h", "Use Vision": "v", "Normal Attack": "1", "Special Attack": "2",
-                     "View current status": "stats", "Save Game": "save", "Quit Game": "q"}
-
+                "Use Health Potion": "h", "Use Vision": "v", "Normal Attack": "1", "Special Attack": "2",
+                "View current status": "stats", "Map Display": "map", "Save Game": "save", "Quit Game": "q"}
         formatted_list = ["    " + item + " : " + values for item, values in menu.items()]
         string_test = "\n".join(formatted_list) + "\n"
         actual_string = self.da.menu_str()
