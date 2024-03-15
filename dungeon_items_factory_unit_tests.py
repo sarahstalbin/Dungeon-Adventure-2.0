@@ -1,7 +1,7 @@
 """
 Name: Aqueno Nirasmi, Minna Chae, Sarah St. Albin
-Assignment: Dungeon Adventure Game
-Class: TCSS 502
+Assignment: Dungeon Adventure 2.0
+Class: TCSS 504
 """
 import unittest
 from DungeonItemsFactory import DungeonItemsFactory
