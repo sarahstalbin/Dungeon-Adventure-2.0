@@ -464,6 +464,3 @@ class Dungeon:
                     if choice == "X":
                         pit = DungeonItemsFactory.create_item("X", 1, 10)
                         room.pit = True if pit else False
-
-d = Dungeon(5, 5)
-print(d)
