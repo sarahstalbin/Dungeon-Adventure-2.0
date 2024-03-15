@@ -50,8 +50,8 @@ class DungeonAdventure:
     def __init__(self):
         self.menu = {"Action Menu": "m", "Go Up": "w", "Go Down": "s", "Go Left": "a", "Go Right": "d",
                      "Use Health Potion": "h", "Use Vision": "v", "Normal Attack": "1", "Special Attack": "2",
-                     "View current status": "stats", "Save Game": "save", "Quit Game": "q"}
-        self.cheat = {"Map display": "map", "win": "win the game!", "lose 1": "lose with pillar", "lose 2": "lose with maze", "lose 3": "lose completely",
+                     "View current status": "stats", "Map Display": "map", "Save Game": "save", "Quit Game": "q"}
+        self.cheat = {"Map display": "cheat map", "win": "win the game!", "lose 1": "lose with pillar", "lose 2": "lose with maze", "lose 3": "lose completely",
                       "+100 vision potions": "visions", "+1000 HP": "healings", "kill monsters": "kill"}
         self.hidden_menu_option = "map"  # prints dungeon
         self.dungeon = Dungeon(5, 5)
@@ -304,9 +304,9 @@ class DungeonAdventure:
             elif menu_command == 'save':
                 self.view.save_game_message()
                 self.send_save_data()
-            elif str(menu_command).lower() == "map":
-
-
+            elif str(menu_command).lower() == 'map':
+                self.print_play()
+            elif str(menu_command).lower() == "cheat map":
                 # Secret menu prints map and uses @ for player location
                 self.print_dungeon()
             else:
@@ -493,6 +493,7 @@ class DungeonAdventure:
         Hero and monster fight method. Takes the input to determine which move to make
         return: None
         """
+        print(monster.name)
         move = self.view.attack_mode(monster)
         while self.hero.hit_points > 0 or not monster.has_fainted:
             if move == "healings":
