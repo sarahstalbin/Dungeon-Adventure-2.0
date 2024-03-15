@@ -49,10 +49,10 @@ class DungeonAdventure:
 
     def __init__(self):
         self.menu = {"Action Menu": "m", "Go Up": "w", "Go Down": "s", "Go Left": "a", "Go Right": "d",
-                     "Use Health Potion": "h", "Use Vision": "v", "Normal Attack": "n", "Special Attack": "s",
-                     "View current status": "stats", "Quit Game": "q"}
+                     "Use Health Potion": "h", "Use Vision": "v", "Normal Attack": "1", "Special Attack": "2",
+                     "View current status": "stats", "Save Game": "save", "Quit Game": "q"}
         self.cheat = {"Map display": "map", "win": "win the game!", "lose 1": "lose with pillar", "lose 2": "lose with maze", "lose 3": "lose completely",
-                      "100+ vision potions": "visions", "1000+ HP": "healings", "kill monsters": "kill"}
+                      "+100 vision potions": "visions", "+1000 HP": "healings", "kill monsters": "kill"}
         self.hidden_menu_option = "map"  # prints dungeon
         self.dungeon = Dungeon(5, 5)
         self.view = View()
@@ -221,15 +221,15 @@ class DungeonAdventure:
             self.print_play()
 
         while self.hero.hit_points > 0:
-
+            room = self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col))
             menu_command = self.view.next_move()
             # while still in maze and not quit
             # quits game
             if menu_command == "q":
                 break
             # prints menu
-            elif menu_command == 'clear':
-                self.view.clear_screen()
+            # elif menu_command == 'clear':
+            #     self.view.clear_screen()
             elif menu_command == "m":
                 self.view.menu_str(self.menu_str())
             # use health potion
@@ -275,7 +275,7 @@ class DungeonAdventure:
 
             elif (menu_command == "w" or menu_command == "a" or menu_command == "s" or
                   menu_command == "d"):
-                room = self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col))
+                #
                 # moving character
                 room = self.move_hero(menu_command)
 
@@ -326,9 +326,8 @@ class DungeonAdventure:
         """
         Player's input is a direction, check to see if that direction is possible and move that direction.
         If moving to next room is possible, collect items and make traveled rooms empty unless pit
-        :return: str
+        :return: Room
         """
-
         # Getting direction
         if menu_command == "w":
             real_direction = "N"
@@ -341,6 +340,8 @@ class DungeonAdventure:
         else:
             return menu_command
         # get coordinates for next move
+        room = self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col))
+        print(room)
         new_row, new_col = self.dungeon._return_neighbor_coordinates(self.player_loc_row, self.player_loc_col,
                                                                      real_direction)
         # checking to see if next move is going to an actual room
@@ -353,22 +354,22 @@ class DungeonAdventure:
                 self.player_loc_row, self.player_loc_col = new_row, new_col
                 self.print_play()
                 self.view.print_room(self.dungeon.get_room_str((new_row, new_col)))
-
                 room = self.dungeon.get_room_str(
                     (self.player_loc_row, self.player_loc_col))  # item = get room content, array
                 room = self.collect_item(room)  # item = get room content, array
                 return room
             else:
                 self.view.no_door()
+                return room
 
         else:
             self.view.not_valid_direction()
-            return
+            return room
 
     def collect_item(self, room):
         """
         Items in room affects the player and returns item str if needed
-        :return: str
+        :return: Room
         """
 
         # boss_type = ["Troll", "Chimera", "Dragon"]
@@ -488,6 +489,10 @@ class DungeonAdventure:
         return room
 
     def fight(self, monster):
+        """
+        Hero and monster fight method. Takes the input to determine which move to make
+        return: None
+        """
         move = self.view.attack_mode(monster)
         while self.hero.hit_points > 0 or not monster.has_fainted:
             if move == "healings":
@@ -500,8 +505,6 @@ class DungeonAdventure:
                 result = monster.attack(self.hero)
                 self.view.display_attack_result(result, self.hero,self.player_name_str(), monster)
 
-                # if monster.has_fainted:
-                # room.ogre = False
                 if self.hero.hit_points <= 0:
                     self.view.lost()
                     break
@@ -515,8 +518,7 @@ class DungeonAdventure:
                 self.view.monster_heal(result)
                 result = monster.attack(self.hero)
                 self.view.display_attack_result(result, self.hero,self.player_name_str(), monster)
-                # if monster.has_fainted:
-                # room.ogre = False
+
                 if self.hero.hit_points <= 0:
                     break
                 if monster.has_fainted():
@@ -563,22 +565,34 @@ class DungeonAdventure:
             self.view.dont_save_game()
 
     def send_save_data(self):
+        """
+        Saves the game with pickle
+        Return: None
+        """
         with open('saved.pickle', 'wb') as saved_file:
             pickle.dump(self, saved_file)
 
     def print_play(self):
+        """
+        Calls View to print the playing dungeon map that does not show items
+        return: None
+        """
         self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = True
         self.view.print_play_dungeon(self.dungeon)
         self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = False
 
     def print_dungeon(self):
+        """
+        Calls view to print the dungeon with items in view
+        return: None
+        """
         self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = True
         self.view.print_view(self.dungeon)
         self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = False
     def play_saved_game(self):
         """
-        Saves the currently running dungeon adventure game.
-        Returns: Boolean if game was saved
+        Reloads and sets up the previously saved dungeon game
+        Returns: Boolean
         """
         try:
             with open('saved.pickle', 'rb') as saved_file:
@@ -597,18 +611,16 @@ class DungeonAdventure:
         except (AttributeError, EOFError, ImportError, IndentationError, IndexError, TypeError, ValueError) as e:
             # secondary errors
             self.view.not_valid_file()
-            return True
+            return False
             # print(traceback.format_exc(e))
         except Exception as e:
             # everything else, possibly fatal
             # print(traceback.format_exc(e))
             self.view.error_pickling()
-            return True
-    # Now you can call this function to clear the screen
-    # clear_screen()
+            return False
 
 
 if __name__ == "__main__":
     game_play = DungeonAdventure()
     game_play.play_whole_game()
-    # game_play.set_play_mode()
+
