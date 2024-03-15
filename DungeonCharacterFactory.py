@@ -8,11 +8,18 @@ class DungeonCharacterFactory:
     Creates and returns Dungeon Characters for Dungeon Adventure 2.0.
     All Dungeon Characters should be created via the DungeonCharacterFactory.
 
-    Contains two methods: create_hero(), which creates a Hero, and create_monster(), which creates a Monster.
+    Contains one method, create_character, which returns either a Hero (Warrior, Priestess, Thief) or a Monster.
     """
 
     @staticmethod
     def create_character(table_name, character_name):
+        """
+        Static method that returns Dungeon Character objects. Queries the Dungeon Character SQLite database
+        and passes parameter data required to create an instance of Monster, Warrior, Priestess, or Thief.
+        :param table_name: the name of the table to query
+        :param character_name: name of character that corresponds to database information
+        :return: the Dungeon Character object (Monster, Warrior, Priestess, Thief).
+        """
         conn = query_database.create_connection("dungeon_character_db.sqlite")
         if table_name.lower() == "warrior":
             warrior_data = query_database.select_row(conn, table_name, character_name)
@@ -49,26 +56,3 @@ class DungeonCharacterFactory:
             return Monster(monster_type, **dragon_data)
         else:
             raise ValueError("Invalid Dungeon Character type")
-
-if __name__ == "__main__":
-    w = DungeonCharacterFactory.create_character("warrior", "Warrior")
-    # p = DungeonCharacterFactory.create_character("priestess", "Priestess")
-    # t = DungeonCharacterFactory.create_character("thief", "Thief")
-    o = DungeonCharacterFactory.create_character("ogre", "Throg")
-    # g = DungeonCharacterFactory.create_character("gremlin", "Spike")
-    # s = DungeonCharacterFactory.create_character("skeleton", "Rattlebones")
-    # tr = DungeonCharacterFactory.create_character("troll", "Ragnok")
-    # c = DungeonCharacterFactory.create_character("chimera", "Thrawn")
-    # d = DungeonCharacterFactory.create_character("dragon", "Fafnir")
-    #
-    # print(t)
-    # print(s)
-    # print(c)
-    # print(w)
-    print(o)
-    # o.heal
-    # print(o.calculate_damage(50))
-
-    print(w.special_skill(o))
-    # print(w)w
-    print(o)
