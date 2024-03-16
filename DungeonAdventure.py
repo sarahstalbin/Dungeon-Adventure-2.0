@@ -20,27 +20,21 @@ play_whole_game. This file
 will have the set up created after the class.
 
 This game provides 4 levels, Easy, Medium, Hard, and Player's Choice.
-Easy provides a 5x5 dungeon maze with the player at 100 HP, 3 healing potions, random vision
-potions between 1 and 3. Medium provides a 10x10 dungeon maze with the player at random 
-generated HP of 75 to 100, random healing potions of 0 to 2, and random vision potions 
-of 0 to 1. Hard provides a 15x15 dungeon maze with the player at random 
-generated HP of 75 to 90, 0 healing potions, and 0 vision potions. Player's choice allows
-the player to choose any HP, healing potion, vision potion, and dungeon size as long as the
+Player's choice allows the player to choose any HP, healing potion, vision potion, and dungeon size as long as the
 dungeon size is equal to or larger than 3x3. HP can be negative but player will instantly die.
 Healing and vision potions can be negative but that will count against player.
 
 Players can use the Action menu option to view keyboard inserts "Action Menu": "m", "Go Up": 
 "w", "Go Down": "s", "Go Left": "a", "Go Right": "d", "Use Health Potion": "h", "Use Vision": 
-"v", "View current status": "stats", "Quit Game": "q". The hidden/secret menu option is "map"
-which will print the whole map and item layout.
+"v", "View current status": "stats", "Map Display": "map", "Quit Game": "q". There are also hidden inputs and monster
+fighting inputs that can be displayed within the game.
 
-Each time a player moves, the output will be a display of the map. Traveled Rooms will be 
-indicated by the notation --- and not yet traveled rooms will be indicated by the notation ^^^.
-Player's current location will display the current layout of the room. There is also a print
-of only the current room after the map layout.
+Each time a player moves, the output will be a display of the map that does not reveal any information about the room. 
+Traveled Rooms will be  indicated by the notation --- and not yet traveled rooms will be indicated by the notation ^^^.
+Player's current location will display the current layout of the room. T
 
 If a player picks up items or falls into a pit, a print statement will indicate these added or
-negative points.
+negative points. If a player encounters monsters, the menu option will appear and the player can fight.
 
 """
 
@@ -199,8 +193,13 @@ class DungeonAdventure:
         """
         formatted_list = ["    " + item + " : " + values for item, values in self.cheat.items()]
         return "\n".join(formatted_list) + "\n"
+
     def player_name_str(self):
+        """
+        Creates Hero's name
+        """
         return self.player_name + str(self.hero.name)
+
     def set_up_player(self):
         """
         Sets up the game by creating the dungeon maze and locating the starting coordinates
@@ -313,6 +312,10 @@ class DungeonAdventure:
                 self.view.not_valid_command()
 
     def use_healing_potion(self):
+        """
+        Creates a healing potion and uses the healing potion on hero when called
+        return: none
+        """
         if self.hero.healing_potion_count > 0:
             health_points = self.item.create_item("H", 20, 100).use_item()
             self.hero.hit_points += health_points
@@ -493,7 +496,6 @@ class DungeonAdventure:
         Hero and monster fight method. Takes the input to determine which move to make
         return: None
         """
-        print(monster.name)
         move = self.view.attack_mode(monster)
         while self.hero.hit_points > 0 or not monster.has_fainted:
             if move == "healings":
@@ -590,6 +592,7 @@ class DungeonAdventure:
         self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = True
         self.view.print_view(self.dungeon)
         self.dungeon.get_room_str((self.player_loc_row, self.player_loc_col)).current_room = False
+
     def play_saved_game(self):
         """
         Reloads and sets up the previously saved dungeon game
