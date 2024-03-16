@@ -1,5 +1,5 @@
 import random
-from DungeonCharacter_Model import DungeonCharacter
+from DungeonCharacter import DungeonCharacter
 
 
 class Monster(DungeonCharacter):
