@@ -1,4 +1,4 @@
-from DungeonCharacter_Model import DungeonCharacter
+from DungeonCharacter import DungeonCharacter
 from abc import ABC, abstractmethod
 import random
 
