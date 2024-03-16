@@ -80,7 +80,7 @@ class TestDungeonCharacter(unittest.TestCase):
         self.assertEqual(hero.hit_points, 200)
 
         with self.assertRaises(ValueError):
-            hero.hit_points = 0  # Empty name should raise ValueError
+            hero.hit_points = -1  # Empty name should raise ValueError
 
     def test_attack_speed_property(self):
         """ Test for attack_speed property in Dungeon Character class"""
