@@ -10,7 +10,7 @@ class TestHeroClasses(unittest.TestCase):
         warrior = Warrior("Warrior", 200, 1, 0.8, 20, 40, 0.5, 2, 1, 3)
         opponent = Warrior("Opponent", 200, 1, 0.8, 20, 40, 0.5, 2, 1, 3)
         # Setting random.randint to return 100 using patch
-        with patch('random.randint', return_value=100):
+        with patch('random.random',  return_value=.1), patch('random.randint', return_value=100):
             result = warrior.special_skill(opponent)
 
             self.assertEqual(result['damage'], 100)
