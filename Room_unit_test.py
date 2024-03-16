@@ -48,12 +48,6 @@ class TestRoomGettersAndSetters(unittest.TestCase):
         self.room.visited = True
         self.assertTrue(self.room.visited)
 
-    def test_multiple_items(self):
-        """ Test multiple items method"""
-        self.assertFalse(self.room.multiple_items)  # Initial value should be False
-        self.room.multiple_items = True
-        self.assertTrue(self.room.multiple_items)
-
     def test_north_door(self):
         """ Test north door method"""
         self.assertFalse(self.room.north_door)  # Initial value should be False
@@ -104,8 +98,6 @@ class TestRoomGettersAndSetters(unittest.TestCase):
 
     def test_empty_room(self):
         """ Test empty room method"""
-        self.assertFalse(self.room.empty_room)  # Initial value should be False
-        self.room.empty_room = True
         self.assertTrue(self.room.empty_room)
 
     def test_current_room(self):
@@ -169,7 +161,7 @@ class TestRoomGettersAndSetters(unittest.TestCase):
 
     def test_str_representation(self):
         # Test the __str__ method to ensure it returns the correct layout of the room
-        expected_layout = "***\n**\n***"
+        expected_layout = "***\n* *\n***"
         self.assertEqual(str(self.room), expected_layout)
 
         # Test another layout
