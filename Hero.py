@@ -129,8 +129,7 @@ class Thief(Hero):
         result = {"attacker": self.name, "opponent": opponent.name, "success": False, "attacks": 0,
                   "damage": 0}
 
-        # chance = random.random()
-        chance = .1
+        chance = random.random()
         if chance < 1:
 
             res = DungeonCharacter.attack(self, opponent)
