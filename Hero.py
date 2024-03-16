@@ -147,7 +147,3 @@ class Thief(Hero):
             result["attacks"] = 1
 
         return result
-
-if  __name__ == "__main__":
-    t = Thief("thief", "Thief")
-    print(t)
